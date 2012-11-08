@@ -1,0 +1,26 @@
+Réunion 1 -- 08/11/2012
+
+Participants :
+    Yicheng Gao, Giovanni Huet, Florian Guilbert, 
+    Emmanuel Mocquet, Romain Pignard.
+
+Ordre du jour :
+    1. attributions des rôles;
+    2. préparation de la réunion avec le client;
+
+
+1. Rôles
+
+Client-testeur : Giovanni Huet, Romain Pignard.
+Développeur    : Yicheng Gao, Emmanuel Mocquet.
+Chef de projet : Florian Guilbert.
+
+
+2. Réunion avec le client
+
+Après confirmation, elle aura lieu le 13/11/2012 à 15h30.
+
+Questions : 
+    - Quelle sorte d'application cliente ? Que voulez-vous qu'elle fasse ?
+    - Sur quels matériels allons-nous travailler ?
+    - Devons-nous protéger les cartes à puce d'une éventuelle reprogrammation ?
