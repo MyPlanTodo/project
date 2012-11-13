@@ -1,0 +1,46 @@
+Réunion 2 -- 13/11/2012
+
+Participants :
+    Cliente : Magali Bardet.
+    Groupe : Yicheng Gao, Giovanni Huet, Florian Guilbert, 
+    Emmanuel Mocquet, Romain Pignard.
+
+Ordre du jour :
+    Première réunion avec la cliente.
+
+-- Objectif du projet:
+
+    1) Programmation d'une carte 
+    
+La carte devra pouvoir :
+    - générer un nombre aléatoire;
+    - authentifier ou signer avec un cryptosystème symétrique 
+        et un cryptosystème asymétrique.
+La programmation de la carte se fera via les standards
+Java Card 2.2.2 et GlobalPlatform 2.1.1.
+
+    2) Communication avec la carte.
+
+Il faudra développer une application pouvant
+communiquer avec le lecteur de carte, (cf PC/SC).
+
+  [  3) Étude de la sécurité des cartes
+
+Après la programmation des cartes, il faudra étudier
+leur robustesse. ]
+
+    4) Outils
+
+Nous disposerons de 20 cartes et de 6 lecteurs.
+Les cartes sont des Java Card J3A (marque NXP) avec 40K d'EEPROM.
+Les lecteurs sont de marque Omnikey 3121.
+
+Après la programmation de l'applet, il devrait être impossible
+de la modifier.
+
+
+Prochaine réunion : 23/11/12
+    --> Recherche à mener :
+            - testeur : standards Java Card 2.2.2 et Global Platform 2.1.1
+            - développeur : PC/SC
+        Avec présentation à faire à l'autre groupe.
