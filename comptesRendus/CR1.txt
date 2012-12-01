@@ -1,26 +1,66 @@
-Réunion 1 -- 08/11/2012
+
+Réunion 30/11/12
 
 Participants :
-    Yicheng Gao, Giovanni Huet, Florian Guilbert, 
-    Emmanuel Mocquet, Romain Pignard.
+    - Magali Bardet, Ayoub Otmani.
+    - Baptiste Dolbeau, Giovanni Huet, Florian Guilbert, Maxence Péchoux, Romain Pignard.
 
-Ordre du jour :
-    1. attributions des rôles;
-    2. préparation de la réunion avec le client;
+Absents : Zakaria Addi, Yicheng Gao, Emmanuel Mocquet.
+
+Ordre du jour : Clarification du sujet
+
+Diagramme de séquence :
+
+    Acteurs : 
+        - User : utilisateur du système;
+        - SoftCard : logiciel dialoguant avec la carte;
+        - SmartCard : carte à puce, contient la clef privée de l'utilisateur;
+        - Browser-Proxy : logiciel ouvrant une fenêtre permettant de visualiser le réseau social,
+            et dialoguant avec le SoftCard;
+        - Social Network : facebook ou autre selon les possibilités.
+
+User                   SoftCard              SmartCard                 BrowserProxy               SocialNetwork
+            
+                
+                          Démarrage BP, connexion SN
+----------------------------------------------------------------------------> 
+                                     ? Authentification Carte ?         
+                          <-------------------------------------------------- 
+        PIN ?
+<-------------------------
+        PIN !
+------------------------->
+                                  PIN
+                         --------------------->
+                                  OK
+                         <---------------------
+                              Demande d'auth du Proxy, valide Auth Card 
+                         -------------------------------------------------->
+                              Authentification, clef de session
+                         <--------------------------------------------------
+                                login et mot de passe
+                         -------------------------------------------------->
+                                                                                      GET 
+                                                                           -------------------------->
+                                                                                Données chiffrées
+                                                                           <--------------------------
+                                      Demande de la clef privée                                    
+                        <--------------------------------------------------
+                                            Clef privée
+                        -------------------------------------------------->
+
+                                                                    Déchiffrement et 
+                                                                     affichage 
+                                                                        sur la vue.
+                                                                            
 
 
-1. Rôles
+Travail pour la prochaine réunion (04/12/12)
+     - Étudier le schéma et trouver des questions à poser aux profs pour mardi.
+                             
 
-Client-testeur : Giovanni Huet, Romain Pignard.
-Développeur    : Yicheng Gao, Emmanuel Mocquet.
-Chef de projet : Florian Guilbert.
-
-
-2. Réunion avec le client
-
-Après confirmation, elle aura lieu le 13/11/2012 à 15h30.
-
-Questions : 
-    - Quelle sorte d'application cliente ? Que voulez-vous qu'elle fasse ?
-    - Sur quels matériels allons-nous travailler ?
-    - Devons-nous protéger les cartes à puce d'une éventuelle reprogrammation ?
+Travail pour la réunion du (14/12/12)
+    - STB Cartes à puce Giovanni et Romain.
+    - Yicheng et Emmanuel Technologie javacard et PC/SC (DAL)
+    - STB SSN Baptiste et Florian
+    - Recherche sur protocole par rapport au Social Network, Zakaria et Maxence.
