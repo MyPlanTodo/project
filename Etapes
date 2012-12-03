@@ -1,0 +1,40 @@
+Etapes pour les livrables
+
+1.
+    sc      Génération d'un nombre pseudo-aléatoire 
+            Stokage d'une information sur la carte
+   ssn      Appli dialoguat avec facebook
+                -> avec injection de code
+
+2.
+    sc      Certificat dans cartes
+   ssn      Intégrer systèmes de Tag
+                -> chiffrement/déchiffrement
+
+3.
+    lier sc - snn
+
+
+Besoin (STB)
+
+    sc
+        -> Génération nombre pseudo                   Y Ind
+        -> Signature/chiffrement/déchiffrement        Y Ind
+                - asymetric/symetric                  Y
+        -> Étudier attaques                           Y Opt
+                - side channel                        Y
+                - etc...
+        -> Stockage et utilisation de certificats     Y Imp
+
+    ssn
+        -> Application fonctionnelle                  Y Ind
+        -> Status chiffré/déchiffré                   Y Ind
+        -> images                                     Y Imp
+        -> coms                                       Y Sec
+        -> liens amitiés                              Y Imp
+
+    Anonymat ?                                        Y Opt ?
+
+    Tunnel entre appli et carte                       Y Ind
+
+
