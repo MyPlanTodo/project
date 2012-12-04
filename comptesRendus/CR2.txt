@@ -1,0 +1,32 @@
+Réunion 04/12/12
+
+Participants :
+    - Magali Bardet.
+    - Baptiste Dolbeau, Giovanni Huet, Florian Guilbert, 
+        Romain Pignard, Zakaria Addi, Emmanuel Mocquet.
+Absents : 
+    - Yicheng Gao, Maxence Péchoux, Ayoub Otmani.
+
+Ordre du jour : Expression des besoins.
+
+Smart cards : 
+
+    Objectifs : Application fonctionnelle
+                    (trivial : Application de dialogue entre lecteur et carte)
+                Appliction de vérification de code PIN
+                Application d'authentification
+                Stockage et "utilisation" de certificats
+                Stockage du login/mot de passe Facebook
+                Documentation détaillée du fonctionnement des applications et de l'implantation 
+                    (comme un compte-rendu de TP)
+                Documentation, comment faire (comment l'avons-nous développé) ?
+
+                
+Conseillé de réutiliser tout ce qui existe sur carte (fonctions crypto...) 
+
+Secure Social Network : 
+
+    En attente d'une réunion avec le client.
+
+Prochaine réunion : 
+    - 14/12/12 --> cf CR1
