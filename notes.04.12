@@ -1,0 +1,11 @@
+Sur carte : 
+    Objectifs : Application fonctionnelle
+                (trivial : Appli de dialogue entre lecteur et carte)
+                Appli de vérification de code PIN
+                Appli d'authentification
+                Stockage et "utilisation" de certificats
+                Stockage du login/mot de passe Facebook
+            Documentation détaillée du fonctionnement des appli et de l'implantation (comme un compte-rendu de TP)
+
+   Conseillé de réutiliser tout ce qui existe sur carte (fonctions crypto...) 
+    
