@@ -13,7 +13,7 @@ Smart cards :
 
     Objectifs : Application fonctionnelle
                     (trivial : Application de dialogue entre lecteur et carte)
-                Appliction de vérification de code PIN
+                Application de vérification de code PIN
                 Application d'authentification
                 Stockage et "utilisation" de certificats
                 Stockage du login/mot de passe Facebook
