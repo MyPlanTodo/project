@@ -64,13 +64,24 @@
 \section{Objet}
 \renewcommand\labelitemi{\textbullet} %style des puces
 \renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
-Proposer aux utilisateurs d'un réseau social une sécurité vis-à-vis
-des autres utilisateurs mais aussi par rapport au réseau social lui-même,
-afin d'empêcher l'utilisation de nos données et informations par celui-ci.
+Proposer des solutions cryptographiques garantissant la protection de la vie 
+privée des utilisateurs vis-à-vis d'un réseau social. Cette protection pourra
+être effective par le chiffrement systématique des données sensibles. Et
+le déchiffrement de ces données ne serait possible que par des personnes
+considérées explicitement par l'utilisateur.
 
-Notre objectif principal consiste donc en une preuve de concept 
+% TODO préciser
+Le projet prendra la forme d'une extension pour le navigateur \emph{Mozilla Firefox}
+s'interfaçant avec une carte à puce pour effectuer certaines tâches de chiffrement.
 
-\paragraph{Note importante}
+Il ne sera pas nécessaire de créer un compte, notre projet pourra fonctionner comme
+un patch sur un compte déjà existant.
+
+\paragraph{}
+Le réseau social étudié sera \emph{Facebook} à moins que lors du développement
+du projet des problèmes spécifiques à ce réseau social soient rencontrés. 
+Par conséquent, la terminologie utilisée correspond à celle de \emph{Facebook} (statut, mur, ...).
+
 
 \section{Documents applicables et de référence}
 \begin{itemize}
@@ -83,6 +94,7 @@ Notre objectif principal consiste donc en une preuve de concept
 \begin{description}
 	\item[SN :] Social Network, représente le réseau social que nous avons choisi comme support
     pour ce projet;
+    % Proxy ?
 \end{description}
 
 
@@ -95,129 +107,185 @@ Notre objectif principal consiste donc en une preuve de concept
 \rowcolor{blue}~{\color{white}\bfseries{Reference}}&~{\color{white}\bfseries{Fonctionalité Globale}}&~{\color{white}\bfseries{Acteur}}&~{\color{white}\bfseries{Priorité}}\\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{green!50}Indispensable \\
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un statut & Utilisateur & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{green!50}Indispensable \\
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un document & Utilisateur & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{blue!50}Secondaire\\
+F-Gl-\arabic{FGcount} & Gérer les liens d'amitiés & Utilisateur & \cellcolor{red!20}Important \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{blue!50}Secondaire\\
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cellcolor{blue!50}Secondaire\\
 \hline
 \end{tabularx}
 
-\subsection{Gestion du compte}
-La gestion du compte se décline en huit parties : 
-\begin{itemize}
-    \item création d'un compte utilisateur;
-    \item connexion au SAUD;
-    \item déconnexion du SAUD;
-    \item suppression du compte utilisateur;
-    \item modifier l'adresse mail du compte utilisateur;
-    \item modifier le mot de passe;
-    \item modifier la question secrête;
-    \item modification de mot de passe.
-\end{itemize}
-Il y a deux comptes différents : utilisateur et administrateur.\\
-La création du compte administrateur se fait à l'installation du SAUD sur le serveur.
-N'importe quel visiteur peut créer un compte sur un SAUD.\\
+\subsection{Chiffrer/déchiffrer un statut}
+Un utilisateur peut lorsqu'il souhaite écrire un message
+sur son mur le chiffrer. Il choisit, dans ce cas, les amis
+qui peuvent déchiffrer ce message.
+
+Inversement, lorsqu'un de ses amis poste (sur son mur) un message chiffré,
+l'utilisateur peut tenter de le déchiffrer. Si, l'utilisateur
+fait partie des personnes autorisées, il peut lire le message.
+
 
 \fiche
-	{Création d'un compte utilisateur}
+	{Chiffrement d'un message sur son mur}
 	{Utilisateur}
-	{L'utilisateur crée un compte en remplissant un formulaire}
-	{L'utilisateur n'est pas déjà authentifié}
-	{L'utilisateur souhaite se créer un compte sur le SAUD}
-	{La création du compte s'est effectuée avec succès}
+	{L'utilisateur chiffre un message qui sera affiché sur le mur}
+	{}
+	{L'utilisateur souhaite poster un message sur son mur}
+	{L'utilisateur a posté un message chiffré sur son mur, lisible que des personnes autorisées}
 	{\begin{itemize}
 	    \item[]
-	  \item[1.] Clique sur le lien/bouton "Créer un compte"
-	  \item[3.] Entre son pseudo, son adresse mail et son mot de passe.
-	  \item[4.] Valide la création du compte en appuyant sur "Créer"
-	  \item[7.] Confirme le mail reçu en suivant le lien présent dans 
-	  le corps du texte.
+	  \item[1.] L'utilisateur saisie un message et choisi de le chiffrer,
+          il spécifie les personnes autorisées;
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Envoie le formulaire de création de compte.
-		\item[5.] Vérifie les données transmises par l'utilisateur : 
-        l'identifiant doit être unique, l'adresse mail valide et le mot
-        de passe doit être conforme à la politique de mot de passe
-        du site.
-        \item [6.] Envoie un mail de confirmation à l'utilisateur.
-        \item [8.] Insère les données de l'utilisateur dans la base de données du site.
-        \item [9.] Archive l'identifiant.
+		\item[2.] Le "proxy" chiffre le message avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] le "proxy" envoi ensuite une concaténation de 
+        ce message et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
 	{}
 \flots
     {\begin{itemize}
     \item[]
-    \item[5.] Tant que le pseudo n'est pas unique, l'utilisateur est invité à en entrer un autre;
-    \item[5.] Si un des champs obligatoires n'est pas rempli, l'utilisateur est invité à les remplir;
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
     \end{itemize}
     }
-	{\begin{itemize}
-    \item[]
-    \item[8.] Si le mail de confirmation n'est pas renvoyé avant la fin de la session du site,
-    la création du compte est avortée.
-    \item[8.] Si le mail est renvoyé après la fin de la session du visiteur,
-        il est invité à réitérer la création de son compte.
-    \end{itemize}
-    }    
+	{}    
 \\*
 
 \fiche
-	{Authenfication au SAUD}
+	{Déchiffrement d'un message sur un mur}
 	{Utilisateur}
-	{L'utilisateur s'authentifie au SAUD}
-	{L'utilisateur n'est pas déjà authentifié}
-	{L'utilisateur souhaite s'authentifier au SAUD}
-	{L'authentification s'est effectuée avec succès}
+	{L'utilisateur déchiffre un message du mur d'un de ses amis}
+	{}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un message chiffré}
+	{L'utilisateur a déchiffré un message}
+    {}
+	{\begin{itemize}
+        \item[]
+		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+            du message avec la clef publique de l'utilisateur;
+		\item[2.] le "proxy" déchiffre tout le message avec la clef
+            de chiffrement.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le message.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Chiffrer/déchiffrer un document}
+Un utilisateur peut choisir utiliser l'option de téléversement
+d'image du réseau social pour téléverser un document (image, 
+fichier texte, ...) chiffré. Celui-ci sera considéré par une image
+par le réseau social.\\*
+
+\fiche
+	{Chiffrement d'un document}
+	{Utilisateur}
+	{L'utilisateur chiffre un document qui sera interpréter comme une image par Facebook}
+	{}
+	{L'utilisateur souhaite téléverser un document}
+	{L'utilisateur a téléverser un document, lisible que des personnes autorisées}
 	{\begin{itemize}
 	    \item[]
-		\item[1.] Remplit le formulaire d'authentification, entre son pseudo,
-		son mot de passe et valide.
-		\item[3.] Renseigne l'adresse mail, ainsi que la réponse à la question secrète.
+	  \item[1.] L'utilisateur téléverse un document et choisi de le chiffrer,
+          il spécifie les personnes autorisées;
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Vérifie les données entrées par l'utilisateur, 
- si les données sont correctes mais que l'utilisateur se connecte d'un endroit
-inhabituel, le système envoi un formulaire en demandant de remplir le mail et de répondre à la question secrète;
+		\item[2.] Le "proxy" chiffre le document avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] le "proxy" envoi ensuite une concaténation de 
+        du document chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
 	{}
 \flots
     {\begin{itemize}
     \item[]
-    \item[2.] Tant que le mot de passe ou l'identifiant ne sont pas correctes, l'utilisateur 
-    est invité à les rentrer de nouveau.
+    \item[1.] Si l'utilisateur spécifie un document qui n'est pas une image
+    et choisi de ne pas le chiffrer, cela sera refusé par Facebook;
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
     \end{itemize}
     }
-    {}    
+	{}    
 \\*
 
 \fiche
-	{Déconnexion de l'utilisateur}
+	{Déchiffrement d'un document}
 	{Utilisateur}
-	{L'utilisateur se déconnecte du SAUD}
-	{L'utilisateur est authentifié}
-	{L'utilisateur souhaite se déconnecter du SAUD}
-	{La déconnexion s'est effectuée avec succès}
+	{L'utilisateur déchiffre un document d'un de ses amis}
+	{}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un document chiffré}
+	{L'utilisateur a déchiffré un message}
+    {}
+	{\begin{itemize}
+        \item[]
+		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+            du document avec la clef publique de l'utilisateur;
+		\item[2.] le "proxy" déchiffre tout le document avec la clef
+            de chiffrement, la télécharge dans le cas ou ce n'est pas
+            une image.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le document.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Gérer les liens d'amitiés}
+Afin d'améliorer l'ergonomie des opérations de chiffrement, 
+l'utilisateur aura la possibilité d'organiser ses amis en
+différents groupes. \\*
+
+% TODO à discuter
+\fiche
+	{}
+	{}
+	{}
+	{}
+	{}
+	{}
 	{\begin{itemize}
 	    \item[]
-		\item[1.] Clique sur le lien/bouton déconnexion.
+		\item[1.] toto
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Vide la session de l'utilisateur pour le déconnecter et 
-		supprime les éventuels cookies.
+		\item[2.] tutu
 	\end{itemize}
 	}
 	{}
@@ -226,334 +294,77 @@ inhabituel, le système envoi un formulaire en demandant de remplir le mail et d
 	{}    
 \\*
 
-\fiche
-	{Suppression d'un compte utilisateur}
-	{Utilisateur}
-	{L'utilisateur supprime son compte}
-	{L'utilisateur possède un compte et est authentifié}
-	{L'utilisateur souhaite supprimer son compte}
-	{La suppression du compte s'est effectuée avec succès}
-	{\begin{itemize}
-		\item[1.] Clique sur le lien/bouton "Supprimer son compte"
-        \item[3.] Entre son mot de passe et valide la suppression
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie un le formulaire de suppression de compte.
-		\item[4.] Vérifie le mot de passe de l'utilisateur.
-        \item [5.] Envoie un mail à l'utilisateur pour lui signifier la
-suppression du compte
-	\item[6.] Supprime les données présentes de l'utilisateur dans la
-base
-         de données.
-	\end{itemize}
-	}
-	{}
-\flots
-    {\begin{itemize}
-    \item[]
-    \item[4.] Tant que le mot de passe est invalide, l'utilisateur doit le
-retaper.
-    \end{itemize}
-    }
-	{}
-\\*
+\subsection{Chiffrer/déchiffrer un commentaire}
+De même que pour les messages de statut (de mur), l'utilisateur
+peut chiffrer un commentaire ou au contraire en déchiffrer,
+s'il fait partie des personnes autorisées.
 
 \fiche
-	{Modification de l'adresse mail}
+	{Chiffrement d'un commentaire}
 	{Utilisateur}
-	{L'utilisateur modifie son adresse mail}
-	{L'utilisateur possède un compte et est authentifié}
-	{L'utilisateur souhaite modifier son adresse mail}
-	{La modification de l'adresse mail s'est effectuée avec succès}
-	{\begin{itemize}
-		\item[1.] Clique sur le lien/bouton "Modifier son adresse mail"
-        \item[3.] Entre sa nouvelle adresse ainsi que la réponse à sa question
-et valide
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie un le formulaire de suppression de compte
-		\item[4.] Modifie dans la base la nouvelle adresse de l'utilisateur
-	\end{itemize}
-	}
+	{L'utilisateur chiffre un commentaire}
 	{}
-\flots
-    {\begin{itemize}
-    \item[]
-    \item[5.] Tant que l'adresse mail n'est pas une adresse valide et que la
-réponse à la question est incorrecte.
-    \end{itemize}
-    }
-	{}
-\\*
-
-\fiche
-	{Modification du mot de passe}
-	{Utilisateur}
-	{L'utilisateur modifie son mot de passe}
-	{L'utilisateur possède un compte et est authentifié}
-	{L'utilisateur souhaite modifier son mot de passe}
-	{La modification de le mot de passe s'est effectuée avec succès}
-	{\begin{itemize}
-	      \item[]
-		\item[1.] Clique sur le lien/bouton "Modifier son mot de passe"
-        \item[3.] Entre son mot de passe actuel, ainsi que son nouveau mot de 
-        passe deux fois et valide le formulaire
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie un le formulaire de modification de mot de passe.
-		\item[4.] Vérifie le mot de passe de l'utilisateur
-        \item [5.] modifie le mot de passe de l'utilisateur
-	\end{itemize}
-	}
-	{}
-\flots
-    {\begin{itemize}
-    \item[]
-    \item[5.] Tant que le mot de passe est invalide, l'utilisateur doit le retaper.
-    \end{itemize}
-    }
-	{}
-\\*
-
-\fiche
-	{Modification de la question secrête}
-	{Utilisateur}
-	{L'utilisateur modifie sa question secrête}
-	{L'utilisateur possède un compte et est authentifié}
-	{L'utilisateur souhaite modifier sa question secrête}
-	{La modification de la question secrête s'est effectuée avec succès}
-	{\begin{itemize}
-		\item[1.] Clique sur le lien/bouton "Modifier ma question secrête"
-        \item[3.] Entre l'intitulé de question ainsi que sa réponse et valide
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie un le formulaire de modification de la question
-		secrête
-		\item[4.] Entre en base de données l'intitulé et la réponse de la 
-		question s'ils sont conforme à la syntaxe attendue
-	\end{itemize}
-	}
-	{}
-\flots
-    {\begin{itemize}
-    \item[]
-    \item[5.] Tant que l'intitulé et la réponse à la  question secrête ne 
-    correspondent pas à la syntaxe attendue, l'utilisateur est invité à les 
-    retaper 
-    \end{itemize}
-    }
-	{}
-\\*
-
-\fiche
-	{Modifie son mot de passe}
-	{Utilisateur}
-	{L'utilisateur souhaite modifié son mot de passe}
-	{L'utilisateur possède un compte et n'est pas authentifié}
-	{L'utilisateur souhaite modifié son mot de passe}
-	{L'utilisateur a modifié son mot de passe}
+	{L'utilisateur souhaite chiffrer un commentaire}
+	{L'utilisateur a chiffré un commentaire, lisible que des personnes autorisées}
 	{\begin{itemize}
 	    \item[]
-		\item[1.] Clique sur le lien/bouton "Modification de mot de
-passe"
-        \item[3.] Entre son adresse mail et répond à sa question
-        \item[5.] Suit le lien présent dans le mail
-        \item[7.] Entre un nouveau mot de passe.
+	  \item[1.] L'utilisateur saisie un commentaire et choisi de le chiffrer,
+          il spécifie les personnes autorisées à le déchiffrer;
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Envoie un le formulaire d'oublie de mot de passe
-		\item[4.] Vérifie les données entrées et envoie un mail à l'adresse de 
-		l'utilisateur
-		\item[6.] Redirige l'utilisateur vers un formulaire de mot de passe
-		\item[8.] Vérifie le mot de passe et entre celui-ci dans la base de 
-		données.
+		\item[2.] Le "proxy" chiffre le commentaire avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] le "proxy" envoi ensuite une concaténation de 
+        du commentaire chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
 	{}
 \flots
     {\begin{itemize}
     \item[]
-    \item[4.] Tant que la réponse est incorrecte, l'utilisateur est invité à la
-    retaper
-    \item[8.] Tant que le mot de passe ne correspond pas à la syntaxe attendue,
-     l'utilisateur doit en retaper un nouveau.
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
     \end{itemize}
     }
-	{\begin{itemize}
-	\item[]
-	\item[6.] Si le lien du mail n'est pas suivie avant la fin de la session, 
-	l'utilisateur devra réitérer la procédure
-	\item[6.] Si le lien est suivi après la fin de la session, l'utilisateur est
-	redirigé vers le formulaire d'oublie de mot de passe.
-	\end{itemize}
-	}
-
-\subsection{Authentification sur un site quelconque par le biais du SAUD}
-Un utilisateur enregistré sur un SAUD peut créer un compte sur un site quelconque
-en spécifiant l'utilisation de l'authentification externe.
-
-Une fois le compte créer sur ce site, il peut désormais s'y connecter en s'authentifiant
-par l'intermédiaire du SAUD. Un utilisateur peut créer plusieurs compte avec authenficiation
-externe sur un même site.\\
-
-\fiche
-	{Création d'un compte sur un site quelconque avec AE}
-	{Utilisateur}
-	{L'utilisateur crée un compte en remplissant un formulaire et en cochant la mention
-    "Authentification externe"}
-	{L'utilisateur dispose d'un compte sur un SAUD et le site quelconque doit proposer le service d'authentification externe}
-	{}
-	{La création du compte s'est effectuée avec succès}
-	{\begin{itemize}
-        \item[]
-		\item[1.] Clique sur le lien/bouton "Créer un compte"
-        \item[3.] Remplit le formulaire du site hormis le champs \emph{mot de
-passe} et donne pour identifiant, son adresse SAUD.
-        \item[4.] Valide l'envoi formulaire.
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie le formulaire de création de compte.
-		\item[5.] Vérifie les données du formulaire, la syntaxe de
-l'identifiant doit correspondre à un identifiant SAUD
-		\item[6.] Envoie une requête au SAUD pour savoir si l'utilisateur est authentifié.
-        \item[7.] Créer le compte.
-	\end{itemize}
-	}
-	{}
-\flots
-    {\begin{itemize}
-    \item[]
-    \item[5.] Si l'identifiant n'est pas conforme à la syntaxe attendue
-    l'utilisateur est invité à le réentrer.
-    \item[5.] S'il y a plusieurs idenfiant interne pour un identifiant externe, il y a ambiguïté,
-    l'utilisateur est donc invité à préciser l'identifiant interne.
-    \item[6.] Si la reponse du SAUD est négative, le site redirige l'utilisateur sur le SAUD pour 
-    qu'il s'authentifie.
-    \item[6.] Si l'adresse dans l'identifiant ne pointe pas vers une adresse
-de SAUD valide.
-    \end{itemize}
-    }
-    {}
-\\*
+	{}    
 \\*
 
 \fiche
-	{Connexion sur un site quelconque avec AE}
+	{Déchiffrement d'un commentaire}
 	{Utilisateur}
-	{L'utilisateur se connecte au site quelconque par le biais du SAUD}
-	{L'utilisateur dispose d'un compte sur un SAUD et sur le site quelconque et le site quelconque doit proposer le service d'authentification externe}
+	{L'utilisateur déchiffre un commentaire d'un de ses amis, présent sur la page}
 	{}
-	{La connexion s'est effectuée avec succès}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un commentaire chiffré}
+	{L'utilisateur a déchiffré un commentaire}
+    {}
 	{\begin{itemize}
         \item[]
-		\item[1.] Rempli uniquement le champs \emph{identifiant} avec
-        son adresse SAUD et valide la connexion en laissant vide
-        le champs \emph{mot de passe}.
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie une requête au SAUD pour savoir si l'utilisateur est authentifié.
-        \item[3.] Valide la connexion de l'utilisateur.
+		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+            du commentaire avec la clef publique de l'utilisateur;
+		\item[2.] le "proxy" déchiffre le commentaire avec la clef
+            de chiffrement et l'affiche
 	\end{itemize}
 	}
 	{}
 \flots
     {}
-	{\begin{itemize}
-    \item[]
-    \item[2.] Si la reponse du SAUD est négative : deux cas possibles : 
-	\begin{itemize}
-	\item[-]le login existe, donc le site redirige l'utilisateur sur le SAUD pour qu'il s'authentifie;
-	\item[-]le login n'existe pas, une erreur est renvoyé au site.
-	\end{itemize}
-    \end{itemize}
-    }
-
-\subsection{Administration du SAUD}
-À l'installation du SAUD, un  compte administrateur est créé. Ce compte permet 
-de supprimer les utilisateurs.
-
-\fiche
-	{Administration du SAUD}
-	{Administrateur}
-	{L'administrateur peut supprimer les comptes des utilisateurs du SAUD}
-	{Il y a un compte administrateur sur ce SAUD}
-	{}
-	{L'administration s'est bien passée}
-	{\begin{itemize}
-        \item[]
-		\item[1.] L'administrateur clique sur "Panneau d'administration"
-		\item[3.] L'administrateur supprime un ou plusieurs utilisateurs et valide
-		l'envoi du formulaire
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Envoie un formulaire contenant l'intégralité des utilisateurs
-        \item[4.] Supprime les utilisateurs choisie par l'administrateur
-	\end{itemize}
-	}
-	{}
-\flots
-    {}
-	{}
-
-\subsection{Installation d'un SAUD personnel}
-Un utilisateur peut choisir d'utiliser un SAUD déjà existant ou bien
-de d'installer le sien. Pour installer son SAUD, il doit télécharger
-le paquetage requis et l'exécuter sur sa machine.\\
-
-\fiche
-	{Installation du paquetage d'installation du SAUD}
-	{Utilisateur}
-	{L'utilisateur installe son SAUD personnel sur sa machine}
-	{L'utilisateur doit avoir un environnement adéquat pour installer le SAUD}
-	{Téléchargement du paquetage}
-	{L'installation s'est terminée}
-	{\begin{itemize}
-        \item[]
-		\item[1.] L'utilisateur télécharge et installe le paquetage;
-		\item[4.] L'utilisateur entre le mot de passe administrateur.
-	\end{itemize}
-	}
-	{\begin{itemize}
-        \item[]
-		\item[2.] Installation du paquetage;
-		\item[3.] Le programme d'installation invite l'utilisateur à entrer
-		un mot de passe pour le compte administrateur conformément à la politique 
-		des mots de passe du SAUD;
-		\item[5.] Création du compte administrateur.
-	\end{itemize}
-	}
-	{}
-\flots
     {\begin{itemize}
     \item[]
-    \item[2.] Si les logiciels apache, mysql et php ne sont pas installés, le 
-    système demande à l'utilisateur de les installer;
-    \item[3.] Tant que le mot de passe saisie par l'utilisateur est trop faible
-    il doit en entrer un de nouveau.
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le commentaire.
     \end{itemize}
     }
-	{}
-	
+	{}    
+
 \pagebreak
 \subsection{Exigences fonctionnelles détaillées}
 
-\subsubsection{Le protocole}
+TODO
 
 \newcounter{FNcount}
 
@@ -599,7 +410,6 @@ et utilisateur sont sécurisés &
 \hline
 \end{longtable}
 
-\subsubsection{Le SAUD}
 
 \begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
 
@@ -726,22 +536,7 @@ F-FN-\arabic{FNcount} & Log de la dernière connexion à chaque nouvelle connexi
 
 \hline
 \addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & La délai maximum de réponse du SAUD est de deux secondes & \cellcolor{red!50}Important \\
-\hline
-\addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & Le SAUD peut supporter plus de 1000 utilisateurs
- & \cellcolor{red!50}Important \\
-\hline
-\addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & Le SAUD peut gérer 100 connexions simultanées au maximum & \cellcolor{red!50}Important \\
-\hline
-\addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & \begin{itemize}
-\item le SAUD sera développé en Javascript, PHP et MySQL
-\item l'API sera développé en Javascript et PHP \end{itemize} & \cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & l'API sera aussi développée en JSP & \cellcolor{blue!50}Secondaire \\
+F-FO-\arabic{FOcount} & Le chiffrement n'est pas trop long (> 2s) & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
 
@@ -765,12 +560,8 @@ F-FO-\arabic{FOcount} & l'API sera aussi développée en JSP & \cellcolor{blue!5
 
 \hline
 \addtocounter{FIcount}{10}
-F-FI-\arabic{FIcount} & L'interface utilisateur/SAUD -> authentification
+F-FI-\arabic{FIcount} & Notre système d'interface avec \emph{Mozilla Firefox}
 & \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FIcount}{10}
-F-FI-\arabic{FIcount} & L'interface administrateur
-& \cellcolor{red!50}Secondaire \\
 \hline
 \end{longtable}
 
@@ -794,14 +585,10 @@ F-FI-\arabic{FIcount} & L'interface administrateur
 
 \hline
 \addtocounter{FQcount}{10}
-F-FQ-\arabic{FQcount} & La système sera livré pour le 31 mai 2012 & \cellcolor{green!50}Indispensable \\
+F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FQcount}{10}
 F-FQ-\arabic{FQcount} & Un manuel d'utilisation sera livré avec le système
-& \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FQcount}{10}
-F-FQ-\arabic{FQcount} & La RFC du protocole sera fourni au client
 & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
@@ -826,8 +613,7 @@ F-FQ-\arabic{FQcount} & La RFC du protocole sera fourni au client
 
 \hline
 \addtocounter{FRcount}{10}
-F-FR-\arabic{FRcount} & Une API sera développée pour permettre aux sites
-quelconques d'implanter le protocole d'authentification & \cellcolor{green!50}Indispensable \\
+F-FR-\arabic{FRcount} & TODO & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
 

@@ -28,7 +28,7 @@ Besoin (STB)
 
     ssn (Plugin ou extension pour Firefox ?)
         -> Application fonctionnelle                  Y Ind
-        -> Status chiffré/déchiffré                   Y Ind
+        -> Statut chiffré/déchiffré                   Y Ind
         -> Tout document(images, ...)                 Y Ind
         -> coms                                       Y Sec
         -> liens amitiés                              Y Imp
