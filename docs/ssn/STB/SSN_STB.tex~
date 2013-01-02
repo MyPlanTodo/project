@@ -1,0 +1,835 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\documentclass[a4paper,11pt,french]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{lastpage} %pour compter le nombre de pages
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+\hypersetup{breaklinks=true}
+
+
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{4cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{-0.3cm}
+
+%les structures de gestion de projet
+\usepackage{../../../lib/tex/structures} 
+
+
+\def\projectName{Smart Social Network}
+\def\docType{Spécification Technique de Besoin}
+\def\version{0.1}
+\def\author{\begin{tabular}{l}Baptiste \textsc{Dolbeau},\\Florian \textsc{Guilbert}\end{tabular}}
+\def\dateStb{\today}
+\def\checked{}
+\def\approved{}
+
+
+
+\begin{document}
+\makeFirstPage
+\clearpage
+\vspace*{1cm}
+%Tableau de mises à jour
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 02/01/2013 & Création\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+
+\section{Objet}
+\renewcommand\labelitemi{\textbullet} %style des puces
+\renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
+Proposer aux utilisateurs d'un réseau social une sécurité vis-à-vis
+des autres utilisateurs mais aussi par rapport au réseau social lui-même,
+afin d'empêcher l'utilisation de nos données et informations par celui-ci.
+
+Notre objectif principal consiste donc en une preuve de concept 
+
+\paragraph{Note importante}
+
+\section{Documents applicables et de référence}
+\begin{itemize}
+    \item Manuel d'utilisation;
+    \item proxy-encryption.pdf, le sujet du projet.
+\end{itemize}
+
+
+\section{Terminologie et sigles utilisés}
+\begin{description}
+	\item[SN :] Social Network, représente le réseau social que nous avons choisi comme support
+    pour ce projet;
+\end{description}
+
+
+\section{Exigences fonctionnelles}
+
+\subsection{Présentation de la mission du produit logiciel}
+\newcounter{FGcount}
+\begin{tabularx}{16cm}{|c|X|l|c|}
+\hline
+\rowcolor{blue}~{\color{white}\bfseries{Reference}}&~{\color{white}\bfseries{Fonctionalité Globale}}&~{\color{white}\bfseries{Acteur}}&~{\color{white}\bfseries{Priorité}}\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{blue!50}Secondaire\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & toto & toto & \cellcolor{blue!50}Secondaire\\
+\hline
+\end{tabularx}
+
+\subsection{Gestion du compte}
+La gestion du compte se décline en huit parties : 
+\begin{itemize}
+    \item création d'un compte utilisateur;
+    \item connexion au SAUD;
+    \item déconnexion du SAUD;
+    \item suppression du compte utilisateur;
+    \item modifier l'adresse mail du compte utilisateur;
+    \item modifier le mot de passe;
+    \item modifier la question secrête;
+    \item modification de mot de passe.
+\end{itemize}
+Il y a deux comptes différents : utilisateur et administrateur.\\
+La création du compte administrateur se fait à l'installation du SAUD sur le serveur.
+N'importe quel visiteur peut créer un compte sur un SAUD.\\
+
+\fiche
+	{Création d'un compte utilisateur}
+	{Utilisateur}
+	{L'utilisateur crée un compte en remplissant un formulaire}
+	{L'utilisateur n'est pas déjà authentifié}
+	{L'utilisateur souhaite se créer un compte sur le SAUD}
+	{La création du compte s'est effectuée avec succès}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] Clique sur le lien/bouton "Créer un compte"
+	  \item[3.] Entre son pseudo, son adresse mail et son mot de passe.
+	  \item[4.] Valide la création du compte en appuyant sur "Créer"
+	  \item[7.] Confirme le mail reçu en suivant le lien présent dans 
+	  le corps du texte.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie le formulaire de création de compte.
+		\item[5.] Vérifie les données transmises par l'utilisateur : 
+        l'identifiant doit être unique, l'adresse mail valide et le mot
+        de passe doit être conforme à la politique de mot de passe
+        du site.
+        \item [6.] Envoie un mail de confirmation à l'utilisateur.
+        \item [8.] Insère les données de l'utilisateur dans la base de données du site.
+        \item [9.] Archive l'identifiant.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[5.] Tant que le pseudo n'est pas unique, l'utilisateur est invité à en entrer un autre;
+    \item[5.] Si un des champs obligatoires n'est pas rempli, l'utilisateur est invité à les remplir;
+    \end{itemize}
+    }
+	{\begin{itemize}
+    \item[]
+    \item[8.] Si le mail de confirmation n'est pas renvoyé avant la fin de la session du site,
+    la création du compte est avortée.
+    \item[8.] Si le mail est renvoyé après la fin de la session du visiteur,
+        il est invité à réitérer la création de son compte.
+    \end{itemize}
+    }    
+\\*
+
+\fiche
+	{Authenfication au SAUD}
+	{Utilisateur}
+	{L'utilisateur s'authentifie au SAUD}
+	{L'utilisateur n'est pas déjà authentifié}
+	{L'utilisateur souhaite s'authentifier au SAUD}
+	{L'authentification s'est effectuée avec succès}
+	{\begin{itemize}
+	    \item[]
+		\item[1.] Remplit le formulaire d'authentification, entre son pseudo,
+		son mot de passe et valide.
+		\item[3.] Renseigne l'adresse mail, ainsi que la réponse à la question secrète.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Vérifie les données entrées par l'utilisateur, 
+ si les données sont correctes mais que l'utilisateur se connecte d'un endroit
+inhabituel, le système envoi un formulaire en demandant de remplir le mail et de répondre à la question secrète;
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[2.] Tant que le mot de passe ou l'identifiant ne sont pas correctes, l'utilisateur 
+    est invité à les rentrer de nouveau.
+    \end{itemize}
+    }
+    {}    
+\\*
+
+\fiche
+	{Déconnexion de l'utilisateur}
+	{Utilisateur}
+	{L'utilisateur se déconnecte du SAUD}
+	{L'utilisateur est authentifié}
+	{L'utilisateur souhaite se déconnecter du SAUD}
+	{La déconnexion s'est effectuée avec succès}
+	{\begin{itemize}
+	    \item[]
+		\item[1.] Clique sur le lien/bouton déconnexion.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Vide la session de l'utilisateur pour le déconnecter et 
+		supprime les éventuels cookies.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+	{}    
+\\*
+
+\fiche
+	{Suppression d'un compte utilisateur}
+	{Utilisateur}
+	{L'utilisateur supprime son compte}
+	{L'utilisateur possède un compte et est authentifié}
+	{L'utilisateur souhaite supprimer son compte}
+	{La suppression du compte s'est effectuée avec succès}
+	{\begin{itemize}
+		\item[1.] Clique sur le lien/bouton "Supprimer son compte"
+        \item[3.] Entre son mot de passe et valide la suppression
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un le formulaire de suppression de compte.
+		\item[4.] Vérifie le mot de passe de l'utilisateur.
+        \item [5.] Envoie un mail à l'utilisateur pour lui signifier la
+suppression du compte
+	\item[6.] Supprime les données présentes de l'utilisateur dans la
+base
+         de données.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[4.] Tant que le mot de passe est invalide, l'utilisateur doit le
+retaper.
+    \end{itemize}
+    }
+	{}
+\\*
+
+\fiche
+	{Modification de l'adresse mail}
+	{Utilisateur}
+	{L'utilisateur modifie son adresse mail}
+	{L'utilisateur possède un compte et est authentifié}
+	{L'utilisateur souhaite modifier son adresse mail}
+	{La modification de l'adresse mail s'est effectuée avec succès}
+	{\begin{itemize}
+		\item[1.] Clique sur le lien/bouton "Modifier son adresse mail"
+        \item[3.] Entre sa nouvelle adresse ainsi que la réponse à sa question
+et valide
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un le formulaire de suppression de compte
+		\item[4.] Modifie dans la base la nouvelle adresse de l'utilisateur
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[5.] Tant que l'adresse mail n'est pas une adresse valide et que la
+réponse à la question est incorrecte.
+    \end{itemize}
+    }
+	{}
+\\*
+
+\fiche
+	{Modification du mot de passe}
+	{Utilisateur}
+	{L'utilisateur modifie son mot de passe}
+	{L'utilisateur possède un compte et est authentifié}
+	{L'utilisateur souhaite modifier son mot de passe}
+	{La modification de le mot de passe s'est effectuée avec succès}
+	{\begin{itemize}
+	      \item[]
+		\item[1.] Clique sur le lien/bouton "Modifier son mot de passe"
+        \item[3.] Entre son mot de passe actuel, ainsi que son nouveau mot de 
+        passe deux fois et valide le formulaire
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un le formulaire de modification de mot de passe.
+		\item[4.] Vérifie le mot de passe de l'utilisateur
+        \item [5.] modifie le mot de passe de l'utilisateur
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[5.] Tant que le mot de passe est invalide, l'utilisateur doit le retaper.
+    \end{itemize}
+    }
+	{}
+\\*
+
+\fiche
+	{Modification de la question secrête}
+	{Utilisateur}
+	{L'utilisateur modifie sa question secrête}
+	{L'utilisateur possède un compte et est authentifié}
+	{L'utilisateur souhaite modifier sa question secrête}
+	{La modification de la question secrête s'est effectuée avec succès}
+	{\begin{itemize}
+		\item[1.] Clique sur le lien/bouton "Modifier ma question secrête"
+        \item[3.] Entre l'intitulé de question ainsi que sa réponse et valide
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un le formulaire de modification de la question
+		secrête
+		\item[4.] Entre en base de données l'intitulé et la réponse de la 
+		question s'ils sont conforme à la syntaxe attendue
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[5.] Tant que l'intitulé et la réponse à la  question secrête ne 
+    correspondent pas à la syntaxe attendue, l'utilisateur est invité à les 
+    retaper 
+    \end{itemize}
+    }
+	{}
+\\*
+
+\fiche
+	{Modifie son mot de passe}
+	{Utilisateur}
+	{L'utilisateur souhaite modifié son mot de passe}
+	{L'utilisateur possède un compte et n'est pas authentifié}
+	{L'utilisateur souhaite modifié son mot de passe}
+	{L'utilisateur a modifié son mot de passe}
+	{\begin{itemize}
+	    \item[]
+		\item[1.] Clique sur le lien/bouton "Modification de mot de
+passe"
+        \item[3.] Entre son adresse mail et répond à sa question
+        \item[5.] Suit le lien présent dans le mail
+        \item[7.] Entre un nouveau mot de passe.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un le formulaire d'oublie de mot de passe
+		\item[4.] Vérifie les données entrées et envoie un mail à l'adresse de 
+		l'utilisateur
+		\item[6.] Redirige l'utilisateur vers un formulaire de mot de passe
+		\item[8.] Vérifie le mot de passe et entre celui-ci dans la base de 
+		données.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[4.] Tant que la réponse est incorrecte, l'utilisateur est invité à la
+    retaper
+    \item[8.] Tant que le mot de passe ne correspond pas à la syntaxe attendue,
+     l'utilisateur doit en retaper un nouveau.
+    \end{itemize}
+    }
+	{\begin{itemize}
+	\item[]
+	\item[6.] Si le lien du mail n'est pas suivie avant la fin de la session, 
+	l'utilisateur devra réitérer la procédure
+	\item[6.] Si le lien est suivi après la fin de la session, l'utilisateur est
+	redirigé vers le formulaire d'oublie de mot de passe.
+	\end{itemize}
+	}
+
+\subsection{Authentification sur un site quelconque par le biais du SAUD}
+Un utilisateur enregistré sur un SAUD peut créer un compte sur un site quelconque
+en spécifiant l'utilisation de l'authentification externe.
+
+Une fois le compte créer sur ce site, il peut désormais s'y connecter en s'authentifiant
+par l'intermédiaire du SAUD. Un utilisateur peut créer plusieurs compte avec authenficiation
+externe sur un même site.\\
+
+\fiche
+	{Création d'un compte sur un site quelconque avec AE}
+	{Utilisateur}
+	{L'utilisateur crée un compte en remplissant un formulaire et en cochant la mention
+    "Authentification externe"}
+	{L'utilisateur dispose d'un compte sur un SAUD et le site quelconque doit proposer le service d'authentification externe}
+	{}
+	{La création du compte s'est effectuée avec succès}
+	{\begin{itemize}
+        \item[]
+		\item[1.] Clique sur le lien/bouton "Créer un compte"
+        \item[3.] Remplit le formulaire du site hormis le champs \emph{mot de
+passe} et donne pour identifiant, son adresse SAUD.
+        \item[4.] Valide l'envoi formulaire.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie le formulaire de création de compte.
+		\item[5.] Vérifie les données du formulaire, la syntaxe de
+l'identifiant doit correspondre à un identifiant SAUD
+		\item[6.] Envoie une requête au SAUD pour savoir si l'utilisateur est authentifié.
+        \item[7.] Créer le compte.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[5.] Si l'identifiant n'est pas conforme à la syntaxe attendue
+    l'utilisateur est invité à le réentrer.
+    \item[5.] S'il y a plusieurs idenfiant interne pour un identifiant externe, il y a ambiguïté,
+    l'utilisateur est donc invité à préciser l'identifiant interne.
+    \item[6.] Si la reponse du SAUD est négative, le site redirige l'utilisateur sur le SAUD pour 
+    qu'il s'authentifie.
+    \item[6.] Si l'adresse dans l'identifiant ne pointe pas vers une adresse
+de SAUD valide.
+    \end{itemize}
+    }
+    {}
+\\*
+\\*
+
+\fiche
+	{Connexion sur un site quelconque avec AE}
+	{Utilisateur}
+	{L'utilisateur se connecte au site quelconque par le biais du SAUD}
+	{L'utilisateur dispose d'un compte sur un SAUD et sur le site quelconque et le site quelconque doit proposer le service d'authentification externe}
+	{}
+	{La connexion s'est effectuée avec succès}
+	{\begin{itemize}
+        \item[]
+		\item[1.] Rempli uniquement le champs \emph{identifiant} avec
+        son adresse SAUD et valide la connexion en laissant vide
+        le champs \emph{mot de passe}.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie une requête au SAUD pour savoir si l'utilisateur est authentifié.
+        \item[3.] Valide la connexion de l'utilisateur.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+	{\begin{itemize}
+    \item[]
+    \item[2.] Si la reponse du SAUD est négative : deux cas possibles : 
+	\begin{itemize}
+	\item[-]le login existe, donc le site redirige l'utilisateur sur le SAUD pour qu'il s'authentifie;
+	\item[-]le login n'existe pas, une erreur est renvoyé au site.
+	\end{itemize}
+    \end{itemize}
+    }
+
+\subsection{Administration du SAUD}
+À l'installation du SAUD, un  compte administrateur est créé. Ce compte permet 
+de supprimer les utilisateurs.
+
+\fiche
+	{Administration du SAUD}
+	{Administrateur}
+	{L'administrateur peut supprimer les comptes des utilisateurs du SAUD}
+	{Il y a un compte administrateur sur ce SAUD}
+	{}
+	{L'administration s'est bien passée}
+	{\begin{itemize}
+        \item[]
+		\item[1.] L'administrateur clique sur "Panneau d'administration"
+		\item[3.] L'administrateur supprime un ou plusieurs utilisateurs et valide
+		l'envoi du formulaire
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Envoie un formulaire contenant l'intégralité des utilisateurs
+        \item[4.] Supprime les utilisateurs choisie par l'administrateur
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+	{}
+
+\subsection{Installation d'un SAUD personnel}
+Un utilisateur peut choisir d'utiliser un SAUD déjà existant ou bien
+de d'installer le sien. Pour installer son SAUD, il doit télécharger
+le paquetage requis et l'exécuter sur sa machine.\\
+
+\fiche
+	{Installation du paquetage d'installation du SAUD}
+	{Utilisateur}
+	{L'utilisateur installe son SAUD personnel sur sa machine}
+	{L'utilisateur doit avoir un environnement adéquat pour installer le SAUD}
+	{Téléchargement du paquetage}
+	{L'installation s'est terminée}
+	{\begin{itemize}
+        \item[]
+		\item[1.] L'utilisateur télécharge et installe le paquetage;
+		\item[4.] L'utilisateur entre le mot de passe administrateur.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] Installation du paquetage;
+		\item[3.] Le programme d'installation invite l'utilisateur à entrer
+		un mot de passe pour le compte administrateur conformément à la politique 
+		des mots de passe du SAUD;
+		\item[5.] Création du compte administrateur.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[2.] Si les logiciels apache, mysql et php ne sont pas installés, le 
+    système demande à l'utilisateur de les installer;
+    \item[3.] Tant que le mot de passe saisie par l'utilisateur est trop faible
+    il doit en entrer un de nouveau.
+    \end{itemize}
+    }
+	{}
+	
+\pagebreak
+\subsection{Exigences fonctionnelles détaillées}
+
+\subsubsection{Le protocole}
+
+\newcounter{FNcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur ne donne son mot de passe qu'au SAUD &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'authentification sur un service externe ne peut se
+faire qu'à partir d'un emplacement donnée &
+\cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Plusieurs authenfication simultanées sont impossible, 
+le SAUD déconnecte la session en cours en cas d'une autre demande
+d'authenfication &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & À chaque tentative de connexion d'un client sur un
+service externe, celui-ci vérifie l'authenticité du SAUD associé au client &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Les échanges et dialogues entre service externe, SAUD
+et utilisateur sont sécurisés &
+\cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\subsubsection{Le SAUD}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Le SAUD est accessible au travers d'une page web &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & La page d'accueil du site propose un formulaire
+d'authentification
+ainsi que le lien/bouton "Creer un compte"  & \cellcolor{green!50}Indispensable
+\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un visiteur peut créer un compte utilisateur &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un login unique, un mot de passe, une question secrête
+ainsi que sa réponse et une adresse mail valide est essentiel pour créer un
+compte utilisateur
+ & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Quand un visiteur créé un compte d'utilisateur, un mail
+lui est envoyé
+et sans accusé de reception, le compte n'est pas créé &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Si un utilisateur veut suprimer son compte, il doit
+entrer son mot de passe
+ & \cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut se déconnecter du SAUD en cliquant
+sur un lien & \cellcolor{red!50}Important \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut modifier son mot de passe &
+\cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut changer sa question secrête
+(intitulé et réponse) & \cellcolor{blue!50}Secondaire\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut modifier son adresse mail &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut se connecter à un site quelconque
+ en donnant son adresse SAUD dans le champs "identifiant" du site &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Un utilisateur peut créer un compte sur un site
+quelconque
+ en utilisant l'authentification externe & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Lorsqu'un utilisateur se connecte depuis une autre
+adresse IP pour la première fois, il doit répondre à sa question secrête et 
+rentrer son adresse mail & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut modifier son mot de passe
+peut entrer un nouveau en suivant la procédure adéquate &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'administrateur peut supprimer le compte de n'importe
+quel utilisateur & \cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'administrateur n'aura jamais accès aux mot de passes
+des utilisateurs  & \cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Il est possible de télécharger un paquetage
+d'installation d'un SAUD peronnel & \cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & Log de la dernière connexion à chaque nouvelle connexion
+& \cellcolor{blue!50}Secondaire \\
+\hline
+\end{longtable}
+\pagebreak
+
+\section{Exigences opérationnelles}
+
+\newcounter{FOcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & La délai maximum de réponse du SAUD est de deux secondes & \cellcolor{red!50}Important \\
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & Le SAUD peut supporter plus de 1000 utilisateurs
+ & \cellcolor{red!50}Important \\
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & Le SAUD peut gérer 100 connexions simultanées au maximum & \cellcolor{red!50}Important \\
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & \begin{itemize}
+\item le SAUD sera développé en Javascript, PHP et MySQL
+\item l'API sera développé en Javascript et PHP \end{itemize} & \cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & l'API sera aussi développée en JSP & \cellcolor{blue!50}Secondaire \\
+\hline
+\end{longtable}
+
+\section{Exigences d'interface}
+
+\newcounter{FIcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & L'interface utilisateur/SAUD -> authentification
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & L'interface administrateur
+& \cellcolor{red!50}Secondaire \\
+\hline
+\end{longtable}
+
+\section{Exigences de qualité}
+
+\newcounter{FQcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & La système sera livré pour le 31 mai 2012 & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Un manuel d'utilisation sera livré avec le système
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & La RFC du protocole sera fourni au client
+& \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences de réalisation}
+
+\newcounter{FRcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FRcount}{10}
+F-FR-\arabic{FRcount} & Une API sera développée pour permettre aux sites
+quelconques d'implanter le protocole d'authentification & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+
+\end{document}
