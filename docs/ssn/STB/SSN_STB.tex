@@ -97,7 +97,10 @@ Par conséquent, la terminologie utilisée correspond à celle de \emph{Facebook
 	\item[SN :] Social Network, représente le réseau social que nous avons 
     choisi comme support
     pour ce projet;
-    % Proxy ?
+    \item[Application Java :] programme gérant les traitements lourds 
+    (chiffrement) de l'extension et étant en relation avec la carte à puce.
+    \item[Extension :] programme incorporé dans le navigateur permettant
+    de manipuler les pages de \emph{Facebook}.
 \end{description}
 
 
@@ -148,11 +151,11 @@ fait partie des personnes autorisées, il peut lire le message.
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Le "proxy" chiffre le message avec une clef 
+		\item[2.] L'application Java chiffre le message avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] le "proxy" envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         ce message et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
@@ -178,9 +181,9 @@ fait partie des personnes autorisées, il peut lire le message.
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du message avec la clef publique de l'utilisateur;
-		\item[2.] le "proxy" déchiffre tout le message avec la clef
+		\item[2.] l'application Java déchiffre tout le message avec la clef
             de chiffrement.
 	\end{itemize}
 	}
@@ -219,11 +222,11 @@ par le réseau social.\\*
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Le "proxy" chiffre le document avec une clef 
+		\item[2.] L'application Java chiffre le document avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] le "proxy" envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         du document chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
@@ -251,9 +254,9 @@ par le réseau social.\\*
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du document avec la clef publique de l'utilisateur;
-		\item[2.] le "proxy" déchiffre tout le document avec la clef
+		\item[2.] l'application Java déchiffre tout le document avec la clef
             de chiffrement, la télécharge dans le cas ou ce n'est pas
             une image.
 	\end{itemize}
@@ -320,11 +323,11 @@ s'il fait partie des personnes autorisées.
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] Le "proxy" chiffre le commentaire avec une clef 
+		\item[2.] L'application Java chiffre le commentaire avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] le "proxy" envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         du commentaire chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
@@ -351,9 +354,9 @@ s'il fait partie des personnes autorisées.
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] Le "proxy" tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du commentaire avec la clef publique de l'utilisateur;
-		\item[2.] le "proxy" déchiffre le commentaire avec la clef
+		\item[2.] l'application Java déchiffre le commentaire avec la clef
             de chiffrement et l'affiche
 	\end{itemize}
 	}
@@ -369,159 +372,159 @@ s'il fait partie des personnes autorisées.
 	{}    
 
 \pagebreak
-\subsection{Exigences fonctionnelles détaillées}
-
-TODO
-
-\newcounter{FNcount}
-
-\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
-
-% Header for the first page of the table
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-\endfirsthead
-% Header for next pages of the table
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-\endhead
-
-%This is the footer for all pages except the last page of the table...
-\endfoot
-%This is the footer for the last page of the table...
-\endlastfoot
-
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur ne donne son mot de passe qu'au SAUD &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'authentification sur un service externe ne peut se
-faire qu'à partir d'un emplacement donnée &
-\cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Plusieurs authenfication simultanées sont impossible, 
-le SAUD déconnecte la session en cours en cas d'une autre demande
-d'authenfication &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & À chaque tentative de connexion d'un client sur un
-service externe, celui-ci vérifie l'authenticité du SAUD associé au client &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Les échanges et dialogues entre service externe, SAUD
-et utilisateur sont sécurisés &
-\cellcolor{green!50}Indispensable \\
-\hline
-\end{longtable}
-
-
-\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
-
-% Header for the first page of the table
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
-& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-\endfirsthead
-% Header for next pages of the table
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
-\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
-& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-\endhead
-
-%This is the footer for all pages except the last page of the table...
-\endfoot
-%This is the footer for the last page of the table...
-\endlastfoot
-
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Le SAUD est accessible au travers d'une page web &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & La page d'accueil du site propose un formulaire
-d'authentification
-ainsi que le lien/bouton "Creer un compte"  & \cellcolor{green!50}Indispensable
-\\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un visiteur peut créer un compte utilisateur &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un login unique, un mot de passe, une question secrête
-ainsi que sa réponse et une adresse mail valide est essentiel pour créer un
-compte utilisateur
- & \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Quand un visiteur créé un compte d'utilisateur, un mail
-lui est envoyé
-et sans accusé de reception, le compte n'est pas créé &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Si un utilisateur veut suprimer son compte, il doit
-entrer son mot de passe
- & \cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut se déconnecter du SAUD en cliquant
-sur un lien & \cellcolor{red!50}Important \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut modifier son mot de passe &
-\cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut changer sa question secrête
-(intitulé et réponse) & \cellcolor{blue!50}Secondaire\\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut modifier son adresse mail &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut se connecter à un site quelconque
- en donnant son adresse SAUD dans le champs "identifiant" du site &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Un utilisateur peut créer un compte sur un site
-quelconque
- en utilisant l'authentification externe & \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Lorsqu'un utilisateur se connecte depuis une autre
-adresse IP pour la première fois, il doit répondre à sa question secrête et 
-rentrer son adresse mail & \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut modifier son mot de passe
-peut entrer un nouveau en suivant la procédure adéquate &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'administrateur peut supprimer le compte de n'importe
-quel utilisateur & \cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'administrateur n'aura jamais accès aux mot de passes
-des utilisateurs  & \cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Il est possible de télécharger un paquetage
-d'installation d'un SAUD peronnel & \cellcolor{blue!50}Secondaire \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & Log de la dernière connexion à chaque nouvelle connexion
-& \cellcolor{blue!50}Secondaire \\
-\hline
-\end{longtable}
-\pagebreak
+%\subsection{Exigences fonctionnelles détaillées}
+%
+%TODO
+%
+%\newcounter{FNcount}
+%
+%\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+%
+%% Header for the first page of the table
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+%\endfirsthead
+%% Header for next pages of the table
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+%\endhead
+%
+%%This is the footer for all pages except the last page of the table...
+%\endfoot
+%%This is the footer for the last page of the table...
+%\endlastfoot
+%
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & L'utilisateur ne donne son mot de passe qu'au SAUD &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & L'authentification sur un service externe ne peut se
+%faire qu'à partir d'un emplacement donnée &
+%\cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Plusieurs authenfication simultanées sont impossible, 
+%le SAUD déconnecte la session en cours en cas d'une autre demande
+%d'authenfication &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & À chaque tentative de connexion d'un client sur un
+%service externe, celui-ci vérifie l'authenticité du SAUD associé au client &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Les échanges et dialogues entre service externe, SAUD
+%et utilisateur sont sécurisés &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\end{longtable}
+%
+%
+%\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+%
+%% Header for the first page of the table
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+%& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+%\endfirsthead
+%% Header for next pages of the table
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+%& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+%\endhead
+%
+%%This is the footer for all pages except the last page of the table...
+%\endfoot
+%%This is the footer for the last page of the table...
+%\endlastfoot
+%
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Le SAUD est accessible au travers d'une page web &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & La page d'accueil du site propose un formulaire
+%d'authentification
+%ainsi que le lien/bouton "Creer un compte"  & \cellcolor{green!50}Indispensable
+%\\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un visiteur peut créer un compte utilisateur &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un login unique, un mot de passe, une question secrête
+%ainsi que sa réponse et une adresse mail valide est essentiel pour créer un
+%compte utilisateur
+% & \cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Quand un visiteur créé un compte d'utilisateur, un mail
+%lui est envoyé
+%et sans accusé de reception, le compte n'est pas créé &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Si un utilisateur veut suprimer son compte, il doit
+%entrer son mot de passe
+% & \cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut se déconnecter du SAUD en cliquant
+%sur un lien & \cellcolor{red!50}Important \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut modifier son mot de passe &
+%\cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut changer sa question secrête
+%(intitulé et réponse) & \cellcolor{blue!50}Secondaire\\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut modifier son adresse mail &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut se connecter à un site quelconque
+% en donnant son adresse SAUD dans le champs "identifiant" du site &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Un utilisateur peut créer un compte sur un site
+%quelconque
+% en utilisant l'authentification externe & \cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Lorsqu'un utilisateur se connecte depuis une autre
+%adresse IP pour la première fois, il doit répondre à sa question secrête et 
+%rentrer son adresse mail & \cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & L'utilisateur peut modifier son mot de passe
+%peut entrer un nouveau en suivant la procédure adéquate &
+%\cellcolor{green!50}Indispensable \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & L'administrateur peut supprimer le compte de n'importe
+%quel utilisateur & \cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & L'administrateur n'aura jamais accès aux mot de passes
+%des utilisateurs  & \cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Il est possible de télécharger un paquetage
+%d'installation d'un SAUD peronnel & \cellcolor{blue!50}Secondaire \\
+%\hline
+%\addtocounter{FNcount}{10}
+%F-FN-\arabic{FNcount} & Log de la dernière connexion à chaque nouvelle connexion
+%& \cellcolor{blue!50}Secondaire \\
+%\hline
+%\end{longtable}
+%\pagebreak
 
 \section{Exigences opérationnelles}
 
@@ -567,7 +570,7 @@ F-FO-\arabic{FOcount} & Le chiffrement n'est pas trop long (> 2s) & \cellcolor{g
 
 \hline
 \addtocounter{FIcount}{10}
-F-FI-\arabic{FIcount} & Notre système d'interface avec \emph{Mozilla Firefox}
+F-FI-\arabic{FIcount} & Notre système s'interface avec \emph{Mozilla Firefox}
 & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
