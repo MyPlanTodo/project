@@ -228,7 +228,7 @@ aux deux sous-projets) :
 Chacune de ces étapes comporte des modules qui seront développés en binôme
 afin, d'une part, de faire en sorte que le plus de programmeurs possible
 maitrisent le code source et, d'autre part, qu'une absence ne nuise pas au
-processus de développement.
+processus de développement. 
 
 \section{Organisation et responsabilités}
 
@@ -300,6 +300,9 @@ processus de développement.
 
 \section{Évalutation du projet et dimensionnement des moyens}
 Le projet va être organisé en quatre versions (une par itération).
+À la fin de chaque version, les applications sont testées 
+conforméments  aux tests décrits dans les cahiers de recettes.
+
 Voici un résumé de chaque version.
 
 \paragraph{Version 0.1} 
@@ -326,17 +329,20 @@ La version finale correspond à la fusion des deux sous-projets.
 
 \section{Planning général}
 \begin{center}
-\begin{figure}[h]
-\caption{Diagramme de Gant, tâches}
+\begin{figure}[!h]
+\includegraphics[scale=0.75]{ganttArray.png}
+\caption{Diagramme de Gantt, tâches}
 \end{figure}
 % \newpage
-\begin{figure}[h]
-\caption{Diagramme de Gant, graphes}
+\begin{figure}[!h]
+\includegraphics[scale=0.75]{ganttDiag.png}
+\caption{Diagramme de Gantt, graphes}
 \end{figure}
 \end{center}
-Sur ce graphe, on peut observer trois couleurs, chaque couleur désigne une
-version du logiciel différente (rouge : 0.1, bleu-vert : 0.2, violet : 0.3, bleu : 1.0
-(finale).
+Sur ce graphe, on peut observer trois couleurs, le tâche bleu correspond
+aux tâches correspondants au sous-projets \emph{smartCards}, le rouge aux
+tâches du sous-projets \emph{Secure Social Network} et enfin le violet
+correspond à la tâche fusion.
 \section{Procédés de gestion}
 
 \subsection{Gestion de la documentation}
