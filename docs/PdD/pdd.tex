@@ -84,14 +84,14 @@ Mozilla Firefox permettant à l'utilisateur de gérer le chiffrement de
 ses données sur le réseau social Facebook. Cette extension utilisera une 
 application Java pour assurer les traitements lourds. Pour gérer 
 l'authentification forte, cette application dialoguerait avec une carte à 
-puce qui contiendrai les données sensibles de l'utilisateur 
+puce qui contiendrait les données sensibles de l'utilisateur 
 (login/mot de passe), clef privée, ...
 
 Le dialogue avec cette carte à puce se fera par l'intermédiaire d'un
 client Java.
 
 \paragraph{}
-Ce projet est à une fusion de deux projets :
+Ce projet est une fusion de deux projets :
 \begin{itemize}
     \item Étude et mise en \oe{}uvre de solutions d'authentifications 
     et de signatures par cartes à puce, proposé par Magali \textsc{Bardet};
@@ -102,7 +102,7 @@ Ce projet est à une fusion de deux projets :
 \paragraph{}
 Étant un projet universitaire, ce travail a pour but de nous apprendre
 à gérer un projet, de sa partie analyse jusqu'à sa complète réalisation. Pour
-cette même raison, le projet devra être impérativement terminé avant la 04 
+cette même raison, le projet devra être impérativement terminé avant le 04 
 mars 2013.
 
 \section{Documents applicables et de références}
@@ -111,7 +111,7 @@ mars 2013.
  \item spécification technique de besoin;
  \item cahier des recettes;
  \item document d'architecture logicielle;
- \item analyse des risques
+ \item analyse des risques;
  \item plan qualité;
 \end{itemize}
 
@@ -121,8 +121,8 @@ mars 2013.
 	\item[CdR :] Cahier de Recettes;
 	\item[DAL :] Document d'Architecture Logicielle;
 	\item[PdD :] Plan de développement;
-	\item[STB :] Spécification Technique de Besoin;
-	\item[SC :] Smart Cards, relatif au sous-projet sur
+	\item[STB :] Spécification Technique de Besoins;
+	\item[SC :] SmartCards, relatif au sous-projet sur
     les cartes à puce;
 	\item[SSN :] Secure Social Network, relatif au sous-projet
     sur la sécurisation d'un réseau social
@@ -201,8 +201,8 @@ Responsabilité : clients et testeurs.
 
 \paragraph{}
 Cette méthodologie de développement suit la méthode XP (eXtreme Programming). 
-Durant le développement de ce projet, il y aura quatre itérations. Les
-trois premières itérations sont chacune divisées en deux (correspondant
+Durant le développement de ce projet, il y aura quatre itérations. Chacune des
+trois premières itérations est divisée en deux (correspondant
 aux deux sous-projets) : 
 \begin{enumerate}
  \item \begin{itemize}
@@ -218,7 +218,7 @@ aux deux sous-projets) :
        \end{itemize}
  \item \begin{itemize}
             \item rédaction de documentation et développement de 
-            \emph{softCard};
+            \emph{SoftCard};
             \item implantation du protocole \texttt{xpcom} permettant
             le dialogue entre l'application Java et l'extension
        \end{itemize}
@@ -300,23 +300,23 @@ processus de développement.
 
 \section{Évalutation du projet et dimensionnement des moyens}
 Le projet va être organisé en quatre versions (une par itération).
-À la fin de chaque version, les applications sont testées 
-conforméments  aux tests décrits dans les cahiers de recettes.
+À la fin de chaque version, les applications seront testées 
+conformément aux tests décrits dans les cahiers de recettes.
 
 Voici un résumé de chaque version.
 
 \paragraph{Version 0.1} 
 La première version du projet consistera en trois composants, une application
 permettant de faire générer des nombres pseudo-aléatoire par la
-carte et d'y stocker des informations de, une extension incorporée sur 
+carte et d'y stocker des informations, d'une extension incorporée sur 
 le navigateur Mozilla Firefox et une application Java qui permet chiffrer 
 ou de déchiffrer des données.
 
 \paragraph{Version 0.2}  
 Dans la deuxième version, l'application et la carte à puce doivent pouvoir
-chiffrer et déchiffrer des données, de plus, il devrait être possible
-de stocker des données sur la partie cachée. Pour la partie 
-\emph{Secure Social Network}, l'extension devrait pouvoir injecter
+chiffrer et déchiffrer des données. De plus, il devrait être possible
+de stocker des données, tels que des certificats, sur la partie cachée. Pour la
+partie \emph{Secure Social Network}, l'extension devrait pouvoir injecter
 du code dans la page du réseau social tandis qu'en parallèle, l'application
 Java devrait pouvoir stocker des informations de manière permanente.
 
@@ -339,9 +339,9 @@ La version finale correspond à la fusion des deux sous-projets.
 \caption{Diagramme de Gantt, graphes}
 \end{figure}
 \end{center}
-Sur ce graphe, on peut observer trois couleurs, le tâche bleu correspond
-aux tâches correspondants au sous-projets \emph{smartCards}, le rouge aux
-tâches du sous-projets \emph{Secure Social Network} et enfin le violet
+Sur ce graphe, on peut observer trois couleurs, le tâche bleue correspond
+aux tâches correspondants au sous-projet \emph{smartCards}, le rouge aux
+tâches du sous-projet \emph{Secure Social Network} et enfin le violet
 correspond à la tâche fusion.
 \section{Procédés de gestion}
 
@@ -352,7 +352,7 @@ Il y aura quatre documentations livrables :
  du groupe \emph{smartCards};
  \item le manuel d'utilisation global de l'application rédigé par l'équipe 
  testeur, des deux groupes;
- \item un document décrivant comment a été développé les applications pour
+ \item un document décrivant comment ont été développées les applications pour
  la carte à puce et comment sont-elles installés;
  \item un document sur les protocoles cryptographiques mis en \oe{}uvre
  dans ce projet.
@@ -361,7 +361,7 @@ Il y aura quatre documentations livrables :
 Les documents utilisées tout au long de la réalisation de ce projet sont : 
 (les relecteurs sont encore à préciser)
 \begin{itemize}
- \item Analyse des risques (AdR) rédigé par \textsc{Yicheng};
+ \item Analyse des risques (AdR) rédigée par Yicheng \textsc{Gao};
  \item Cahier des recettes \emph{smartCard} (CdR) rédigé par Giovanni 
 \textsc{Huet} et Romain \textsc{Pignard};
  \item Cahier des recettes \emph{Secure Social Network} (CdR) rédigé par 
@@ -371,17 +371,18 @@ Les documents utilisées tout au long de la réalisation de ce projet sont :
  \item Document d'architecture logicielle \emph{Secure Social Network} (DAL) 
  rédigé par Zakaria \textsc{Addi} et Maxence \textsc{Péchoux};
  \item Plan de développement (PdD) rédigé par Florian \textsc{Guilbert};
- \item Spécification technique des besoins \emph{smartCard} (CdR) rédigé par 
+ \item Spécification technique des besoins \emph{smartCard} (CdR) rédigée par 
  Giovanni \textsc{Huet} et Romain \textsc{Pignard};
  \item Spécification technique des besoins \emph{Secure Social Network} (CdR) 
-    rédigé par Baptiste \textsc{Dolbeau} et Florian \textsc{Guilbert};
+    rédigée par Baptiste \textsc{Dolbeau} et Florian \textsc{Guilbert};
 \end{itemize}
 
 \subsection{Gestion des configurations}
 Toutes les versions du programmes seront gérées par le logiciel de versionnage 
 \texttt{git}. Toutes les machines servant à développer devront
-avoir les même configurations du logiciel Java (1.5). De même, les 
-ordinateurs clients devront aussi posséder cette version de Java.
+avoir les même configurations du logiciel Java (1.5). De même, mais cela reste
+à confirmer, les ordinateurs clients devront aussi posséder cette version de
+Java.
 
 \section{Revues et points clefs}
 Pas de revues officielles de prévues.
