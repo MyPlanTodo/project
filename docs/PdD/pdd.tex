@@ -130,6 +130,8 @@ mars 2013.
 	\item[SoftCard :] application qui assure un passerelle entre
     le lecteur de carte et l'ordinateur;
     \item[Extension :] programme incorporé dans le navigateur.
+    \item[FaceCrypt :] application Java effectuant les traitements lourds 
+    de l'extension.
 \end{description}
 
 \section{Méthodologie et développement}
@@ -207,23 +209,23 @@ aux deux sous-projets) :
 \begin{enumerate}
  \item \begin{itemize}
             \item établir un dialogue entre le terminal et la carte;
-            \item développer une extension et une application Java implantant
+            \item développer une extension et l'application Java (FaceCrypt) implantant
            le chiffrement et le déchiffrement de données; 
        \end{itemize}
  \item \begin{itemize}
             \item utiliser les fonctions cryptographiques de la carte, 
             \item développer les systèmes d'injection de code dans l'extension,
-            gérer la persistance de données dans l'application Java, étudier
+            gérer la persistance de données dans FaceCrypt, étudier
             le protocole \texttt{xpcom};
        \end{itemize}
  \item \begin{itemize}
             \item rédaction de documentation et développement de 
             \emph{SoftCard};
             \item implantation du protocole \texttt{xpcom} permettant
-            le dialogue entre l'application Java et l'extension
+            le dialogue entre FaceCrypt et l'extension
        \end{itemize}
  \item fusion des projets : implantation du dialogue entre le \emph{softCard}
- et l'application Java.
+ et FaceCrypt.
 \end{enumerate}
 Chacune de ces étapes comporte des modules qui seront développés en binôme
 afin, d'une part, de faire en sorte que le plus de programmeurs possible
@@ -298,7 +300,7 @@ processus de développement.
  \item témoigne de l'avancement du projet.
 \end{itemize}
 
-\section{Évalutation du projet et dimensionnement des moyens}
+\section{Évaluation du projet et dimensionnement des moyens}
 Le projet va être organisé en quatre versions (une par itération).
 À la fin de chaque version, les applications seront testées 
 conformément aux tests décrits dans les cahiers de recettes.
@@ -309,7 +311,7 @@ Voici un résumé de chaque version.
 La première version du projet consistera en trois composants, une application
 permettant de faire générer des nombres pseudo-aléatoire par la
 carte et d'y stocker des informations, d'une extension incorporée sur 
-le navigateur Mozilla Firefox et une application Java qui permet chiffrer 
+le navigateur Mozilla Firefox et une application Java (FaceCrypt) qui permet chiffrer 
 ou de déchiffrer des données.
 
 \paragraph{Version 0.2}  
@@ -317,12 +319,12 @@ Dans la deuxième version, l'application et la carte à puce doivent pouvoir
 chiffrer et déchiffrer des données. De plus, il devrait être possible
 de stocker des données, tels que des certificats, sur la partie cachée. Pour la
 partie \emph{Secure Social Network}, l'extension devrait pouvoir injecter
-du code dans la page du réseau social tandis qu'en parallèle, l'application
-Java devrait pouvoir stocker des informations de manière permanente.
+du code dans la page du réseau social tandis qu'en parallèle, FaceCrypt 
+devrait pouvoir stocker des informations de manière permanente.
 
 \paragraph{Version 0.3}
 La troisième version se résume principalement en la mise en place
-d'un dialogue entre extension et application Java.
+d'un dialogue entre l'extension et FaceCrypt.
 
 \paragraph{Version 1.0, finale} 
 La version finale correspond à la fusion des deux sous-projets.
@@ -330,12 +332,12 @@ La version finale correspond à la fusion des deux sous-projets.
 \section{Planning général}
 \begin{center}
 \begin{figure}[!h]
-\includegraphics[scale=0.75]{ganttArray.png}
+\includegraphics[scale=0.70]{ganttArray.png}
 \caption{Diagramme de Gantt, tâches}
 \end{figure}
 % \newpage
 \begin{figure}[!h]
-\includegraphics[scale=0.75]{ganttDiag.png}
+\includegraphics[scale=0.70]{ganttDiag.png}
 \caption{Diagramme de Gantt, graphes}
 \end{figure}
 \end{center}

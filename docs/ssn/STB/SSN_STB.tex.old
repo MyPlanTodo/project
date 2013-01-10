@@ -1,58 +1,49 @@
 %!TEX TS-program = xelatex
 %!TEX encoding = UTF-8 Unicode
-
 \documentclass[a4paper,11pt,french]{article}
 
-%Import des packages utilisés pour le document
 \usepackage[latin1]{inputenc}
 \usepackage[french]{babel}
 \usepackage{chngpage}
-\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
-\usepackage{graphicx, amssymb, color, listings}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
 \usepackage{fontspec,xltxtra,xunicode,color}
-\usepackage{tabularx, longtable}
+\usepackage{tabularx}
 \usepackage[table]{xcolor}
 \usepackage{fancyhdr}
-\usepackage{tikz}
-\usetikzlibrary{shapes}
-\usepackage{lastpage}
+\usepackage{longtable}
+\usepackage{lastpage} %pour compter le nombre de pages
 
 \definecolor{gris}{rgb}{0.95, 0.95, 0.95}
 
-%Redéfinition des marges
+\hypersetup{breaklinks=true}
+
+
 \addtolength{\hoffset}{-2cm}
 \addtolength{\textwidth}{4cm}
 \addtolength{\topmargin}{-2cm}
-\addtolength{\textheight}{1cm}
+\addtolength{\textheight}{4cm}
 \addtolength{\headsep}{0.8cm} 
-\addtolength{\footskip}{1cm}
+\addtolength{\footskip}{-0.3cm}
+
+%les structures de gestion de projet
+\usepackage{../../../lib/tex/structures} 
 
 
-%Import page de garde et structures pour la gestion de projet
-\usepackage{res/structures} 
-
-%Variables
-\def\matiere{Conduite de Projet}
-\def\filiere{Master 2 SSI}
-\def\projectDesc{Smart Social Network}
-\def\projectName{\emph{SSN}~}
-\def\completeName{\projectDesc ~- \projectName}
-\def\docType{Spécification technique des besoins}
-\def\docDate{\today}
+\def\projectName{Smart Social Network}
+\def\docType{Spécification Technique de Besoin}
 \def\version{0.1}
-\def\author{Florian \textsc{Guilbert}}
+\def\author{\begin{tabular}{l}Baptiste \textsc{Dolbeau},\\Florian \textsc{Guilbert}\end{tabular}}
+\def\dateStb{\today}
 \def\checked{}
 \def\approved{}
 
 
-% -- Début du document -- %
+
 \begin{document}
-%Page de garde
 \makeFirstPage
 \clearpage
-
-%Tableau de mises à jour
 \vspace*{1cm}
+%Tableau de mises à jour
 \begin{center}
 \textbf{\huge{MISES À JOUR}}\\
 \vspace*{3cm}
@@ -60,19 +51,15 @@
 	\hline
 	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
 	\hline
-	0.1 & 07/01/2013 & Création\\
-	\hline
-	&&\\
-	\hline
-	&&\\
+	0.1 & 02/01/2013 & Création\\
 	\hline
 	\end{tabularx}
 \end{center}
 
-%La table des matières
 \clearpage
 \tableofcontents
 \clearpage
+
 
 \section{Objet}
 \renewcommand\labelitemi{\textbullet} %style des puces
@@ -110,11 +97,12 @@ Par conséquent, la terminologie utilisée correspond à celle de \emph{Facebook
 	\item[SN :] Social Network, représente le réseau social que nous avons 
     choisi comme support
     pour ce projet;
-    \item[FaceCrypt :] application Java gérant les traitements lourds 
+    \item[Application Java :] programme gérant les traitements lourds 
     (chiffrement) de l'extension et étant en relation avec la carte à puce.
     \item[Extension :] programme incorporé dans le navigateur permettant
     de manipuler les pages de \emph{Facebook}.
 \end{description}
+
 
 \section{Exigences fonctionnelles}
 
@@ -147,6 +135,7 @@ Inversement, lorsqu'un de ses amis poste (sur son mur) un message chiffré,
 l'utilisateur peut tenter de le déchiffrer. Si, l'utilisateur
 fait partie des personnes autorisées, il peut lire le message.
 
+
 \fiche
 	{Chiffrement d'un message sur son mur}
 	{Utilisateur}
@@ -162,24 +151,23 @@ fait partie des personnes autorisées, il peut lire le message.
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] FaceCrypt chiffre le message avec une clef 
+		\item[2.] L'application Java chiffre le message avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         ce message et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
-    }
+	}
 	{}
 \flots
-    {}
     {\begin{itemize}
     \item[]
     \item[2.] Si une des personnes choisie n'a pas de clef publique,
         elle ne pourra pas déchiffrer le message;
     \end{itemize}
     }
-    {}
+	{}    
 \\*
 
 \fiche
@@ -193,9 +181,9 @@ fait partie des personnes autorisées, il peut lire le message.
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du message avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre tout le message avec la clef
+		\item[2.] l'application Java déchiffre tout le message avec la clef
             de chiffrement.
 	\end{itemize}
 	}
@@ -234,11 +222,11 @@ par le réseau social.\\*
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] FaceCrypt chiffre le document avec une clef 
+		\item[2.] L'application Java chiffre le document avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         du document chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
@@ -266,9 +254,9 @@ par le réseau social.\\*
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du document avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre tout le document avec la clef
+		\item[2.] l'application Java déchiffre tout le document avec la clef
             de chiffrement, la télécharge dans le cas ou ce n'est pas
             une image.
 	\end{itemize}
@@ -337,11 +325,11 @@ s'il fait partie des personnes autorisées.
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] FaceCrypt chiffre le commentaire avec une clef 
+		\item[2.] L'application Java chiffre le commentaire avec une clef 
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
+		\item[3.] l'application Java envoi ensuite une concaténation de 
         du commentaire chiffré et des clefs chiffrées aux serveurs de Facebook.
 	\end{itemize}
 	}
@@ -368,9 +356,9 @@ s'il fait partie des personnes autorisées.
     {}
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
             du commentaire avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre le commentaire avec la clef
+		\item[2.] l'application Java déchiffre le commentaire avec la clef
             de chiffrement et l'affiche
 	\end{itemize}
 	}
@@ -498,7 +486,7 @@ F-FI-\arabic{FIcount} & Notre système s'interface avec \emph{Mozilla Firefox}
 & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FIcount}{10}
-F-FI-\arabic{FIcount} & Notre système fonctionnera comme un \emph{patch} : il pourra fonctionner sur d'un compte déjà existant
+F-FI-\arabic{FIcount} & Notre système fonctionnera comme un \emph{patch} : il pourra fonctionner à partir d'un compte déjà existant
 & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
@@ -531,32 +519,29 @@ F-FQ-\arabic{FQcount} & Un manuel d'utilisation sera livré avec le système
 \hline
 \end{longtable}
 
-% TODO
-%\section{Exigences de réalisation}
-%
-%\newcounter{FRcount}
-%
-%\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
-%
-%% Header for the first page of the table
-%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-%\endfirsthead
-%% Header for next pages of the table
-%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-%\endhead
-%
-%%This is the footer for all pages except the last page of the table...
-%\endfoot
-%%This is the footer for the last page of the table...
-%\endlastfoot
-%
-%\hline
-%\addtocounter{FRcount}{10}
-%F-FR-\arabic{FRcount} &  & \cellcolor{green!50}Indispensable \\
-%\hline
-%\end{longtable}
+\section{Exigences de réalisation}
 
+\newcounter{FRcount}
 
-\end{document}
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FRcount}{10}
+F-FR-\arabic{FRcount} & TODO & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
 
 \end{document}
