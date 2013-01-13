@@ -1,0 +1,43 @@
+Etapes pour les livrables
+
+1.
+    sc      Génération d'un nombre pseudo-aléatoire 
+            Stokage d'une information sur la carte
+   ssn      Appli dialogant avec facebook
+                -> avec injection de code
+
+2.
+    sc      Certificat dans cartes
+   ssn      Intégrer systèmes de Tag
+                -> chiffrement/déchiffrement
+
+3.
+    lier sc - snn
+
+
+Besoin (STB)
+
+    sc
+        -> Génération nombre pseudo                   Y Ind
+        -> Signature/chiffrement/déchiffrement        Y Ind
+                - asymetric/symetric                  Y
+        -> Étudier attaques                           Y Opt
+                - side channel                        Y
+                - etc...
+        -> Stockage et utilisation de certificats     Y Imp
+
+    ssn (Plugin ou extension pour Firefox ?)
+        -> Application fonctionnelle                  Y Ind
+        -> Status chiffré/déchiffré                   Y Ind
+        -> Tout document(images, ...)                 Y Ind
+        -> coms                                       Y Sec
+        -> liens amitiés                              Y Imp
+        -> Patch /!\                                  Y Imp
+
+    (Non demandé : Anonymat                           Y Opt ?)
+
+    Tunnel entre appli et carte                       Y Ind
+
+
+prochaine réunion ssn, environ le 21/01/13
+notion de "traitor tracing" ou "broadcast traitor tracing"
