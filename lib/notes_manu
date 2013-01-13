@@ -1,11 +1,3 @@
-Carte devra contenir :
-    Login/Mot de passe Facebook
-    +
-    Clef RSA
-    + 
-    Certificat et chaîne associée
-
-
 Le plus simple et fonctionnel :
     Utilisation d'Eclipse avec jcde/jcwde
     Need java 1.5 pour java_card_kit_2.2
