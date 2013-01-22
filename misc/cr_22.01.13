@@ -1,0 +1,22 @@
+Partie Facebook:
+
+Génération des clefs de sessions par la carte à puces, pas FaceCrypt
+Besoin fichier de config qui spécifie si on déchiffre à la volée ou si l'utilisateur
+doit demander le déchiffrement explicitement
+
+Construction de nos propres listes d'amis (pas celles de Facebook)
+
+Dans les "exigences interface" -> ajouter "bouton" pour déchiffrer
+
+Rajouter que la taille des mots de passe doit être importante
+
+Hypothèse : les données transitant entre l'extension et FaceCrypt sont en clair
+                --> dans ce cas, besoin de chiffrer mdp
+
+
+Stockage des clefs publiques : pseudo-pgp; clef stockée sur page perso
+    Récupération : clef donnée dès qu'on ajoute "l'ami" à notre liste
+Implanter le modèle x509 si le temps
+
+
+Prochain rdv : Lundi 28 16h 
