@@ -1,0 +1,45 @@
+Création d'un nouveau module, et installation
+
+
+Lanceer firefox avec un nouveau profil :
+
+/usr/bin/firefox -no-remote -P dev
+
+about:config # permet d'acceder a la console de configuration
+
+modifications d'un ensemble de valeurs en true, pour augmenter le log et infos :
+
+javascript.options.showInConsole
+nglayout.debug.disable_xul_cache
+browser.dom.window.dump.enabled
+javascript.options.strict
+devtools.chrome.enabled
+extensions.logging.enabled
+nglayout.debug.disable_xul_fastload
+dom.report_all_js_exceptions
+
+Installation firebug
+
+Suivre les étapes du hello world extension de mdn
+
+Creation des fichiers install.rdf chrome.manifest et d'un path 
+./chrome/content/sample.xul
+
+complétion du fichier install.rdf de Building_an_extension (mdn)
+
+ajout dans sample.xul d'une modification par raport au browser.xul (overlay)
+
+dans le chrome.manifest :
+
+- indication sur la premiere ligne : du type (content), du nom(sample), et du path relatif du contenu a notre chrome.manifest
+- on indique un overlay, en précisant : overlay, le xul principal, le xul de ntore extension
+
+dans le dossier profile de firefox, dans le dossier extensions, ajouter un fichier texte du nom de notre ID (sample@exemple.net) contenant le path racine de notre extension.
+
+Zipper le dossier content, et changer son extension en .xpi
+
+On peut ensuite installer le module en le glissant dans la page de gestion des modules.
+
+
+A voir : Installation du module depuis serveur web 
+
