@@ -86,7 +86,7 @@ considérées explicitement par l'utilisateur.
 % TODO préciser
 Le projet prendra la forme d'une extension pour le navigateur 
 \emph{Mozilla Firefox}
-s'interfaçant avec une carte à puce pour effectuer certaines tâches de 
+s'interfaÃ§ant avec une carte à puce pour effectuer certaines tÃ¢ches de 
 chiffrement.
 
 Il ne sera pas nécessaire de créer un compte, notre projet pourra fonctionner 
@@ -114,6 +114,8 @@ Par conséquent, la terminologie utilisée correspond à celle de \emph{Facebook
     (chiffrement) de l'extension et étant en relation avec la carte à puce.
     \item[Extension :] programme incorporé dans le navigateur permettant
     de manipuler les pages de \emph{Facebook}.
+    \item[SoftCard :] Application effectuant le relais entre la carte
+        et FaceCrypt.
 \end{description}
 
 \section{Exigences fonctionnelles}
@@ -138,6 +140,11 @@ F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cel
 \hline
 \end{tabularx}
 
+\subsection{Préconditions}
+Pour tous les cas d'utilisation décrits ci-dessous, nous supposons que 
+l'utilisateur est déjà authentifié sur le réseau social (Facebook), il
+a donc déjà inséré sa carte dans le lecteur.
+
 \subsection{Chiffrer/déchiffrer un statut}
 Un utilisateur peut lorsqu'il souhaite écrire un message
 sur son mur le chiffrer. Il choisit, dans ce cas, les amis
@@ -145,7 +152,7 @@ qui peuvent déchiffrer ce message.
 
 Inversement, lorsqu'un de ses amis poste (sur son mur) un message chiffré,
 l'utilisateur peut tenter de le déchiffrer. Si, l'utilisateur
-fait partie des personnes autorisées, il peut lire le message.
+fait partie des personnes autorisées, il peut lire le message.\\
 
 \fiche
 	{Chiffrement d'un message sur son mur}
@@ -158,16 +165,21 @@ fait partie des personnes autorisées, il peut lire le message.
 	    \item[]
 	  \item[1.] L'utilisateur saisie un message et choisi de le chiffrer,
           il spécifie les personnes autorisées;
+      \item[3.] L'utilisateur précise des listes d'amis ou des amis, 
+          qui pourront lire son message;
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] FaceCrypt chiffre le message avec une clef 
-        de chiffrement, récupère les clefs publiques
-        des personnes autorisées et chiffre la clef de chiffrement
-        avec ces clefs;
+        \item[2.] L'extension demande à l'utilisateur quels amis vont-être
+            autorisés à déchiffrer le message
+		\item[4.] L'extension récupère le message avant l'envoi sur le serveur 
+            de Facebook et l'envoi à FaceCrypt qui va le chiffrer avec une clef 
+        de chiffrement, récupèrer les clefs publiques des personnes autorisées 
+        et chiffre la clef de chiffrement avec ces clefs;
 		\item[3.] FaceCrypt envoi ensuite une concaténation de 
-        ce message et des clefs chiffrées aux serveurs de Facebook.
+        ce message et des clefs chiffrées à l'extension qui enverra le tout
+        chiffré sur les serveurs de Facebook.
 	\end{itemize}
     }
 	{}
@@ -188,15 +200,25 @@ fait partie des personnes autorisées, il peut lire le message.
 	{L'utilisateur déchiffre un message du mur d'un de ses amis}
 	{}
     % TODO à discuter
-	{L'utilisateur est arrivé sur une page contenant un message chiffré}
-	{L'utilisateur a déchiffré un message}
-    {}
+	{L'utilisateur souhaite déchiffrer un message}
+	{L'utilisateur a déchiffré un message, ou pas}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton pour 
+            déchiffrer un message;
+    \end{itemize}
+    }
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
-            du message avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre tout le message avec la clef
-            de chiffrement.
+		\item[1.] L'extension récupère le message et l'envoi à 
+            FaceCrypt;
+        \item[2.] FaceCrypt envoie la concaténation des clefs à la carte
+            pour qu'elle tente de déchiffrer avec la clef privée de 
+            l'utilisateur la clef de chiffrement du message;
+		\item[3.] FaceCrypt reçoit la clef de chiffrement de message;
+        \item[4.] FaceCrypt déchiffre tout le message avec la clef
+            de chiffrement et envoi le message à l'extension.
+        \item[5.] L'extension affiche le résultat;
 	\end{itemize}
 	}
 	{}
@@ -424,24 +446,24 @@ F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un message sur son mur &
 \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un message d'un mur de ses amis, s'il
-a été autorisé à le faire & \cellcolor{green!50}Indispensable\\
+F-FN-\arabic{FNcount} & L'utilisateur peut tenter de déchiffrer un message d'un mur de ses amis, 
+en appuyant sur un bouton & \cellcolor{green!50}Indispensable\\
 \hline
 \addtocounter{FNcount}{10}
 F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un document &
 \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un document, s'il
-a été autorisé à le faire & \cellcolor{green!50}Indispensable\\
+F-FN-\arabic{FNcount} & L'utilisateur peut tenter déchiffrer un document, 
+en appuyant sur le bouton & \cellcolor{green!50}Indispensable\\
 \hline
 \addtocounter{FNcount}{10}
 F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un commentaire &
 \cellcolor{blue!50}Secondaire \\
 \hline
 \addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un commentaire, s'il
-a été autorisé à le faire & \cellcolor{blue!50}Secondaire\\
+F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un commentaire, 
+en appuyant sur le bouton & \cellcolor{blue!50}Secondaire\\
 \hline
 \addtocounter{FNcount}{10}
 F-FN-\arabic{FNcount} & L'utilisateur peut créer une liste d'amis & \cellcolor{green!50}Indispensable \\
@@ -479,7 +501,7 @@ F-FN-\arabic{FNcount} & L'utilisateur peut retirer un ami d'une liste &
 
 \hline
 \addtocounter{FOcount}{10}
-F-FO-\arabic{FOcount} & Le chiffrement n'est pas trop long (> 2s) & \cellcolor{green!50}Indispensable \\
+F-FO-\arabic{FOcount} & Le chiffrement n'est pas trop long & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
 
@@ -510,6 +532,10 @@ F-FI-\arabic{FIcount} & Notre système s'interface avec \emph{Mozilla Firefox}
 F-FI-\arabic{FIcount} & Notre système fonctionnera comme un \emph{patch} : il pourra fonctionner sur d'un compte déjà existant
 & \cellcolor{green!50}Indispensable \\
 \hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & Un bouton permet à l'utilisateur de déchiffrer un message qui lui apparaît chiffré
+& \cellcolor{green!50}Indispensable \\
+\hline
 \end{longtable}
 
 \section{Exigences de qualité}
@@ -538,32 +564,35 @@ F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolo
 F-FQ-\arabic{FQcount} & Un manuel d'utilisation sera livré avec le système
 & \cellcolor{green!50}Indispensable \\
 \hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Les mots de passes utilisés par l'utilisateurs doivent avoir une taille conséquente pour améliorer leur sécurité
+& \cellcolor{green!50}Indispensable \\
+\hline
 \end{longtable}
 
-% TODO
-%\section{Exigences de réalisation}
-%
-%\newcounter{FRcount}
-%
-%\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
-%
-%% Header for the first page of the table
-%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-%\endfirsthead
-%% Header for next pages of the table
-%\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
-%\endhead
-%
-%%This is the footer for all pages except the last page of the table...
-%\endfoot
-%%This is the footer for the last page of the table...
-%\endlastfoot
-%
-%\hline
-%\addtocounter{FRcount}{10}
-%F-FR-\arabic{FRcount} &  & \cellcolor{green!50}Indispensable \\
-%\hline
-%\end{longtable}
+\section{Exigences de réalisation}
+
+\newcounter{FRcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FRcount}{10}
+F-FR-\arabic{FRcount} & Seul le mot de passe nécessite de ne jamais être transmis en clair & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
 
 
 \end{document}
