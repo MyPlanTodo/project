@@ -12,8 +12,7 @@ par code PIN"
 
 faire plus générique
 
-blocage de la carte : par paramètre (5 min exemple) + utilisation d'un code PUK
-                        pour dévérouiller la carte
+blocage de la carte : utilisation d'un code PUK pour dévérouiller la carte
 
 algo qui vérifie le code PIN doit être résistant aux attaques (par canaux cachés)
 et doit être lent
@@ -22,8 +21,7 @@ et doit être lent
 "Authentification sur SocialNetwork":  remplacer par "Transmission"
 précondition:  smartcard s'authentifie auprès de FaceCrypt
 
-
-Réfléchir au choix clef publique/clef privée ou clef partagée 
+Réfléchir au choix clef publique/clef privée ou clef partagée
 
 C3 + C4 : à revoir
 authentification qui ne concerne pas l'utilisateur va dans les exigences
@@ -48,3 +46,8 @@ Dernière répétition avec Mme Bardet possible le vendredi 22 février
 AR : 
 Inverser la description et le facteur pour le retard
 Pareil pour l'apprentissage
+
+
+
+
+Prochains rdv chaque vendredi à 10h
