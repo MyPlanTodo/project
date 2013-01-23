@@ -1,0 +1,39 @@
+
+Réunion 22/01/13
+
+Participants :
+    - Ayoub Otmani.
+    - Zakaria Addi, Baptiste Dolbeau, Yicheng Gao, Florian Guilbert, 
+    Giovanni Huet, Emmanuel Mocquet, Maxence Péchoux, Romain Pignard.
+
+----- 
+Ordre du jour : présentation de la STB, planning, problème de la 
+    distribution des clefs publiques.
+
+
+1) Remarque sur la STB.
+
+Génération des clefs de sessions par la carte à puces, pas FaceCrypt.
+
+Besoin d'une configuration qui spécifie si on déchiffre à la volée ou si 
+l'utilisateur doit demander le déchiffrement explicitement, par défaut,
+un bouton sera présent pour que l'utilisateur demande le déchiffrement.
+
+Construction de nos propres listes d'amis (pas celles de Facebook)
+
+Dans les "exigences interface" -> ajouter "bouton" pour déchiffrer
+
+Rajouter que la taille des mots de passe doit être importante
+
+Hypothèse : les données transitant entre l'extension et FaceCrypt sont en 
+claires ---> dans ce cas, besoin de chiffrer mdp, via crypt.js
+
+
+2) Distribution des clefs.
+
+Stockage des clefs publiques : pseudo-pgp; clef stockée sur la page perso 
+des utilisateurs.
+Récupération : clef donnée dès qu'on ajoute "l'ami" à notre liste
+Implanter le modèle x509 si nous avons le temps.
+
+Prochain réunion : Lundi 28 16h 
