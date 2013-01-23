@@ -1,0 +1,85 @@
+%Définition en-tête et pied de page
+\pagestyle{fancy}
+\fancyhf{} %efface les en-tête, pieds de page de LaTeX
+\rhead{\includegraphics[width=9em]{../../../lib/tex/logoUR.png}}
+\lhead{
+	\bfseries{Master 2 SSI - Conduite de Projet}\\
+	\textcolor{red}{\projectName}\\
+	\docType
+}
+\cfoot{\thepage\ / \pageref{LastPage}}
+
+%Page de garde
+\newcommand{\makeFirstPage}[0] {
+\begin{center}
+\begin{large}
+\vspace*{5cm}
+\textbf{\Huge{\docType}}
+\vspace*{7cm}
+
+\fcolorbox{black}{gris}{
+\begin{minipage}{10cm}
+\begin{tabularx}{10cm}{lXl}
+	& & \\
+	\bfseries{Version} & & \version\\
+	& & \\
+	\bfseries{Date} & & \dateStb\\
+	& & \\
+	\bfseries{Rédigé par} & & \author \\
+	& & \\
+	\bfseries{Relu par} & & \checked \\
+	& & \\
+	\bfseries{Approuvé par} & & \approved\\
+	& & \\
+	\bfseries{Signature} & & \\
+	& & \\
+\end{tabularx}	
+\end{minipage}
+}
+\end{large}
+\end{center}
+}
+
+%Macro commande pour la création d'un tableau de type fiche
+\newcounter{ficheCount}
+\newcommand{\fiche}[8] {
+	\addtocounter{ficheCount}{1}
+	\noindent
+\begin{tabular}{|p{3.5cm}| p{1cm} | p{3cm} | p{.5cm} | p{7cm}|} 
+%col1+2+3=col4+5
+%a & b & c & d & e\\
+\hline
+\multicolumn{2}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Nom: C\theficheCount}} & \multicolumn{3}{>{\color{white}\columncolor{blue}}l|}{\bfseries{#1}}\\
+\hline
+\multicolumn{2}{|l|}{\bfseries{\bfseries{Acteurs concernés}}} & \multicolumn{3}{m{10.5cm}|}{#2}\\
+\hline
+\multicolumn{2}{|l|}{\bfseries{\bfseries{Description}}} & \multicolumn{3}{m{10.5cm}|}{#3}\\
+\hline
+\multicolumn{2}{|l|}{\bfseries{\bfseries{Préconditions}}} & \multicolumn{3}{m{10.5cm}|}{#4}\\
+\hline
+\multicolumn{2}{|l|}{\bfseries{\bfseries{Evénements déclenchants}}} & \multicolumn{3}{m{10.5cm}|}{#5}\\
+\hline
+\multicolumn{2}{|l|}{\bfseries{\bfseries{Conditions d'arrêt}}} & \multicolumn{3}{m{10.5cm}|}{#6}\\
+\hline
+\multicolumn{5}{|>{\columncolor[gray]{.7}}l|}{\bfseries{\bfseries{Description du
+flot d'événements principal :}}}\\
+\hline
+\multicolumn{3}{|>{\columncolor[gray]{.7}}c|}{\bfseries{\bfseries{Acteur(s)}}} & \multicolumn{2}{>{\columncolor[gray]{.7}}c|}{\bfseries{\bfseries{Système}}}\\
+\hline
+\multicolumn{3}{|m{7.5cm}|}{#7} & \multicolumn{2}{m{7.5cm}|}{#8}\\
+\hline
+\end{tabular}
+\\
+}
+
+%Ajout des flots
+\newcommand{\flots}[2] {
+\noindent
+\begin{tabular}{|p{3.9cm}| p{1cm} | p{3cm} | p{.5cm} | p{7cm}|} 
+\bfseries{Flots secondaires:} & \multicolumn{4}{|m{11.5cm}|}{#1}\\
+\hline
+\bfseries{Flots d'exceptions:} & \multicolumn{4}{|m{11.5cm}|}{#2}\\
+\hline
+\end{tabular}
+\\
+}
