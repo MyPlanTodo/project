@@ -1,0 +1,156 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\documentclass[a4paper,11pt,french]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{lastpage} %pour compter le nombre de pages
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+\hypersetup{breaklinks=true}
+
+
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{4cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{-0.3cm}
+
+%les structures de gestion de projet
+\usepackage{res/structures} 
+
+
+\def\projectName{Service d'authentification unique et décentralisé}
+\def\docType{Analyse des risques}
+\def\version{1.1}
+\def\author{Giovanni \textsc{Huet}}
+\def\dateStb{\today}
+\def\checked{Lynda \textsc{Laceb}}
+% \def\approved{Florent \textsc{Nicart}}
+
+
+
+\begin{document}
+\makeFirstPage
+\clearpage
+\vspace*{1cm}
+%Tableau de mises à jour
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications
+réalisées}\\
+	\hline
+	0.1 & 30/11/2011 & Création\\
+	\hline
+	1.0 &  15/01/2012 & Relu par Lynda \textsc{Laceb} \\
+	\hline
+	1.1 &  14/03/2012 & Modification du risque 4\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+\clearpage
+
+\section{Risques}
+\begin{flushleft}
+\begin{small} 
+\begin{tabularx}{18cm}{|c|c|p{2.28cm}|p{2cm}|c|c|c|c|}
+\hline
+Référence & Date & Description & Facteurs & Type & Probabilité & Gravité &
+Criticité \\
+\hline
+R1 & 12-01-2012 & 
+Nombre d'anomalies logicielles des versions précédentes
+à corriger importante. (Anomalies apparues lors de la phase de tests)
+& Code non performant. (Certains cas peuvent être mal traités)
+& Technique & Faible & Importante & 8 \\
+\hline
+R2 & 12-01-2012 &
+Retard pris dans la réalisation du projet
+& Multiples projets et examens menant à un retard dans le planning de
+développement ou membre de l’équipe absente pendant une certaine période
+& Organisationnel & Moyenne & Importante & 9 \\
+\hline
+R3 & 12-01-2012 &
+Gestion du projet durant les vacances 
+& L'équipe ne peut pas faire le point sur l'avancement
+pendant les vacances (Déplacement, non accès à internet...)
+& Organisationnel & Faible & Moyenne & 5 \\
+\hline
+R4 & 12-01-2012 & 
+Apprentissage ou remise à niveau concernant un langage de
+programmation utilisé
+& Langage de programmation pratiqué il y a plusieurs années, ou pas du tout pour
+certain
+& Technique & Faible & Moyenne & 5 \\
+\hline
+R5 & 12-01-2012 & Problème lors de la rédaction de certains documents à
+présenter au client (M. Florent NICART)
+& Une mauvaise rédaction peut engendrer une mauvaise compréhension entre le
+fournisseur et le client
+& Organisationnel & Faible & Faible & 4 \\
+\hline
+\end{tabularx}
+
+\end{small}
+\end{flushleft}
+\section{Détail des risques}
+
+\subsection*{R1}
+Dans le développement des versions de notre projet (ou une partie de celui-ci),
+la dernière version est en phase de test réalisée par les «clients/testeurs ».
+Si la phase de tests est réalisée avec succès, le groupe pourra se concentrer
+sur la nouvelle version à établir. Cependant si des anomalies surviennent, le
+groupe sera divisé de telle sorte à ce qu’un groupe s’occupe pleinement de la
+correction de ces anomalies et les autres, quant à eux, continueront sur
+l’avancement de la nouvelle version.
+
+\subsection*{R2}
+Dans l’objectif d’éviter tout risque de retard dans le développement de notre
+projet, il a été établi un plan de développement avec des délais pour chacune
+des versions. Un suivi hebdomadaire de l’avancement a également été mis en place
+afin de faire un bilan des actions qui deviennent prioritaires et donc une revue
+ciblée du plan de développement.
+
+\subsection*{R3}
+Afin de s’assurer du bon avancement du projet à l’approche des vacances, une
+distribution des différentes tâches sera effectuée juste avant le départ en
+vacances. Chaque membre du groupe devra faire en sorte de respecter ses
+engagements pour la fin des vacances. D’autres part des moyens de communication
+pourront être mis en place (Réunion téléphonique avec un logiciel adapté
+(skype…), la création d’un dossier partagé sur la liste de diffusion du site
+\texttt{www.univ-rouen.fr} afin que tous les membres du groupe puisse avoir
+accès aux différents documents).
+
+\subsection*{R4}
+Pour la réalisation du projet, la connaissance de différents langages de
+programmation est indispensable (PHP, JavaScript, MySQ...). Un apprentissage ou
+une remise à niveau, selon le cas, est donc nécessaire. Des recherches sur des
+sites spécialisés, ou des livres à la bibliothèque seront faite par un ou
+plusieurs membres du groupe afin de gagner du temps pour la réalisation du
+projet.
+\paragraph{}
+14-03-2012 $\Rightarrow$ Des recherches ont été effectuées afin de trouver des
+documents concernant le langage de programmation php, et partagés par les
+différents membres du groupe.
+
+\subsection*{R5}
+La fin du projet se concrétise par la réalisation d’un rapport. Pour cela, une
+rédaction minutieuse des documents sera demandée pour chaque membre du groupe.
+Une documentation exhaustive des différentes librairies utilisées, un mode
+d’emploi, etc. seront effectués. Pour éviter tout quiproquo, des réunions avec
+le client pourront être envisagés.
+
+\end{document}

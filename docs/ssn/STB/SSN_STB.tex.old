@@ -1,0 +1,547 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\documentclass[a4paper,11pt,french]{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{lastpage} %pour compter le nombre de pages
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+\hypersetup{breaklinks=true}
+
+
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{4cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{-0.3cm}
+
+%les structures de gestion de projet
+\usepackage{../../../lib/tex/structures} 
+
+
+\def\projectName{Smart Social Network}
+\def\docType{Spécification Technique de Besoin}
+\def\version{0.1}
+\def\author{\begin{tabular}{l}Baptiste \textsc{Dolbeau},\\Florian \textsc{Guilbert}\end{tabular}}
+\def\dateStb{\today}
+\def\checked{}
+\def\approved{}
+
+
+
+\begin{document}
+\makeFirstPage
+\clearpage
+\vspace*{1cm}
+%Tableau de mises à jour
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 02/01/2013 & Création\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+
+\section{Objet}
+\renewcommand\labelitemi{\textbullet} %style des puces
+\renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
+Proposer des solutions cryptographiques garantissant la protection de la vie 
+privée des utilisateurs vis-à-vis d'un réseau social. Cette protection pourra
+être effective par le chiffrement systématique des données sensibles. Et
+le déchiffrement de ces données ne serait possible que par des personnes
+considérées explicitement par l'utilisateur.
+
+% TODO préciser
+Le projet prendra la forme d'une extension pour le navigateur 
+\emph{Mozilla Firefox}
+s'interfaçant avec une carte à puce pour effectuer certaines tâches de 
+chiffrement.
+
+Il ne sera pas nécessaire de créer un compte, notre projet pourra fonctionner 
+comme un patch sur un compte déjà existant.
+
+\paragraph{}
+Le réseau social étudié sera \emph{Facebook} à moins que lors du développement
+du projet des problèmes spécifiques à ce réseau social soient rencontrés. 
+Par conséquent, la terminologie utilisée correspond à celle de \emph{Facebook} 
+(statut, mur, ...).
+
+\section{Documents applicables et de référence}
+\begin{itemize}
+    \item Manuel d'utilisation;
+    \item proxy-encryption.pdf, le sujet du projet.
+\end{itemize}
+
+
+\section{Terminologie et sigles utilisés}
+\begin{description}
+	\item[SN :] Social Network, représente le réseau social que nous avons 
+    choisi comme support
+    pour ce projet;
+    \item[Application Java :] programme gérant les traitements lourds 
+    (chiffrement) de l'extension et étant en relation avec la carte à puce.
+    \item[Extension :] programme incorporé dans le navigateur permettant
+    de manipuler les pages de \emph{Facebook}.
+\end{description}
+
+
+\section{Exigences fonctionnelles}
+
+\subsection{Présentation de la mission du produit logiciel}
+\newcounter{FGcount}
+\begin{tabularx}{16cm}{|c|X|l|c|}
+\hline
+\rowcolor{blue}~{\color{white}\bfseries{Reference}}&~{\color{white}\bfseries{Fonctionalité Globale}}&~{\color{white}\bfseries{Acteur}}&~{\color{white}\bfseries{Priorité}}\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un statut & Utilisateur & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un document & Utilisateur & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Gérer les liens d'amitiés & Utilisateur & \cellcolor{red!20}Important \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cellcolor{blue!50}Secondaire\\
+\hline
+\end{tabularx}
+
+\subsection{Chiffrer/déchiffrer un statut}
+Un utilisateur peut lorsqu'il souhaite écrire un message
+sur son mur le chiffrer. Il choisit, dans ce cas, les amis
+qui peuvent déchiffrer ce message.
+
+Inversement, lorsqu'un de ses amis poste (sur son mur) un message chiffré,
+l'utilisateur peut tenter de le déchiffrer. Si, l'utilisateur
+fait partie des personnes autorisées, il peut lire le message.
+
+
+\fiche
+	{Chiffrement d'un message sur son mur}
+	{Utilisateur}
+	{L'utilisateur chiffre un message qui sera affiché sur le mur}
+	{}
+	{L'utilisateur souhaite poster un message sur son mur}
+	{L'utilisateur a posté un message chiffré sur son mur, lisible que des personnes autorisées}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] L'utilisateur saisie un message et choisi de le chiffrer,
+          il spécifie les personnes autorisées;
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] L'application Java chiffre le message avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] l'application Java envoi ensuite une concaténation de 
+        ce message et des clefs chiffrées aux serveurs de Facebook.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\fiche
+	{Déchiffrement d'un message sur un mur}
+	{Utilisateur}
+	{L'utilisateur déchiffre un message du mur d'un de ses amis}
+	{}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un message chiffré}
+	{L'utilisateur a déchiffré un message}
+    {}
+	{\begin{itemize}
+        \item[]
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
+            du message avec la clef publique de l'utilisateur;
+		\item[2.] l'application Java déchiffre tout le message avec la clef
+            de chiffrement.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le message.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Chiffrer/déchiffrer un document}
+Un utilisateur peut choisir utiliser l'option de téléversement
+d'image du réseau social pour téléverser un document (image, 
+fichier texte, ...) chiffré. Celui-ci sera considéré par une image
+par le réseau social.\\*
+
+\fiche
+	{Chiffrement d'un document}
+	{Utilisateur}
+	{L'utilisateur chiffre un document qui sera interpréter comme une image 
+        par Facebook}
+	{}
+	{L'utilisateur souhaite téléverser un document}
+	{L'utilisateur a téléverser un document, lisible que des personnes 
+        autorisées}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] L'utilisateur téléverse un document et choisi de le chiffrer,
+          il spécifie les personnes autorisées;
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] L'application Java chiffre le document avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] l'application Java envoi ensuite une concaténation de 
+        du document chiffré et des clefs chiffrées aux serveurs de Facebook.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur spécifie un document qui n'est pas une image
+    et choisi de ne pas le chiffrer, cela sera refusé par Facebook;
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\fiche
+	{Déchiffrement d'un document}
+	{Utilisateur}
+	{L'utilisateur déchiffre un document d'un de ses amis}
+	{}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un document chiffré}
+	{L'utilisateur a déchiffré un message}
+    {}
+	{\begin{itemize}
+        \item[]
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
+            du document avec la clef publique de l'utilisateur;
+		\item[2.] l'application Java déchiffre tout le document avec la clef
+            de chiffrement, la télécharge dans le cas ou ce n'est pas
+            une image.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le document.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Gérer les liens d'amitiés}
+Afin d'améliorer l'ergonomie des opérations de chiffrement, 
+l'utilisateur aura la possibilité d'organiser ses amis en
+différents groupes. \\*
+
+(Cas d'utilisation encore à déterminer)
+
+% TODO à discuter
+%\fiche
+%	{}
+%	{}
+%	{}
+%	{}
+%	{}
+%	{}
+%	{\begin{itemize}
+%	    \item[]
+%		\item[1.] toto
+%	\end{itemize}
+%	}
+%	{\begin{itemize}
+%        \item[]
+%		\item[2.] tutu
+%	\end{itemize}
+%	}
+%	{}
+%\flots
+%    {}
+%	{}    
+%\\*
+
+\subsection{Chiffrer/déchiffrer un commentaire}
+De même que pour les messages de statut (de mur), l'utilisateur
+peut chiffrer un commentaire ou au contraire en déchiffrer,
+s'il fait partie des personnes autorisées.
+
+\fiche
+	{Chiffrement d'un commentaire}
+	{Utilisateur}
+	{L'utilisateur chiffre un commentaire}
+	{}
+	{L'utilisateur souhaite chiffrer un commentaire}
+	{L'utilisateur a chiffré un commentaire, lisible que des personnes 
+        autorisées}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] L'utilisateur saisie un commentaire et choisi de le chiffrer,
+          il spécifie les personnes autorisées à le déchiffrer;
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] L'application Java chiffre le commentaire avec une clef 
+        de chiffrement, récupère les clefs publiques
+        des personnes autorisées et chiffre la clef de chiffrement
+        avec ces clefs;
+		\item[3.] l'application Java envoi ensuite une concaténation de 
+        du commentaire chiffré et des clefs chiffrées aux serveurs de Facebook.
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[2.] Si une des personnes choisie n'a pas de clef publique,
+        elle ne pourra pas déchiffrer le message;
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\fiche
+	{Déchiffrement d'un commentaire}
+	{Utilisateur}
+	{L'utilisateur déchiffre un commentaire d'un de ses amis, présent sur la
+        page}
+	{}
+    % TODO à discuter
+	{L'utilisateur est arrivé sur une page contenant un commentaire chiffré}
+	{L'utilisateur a déchiffré un commentaire}
+    {}
+	{\begin{itemize}
+        \item[]
+		\item[1.] L'application Java tente de déchiffrer la clef de chiffrement
+            du commentaire avec la clef publique de l'utilisateur;
+		\item[2.] l'application Java déchiffre le commentaire avec la clef
+            de chiffrement et l'affiche
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur ne fait pas partie des personnes
+        autorisées, il ne pourra pas déchiffrer le commentaire.
+    \end{itemize}
+    }
+	{}    
+
+\pagebreak
+\subsection{Exigences fonctionnelles détaillées}
+
+
+\newcounter{FNcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} &
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}}
+& \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un message sur son mur &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un message d'un mur de ses amis, s'il
+a été autorisé à le faire & \cellcolor{green!50}Indispensable\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un document &
+\cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un document, s'il
+a été autorisé à le faire & \cellcolor{green!50}Indispensable\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un commentaire &
+\cellcolor{blue!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un commentaire, s'il
+a été autorisé à le faire & \cellcolor{blue!50}Secondaire\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut créer une liste d'amis & \cellcolor{green!50}Indispensable \\
+\hline 
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut effacer une liste d'amis & \cellcolor{green!50}Indispensable \\
+\hline 
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut ajouter un ami dans une liste & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut retirer un ami d'une liste &
+\cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+\pagebreak
+
+\section{Exigences opérationnelles}
+
+\newcounter{FOcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & Le chiffrement n'est pas trop long (> 2s) & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences d'interface}
+
+\newcounter{FIcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & Notre système s'interface avec \emph{Mozilla Firefox}
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & Notre système fonctionnera comme un \emph{patch} : il pourra fonctionner à partir d'un compte déjà existant
+& \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences de qualité}
+
+\newcounter{FQcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Un manuel d'utilisation sera livré avec le système
+& \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences de réalisation}
+
+\newcounter{FRcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Reference}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FRcount}{10}
+F-FR-\arabic{FRcount} & TODO & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+
+\end{document}
