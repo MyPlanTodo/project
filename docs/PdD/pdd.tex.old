@@ -1,0 +1,476 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+\documentclass[a4paper,11pt,french]{article}
+
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage{graphicx, amssymb, color, listings}
+% \usepackage[colorlinks=true, linkcolor=black, urlcolor=blue]{hyperref}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{lastpage} %pour compter le nombre de pages
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+%\hypersetup{breaklinks=true}
+
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{4cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{-0.3cm}
+
+%les structures de gestion de projet
+\usepackage{res/structures} 
+
+
+\def\projectName{Smart Social Network}
+\def\docType{Plan de développement}
+\def\version{0.1}
+\def\author{Florian \textsc{Guilbert}}
+\def\dateStb{\today}
+\def\checked{}
+
+\begin{document}
+\makeFirstPage
+\vspace*{1cm}
+%Tableau de mises à jour
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 30/11/2011 & Création\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+\tableofcontents
+\clearpage
+
+\section{Contexte du projet}
+Ce projet propose la mise en place de solutions cryptographiques pour sécuriser
+les données qu'un utilisateur place sur un réseau social au moyen  
+d'authentifications fortes.
+
+Il s'agirait donc ici de développer une extension pour le logiciel
+Mozilla Firefox permettant à l'utilisateur de gérer le chiffrement de 
+ses données sur le réseau social Facebook. Cette extension utilisera une 
+application Java pour assurer les traitements lourds. Pour gérer 
+l'authentification forte, cette application dialoguerait avec une carte à 
+puce qui contiendrai les données sensibles de l'utilisateur 
+(login/mot de passe), clef privée, ...
+
+Le dialogue avec cette carte à puce se fera par l'intermédiaire d'un
+client Java.
+
+\paragraph{}
+Ce projet est à une fusion de deux projets :
+\begin{itemize}
+    \item Étude et mise en \oe{}uvre de solutions d'authentifications 
+    et de signatures par cartes à puce, proposé par Magali \textsc{Bardet};
+    \item Solutions cryptographiques pour les réseaux sociaux, 
+    proposé par Ayoub \textsc{Otmani};
+\end{itemize}
+
+\paragraph{}
+Étant un projet universitaire, ce travail a pour but de nous apprendre
+à gérer un projet, de sa partie analyse jusqu'à sa complète réalisation. Pour
+cette même raison, le projet devra être impérativement terminé avant la 04 
+mars 2013.
+
+\section{Documents applicables et de références}
+\begin{itemize}
+ \item Intitulé des sujets du projet;
+ \item spécification technique de besoin;
+ \item cahier des recettes;
+ \item document d'architecture logicielle;
+ \item analyse des risques
+ \item plan qualité;
+\end{itemize}
+
+\section{Terminologie et sigles utilisés}
+\begin{description}
+	\item[AdR :] Analyse des Risques;
+	\item[CdR :] Cahier de Recettes;
+	\item[DAL :] Document d'Architecture Logicielle;
+	\item[PdD :] Plan de développement;
+	\item[STB :] Spécification Technique de Besoin;
+	\item[SC :] Smart Cards, relatif au sous-projet sur
+    les cartes à puce;
+	\item[SSN :] Secure Social Network, relatif au sous-projet
+    sur la sécurisation d'un réseau social
+	\item[IHM :] Interface homme-machine, (interface graphique);
+	\item[SoftCard :] application qui assure un passerelle entre
+    le lecteur de carte et l'ordinateur;
+    \item[Extension :] programme incorporé dans le navigateur.
+\end{description}
+
+\section{Méthodologie et développement}
+Le développement du projet suit le schéma suivant : \\
+
+\begin{center}
+\begin{tikzpicture}
+[scale=1]
+% style des nœuds
+\tikzstyle{es}=[rectangle,draw,rounded corners=4pt,fill=blue!25]
+% style des flèches
+\tikzstyle{suite}=[->,>=stealth,thick,rounded corners=4pt]
+% placement des nœuds
+\node[es] (spe) at (6,8) {Spécification};
+\node[es] (con) at (6,6) {Conception};
+\node[es] (ana) at (10,4) {Développement};
+\node[es] (dev) at (6,1) {Test};
+\node[es] (val) at (2,4) {Validation};
+% Placement des flèches
+\draw[suite] (spe) -- (con);
+\draw[suite] (con) -- (ana);
+\draw[suite] (ana) -- (dev);
+\draw[suite] (dev) -- (val);
+\draw[suite] (val) -- (spe); 
+\draw[suite] (val) -- (con); 
+
+\end{tikzpicture}
+\end{center}
+
+\paragraph{Spécification}
+\begin{itemize}
+ \item Déterminer les objectifs;
+ \item définir les contraintes;
+ \item évaluer les risques.
+\end{itemize}
+Responsabilité : clients, testeurs et programmeurs.
+
+\paragraph{Conception}
+\begin{itemize}
+ \item Définir les composants à développer.
+\end{itemize}
+Responsabilité : testeurs et programmeurs.
+
+\paragraph{Développement}
+\begin{itemize}
+ \item Développement des composants;
+ \item tests unitaires sur ces composants.
+\end{itemize}
+Responsabilité : programmeurs.
+
+\paragraph{Test}
+\begin{itemize}
+ \item Tester des scénarii de tests.
+\end{itemize}
+Responsabilité : testeurs.
+
+\paragraph{Validation}
+\begin{itemize}
+ \item L'étape de validation détermine si la version développée propose bien les
+fonctionnalités attendues et dans ce cas valide la version du logiciel.
+Le travail pour la prochaine version peut commencer;
+ \item s'il n'y pas validation de la version, alors c'est aux testeurs de
+décider s'il faut repasser l'étape de spécification ou s'il faut retourner
+directement à l'étape de conception;
+ \item dans le cas d'un succès d'une validation, une version du logiciel peut 
+être livrée.
+\end{itemize}
+Responsabilité : clients et testeurs.
+
+\paragraph{}
+Cette méthodologie de développement suit la méthode XP (eXtreme Programming). 
+Durant le développement de ce projet, il y aura quatre itérations. Les
+trois premières itérations sont chacune divisées en deux (correspondant
+aux deux sous-projets) : 
+\begin{enumerate}
+ \item \begin{itemize}
+            \item établir un dialogue entre le terminal et la carte;
+            \item développer une extension et une application Java implantant
+           le chiffrement et le déchiffrement de données; 
+       \end{itemize}
+ \item \begin{itemize}
+            \item utiliser les fonctions cryptographiques de la carte, 
+            \item développer les systèmes d'injection de code dans l'extension,
+            gérer la persistance de données dans l'application Java, étudier
+            le protocole \texttt{xpcom};
+       \end{itemize}
+ \item \begin{itemize}
+            \item rédaction de documentation et développement de 
+            \emph{softCard};
+            \item implantation du protocole \texttt{xpcom} permettant
+            le dialogue entre l'application Java et l'extension
+       \end{itemize}
+ \item fusion des projets : implantation du dialogue entre le \emph{softCard}
+ et l'application Java.
+\end{enumerate}
+Chacune de ces étapes comporte des modules qui seront développés en binôme
+afin, d'une part, de faire en sorte que le plus de programmeurs possible
+maitrisent le code source et, d'autre part, qu'une absence ne nuise pas au
+processus de développement.
+
+\section{Organisation et responsabilités}
+
+\begin{center}
+\begin{tikzpicture}
+[scale=1]
+% style des nœuds
+\tikzstyle{coach}=[rectangle,draw,rounded corners=2pt,fill=blue!25]
+\tikzstyle{prog}=[rectangle,draw,rounded corners=2pt,fill=red!25]
+\tikzstyle{cliTest}=[rectangle,draw,rounded corners=2pt,fill=green!25]
+% style des flèches
+\tikzstyle{suite}=[->,>=stealth,thick,rounded corners=4pt]
+% placement des nœuds
+\node[coach] (coach) at (5,7.5) {\begin{tabular}{c}
+                             Coach/Tracker \\ \\
+			    Florian \textsc{Guilbert}
+                            \end{tabular}};
+\node[prog] (prog1) at (-.5,4) {\begin{tabular}{c}
+                             Programmeur \\ \\
+			    Ouissem \textsc{Hamdani}
+                            \end{tabular}};
+\node[prog] (prog2) at (3.3,4) {\begin{tabular}{c}
+                             Programmeur\\ \\
+			    Giovanni \textsc{Huet}
+                            \end{tabular}};
+\node[cliTest] (test1) at (7,4) {\begin{tabular}{c}
+                             Client/Testeur \\ \\
+			    Lynda \textsc{Laceb}
+                            \end{tabular}};
+\node[cliTest] (test2) at (10.35,4) {\begin{tabular}{c}
+                             Client/Testeur \\ \\
+			    Safae \textsc{Rebani}
+                            \end{tabular}};
+% Placement des flèches
+\draw (coach) -- (5, 5.5);
+\draw (prog1) |- (5, 5.5);
+\draw (prog2) |- (5, 5.5);
+\draw (test1) |- (5, 5.5);
+\draw (test2) |- (5, 5.5);
+
+\end{tikzpicture}
+\end{center}
+
+\paragraph{Coach:}
+\begin{itemize}
+ \item Garant du processus et de la méthodologie;
+ \item vérifie que chacun joue son rôle;
+ \item organise et anime les réunions et les séances de planifications;
+ \item valide les orientations techniques.
+\end{itemize}
+
+\paragraph{Client:}
+\begin{itemize}
+ \item Spécifie les fonctionnalités du logiciel;
+ \item communique les informations utiles aux développeurs et reçoit leurs 
+``feedback'';
+ \item définit les fonctionnalités à partir de scénarii d'utilisations;
+ \item spécifie les tests de recette.
+\end{itemize}
+
+\paragraph{Programmeur:}
+\begin{itemize}
+ \item Responsables de la production du code;
+ \item conçoit pour assurer la pérennité du code;
+ \item teste pour assurer la qualité du code;
+ \item émet et révise des estimations de charge.
+\end{itemize}
+
+\paragraph{Testeur:}
+\begin{itemize}
+ \item Conçoit et réalise les tests de recettes défini par le client;
+ \item recherche l'automatisation des tests;
+ \item développe les outils de tests nécessaires et les scripts à exécuter;
+ \item témoigne de l'avancement du projet.
+\end{itemize}
+
+\paragraph{Tracker:}
+\begin{itemize}
+ \item Assure le suivi du planning;
+ \item cherche a détecter les difficultés le plus tôt possible et en informe
+le coach.
+\end{itemize}
+
+\section{Organigramme des tâches}
+Le projet va être organisé en quatre versions (une par itération), le schéma
+suivant décrit les tâches à développer pour chaque version :  
+
+\begin{center}
+\begin{tikzpicture}
+[scale=1]
+% style des nœuds
+\tikzstyle{projet}=[rectangle,draw,rounded corners=2pt,fill=blue!25]
+\tikzstyle{analyse}=[rectangle,draw,rounded corners=2pt,fill=red!25]
+\tikzstyle{ver1}=[rectangle,draw,rounded corners=2pt,fill=green!25]
+\tikzstyle{ver2}=[rectangle,draw,rounded corners=2pt,fill=yellow!25]
+\tikzstyle{ver3}=[rectangle,draw,rounded corners=2pt,fill=orange!25]
+
+% style des flèches
+\tikzstyle{suite}=[->,>=stealth,thick,rounded corners=4pt]
+% placement des nœuds
+\node[projet] (projet) at (3.5, 6.5) {Service d'authentification unique,
+décentralisé};
+\node[analyse] (analyse) at (-2,4) {
+  \begin{tabular}{c}Analyse et \\ spécification\end{tabular}};
+\node[ver1] (ver1) at (1.8,4) {Version 0.1};
+\node[ver2] (ver2) at (5,4) {Version 0.2};
+\node[ver3] (ver3) at (9.3,4) {Version finale};
+\node[analyse] (stb) at (-.5,2.5) {STB};
+\node[analyse] (dal) at (-.5,1.5) {DAL};
+\node[analyse] (cdr) at (-.5,0.5) {CdR};
+\node[analyse] (pdd) at (-.5,-0.5) {PdD};
+\node[analyse] (adr) at (-.5,-1.5) {AdR};
+\node[ver1] (proto) at (1.8, 2.5) {
+    \begin{tabular}{c} 
+    Description \\ 
+    du protocole
+    \end{tabular}};
+\node[ver2] (ihm) at (7.2, 2.5) {IHM};
+\node[ver2] (bdd) at (7.2, 1) {\begin{tabular}{c}Conception\\de la base\\de
+données\end{tabular}};
+\node[ver2] (model) at (7.2, -1) {\begin{tabular}{c}Conception\\du
+model\end{tabular}};
+\node[ver2] (fusion) at (7.2, -2.5) {\begin{tabular}{c}Fusion\\
+IHM-model\end{tabular}};
+\node[ver2] (admin) at (7.2, -4.2) {\begin{tabular}{c}Implantation du 
+\\log de connexion\\(optionnelle)
+                                    \end{tabular}};
+\node[ver2] (test1) at (7.2, -6) {Tests};
+
+\node[ver3] (server) at (11.6, 2) {\begin{tabular}{c}Implantation \\du
+protocole\\ coté serveur\end{tabular}};
+\node[ver3] (api) at (11.6, 0) {\begin{tabular}{c}Réalisation \\d'une API pour\\
+le client\end{tabular}};
+\node[ver3] (client) at (11.6, -2) {\begin{tabular}{c}Développement\\d'un site
+client\end{tabular}};
+\node[ver3] (paquetage) at (11.6, -4)
+{\begin{tabular}{c}Système\\d'installation\\ par paquetage\end{tabular}};
+\node[ver3] (test2) at (11.6, -6) {Tests};
+
+% Placement des flèches
+\draw (projet) -- (3.5, 5.5);
+\draw (analyse) |- (3.5, 5.5);
+\draw (ver1) |- (3.5, 5.5);
+\draw (ver2) |- (3.5, 5.5);
+\draw (ver3) |- (3.5, 5.5);
+\draw (analyse) |- (stb);
+\draw (analyse) |- (dal);
+\draw (analyse) |- (cdr);
+\draw (analyse) |- (pdd);
+\draw (analyse) |- (adr);
+\draw (ver1) -- (proto);
+\draw (ver2) |- (ihm);
+\draw (ver2) |- (bdd);
+\draw (ver2) |- (model);
+\draw (ver2) |- (fusion);
+\draw (ver2) |- (admin);
+\draw (ver2) |- (test1);
+\draw (ver3) |- (server);
+\draw (ver3) |- (api);
+\draw (ver3) |- (client);
+\draw (ver3) |- (paquetage);
+\draw (ver3) |- (test2);
+\end{tikzpicture}
+\end{center}
+
+\section{Évalutation du projet et dimensionnement des moyens}
+
+\paragraph{Version 0.1} 
+La première version du projet consistera en trois composants, une application
+permettant de faire générer des nombres pseudo-aléatoire par la
+carte et d'y stocker des informations de, une extension incorporée sur 
+le navigateur Mozilla Firefox et une application Java qui permet chiffrer 
+ou de déchiffrer des données.
+
+\paragraph{Version 0.2}  
+Dans la deuxième version, l'application et la carte à puce doivent pouvoir
+chiffrer et déchiffrer des données, de plus, il devrait être possible
+de stocker des données sur la partie cachée. Pour la partie 
+\emph{Secure Social Network}, l'extension devrait pouvoir injecter
+du code dans la page du réseau social tandis qu'en parallèle, l'application
+Java devrait pouvoir stocker des informations de manière permanente.
+
+\paragraph{Version 0.3}
+La troisième version se résume principalement en la mise en place
+d'un dialogue entre extension et application Java.
+
+\paragraph{Version 1.0, finale} 
+La version finale correspond à la fusion des deux sous-projets.
+
+\section{Planning général}
+\begin{center}
+\begin{figure}[h]
+\caption{Diagramme de Gant, tâches}
+\end{figure}
+% \newpage
+\begin{figure}[h]
+\caption{Diagramme de Gant, graphes}
+\end{figure}
+\end{center}
+Sur ce graphe, on peut observer trois couleurs, chaque couleur désigne une
+version du logiciel différente (rouge : 0.1, bleu-vert : 0.2, violet : 0.3, bleu : 1.0
+(finale).
+\section{Procédés de gestion}
+
+\subsection{Gestion de la documentation}
+Il y aura quatre documentations livrables : 
+\begin{itemize}
+ \item le manuel d'utilisation du \emph{softCard} rédigé par l'équipe testeur,
+ du groupe \emph{smartCards};
+ \item le manuel d'utilisation global de l'application rédigé par l'équipe 
+ testeur, des deux groupes;
+ \item un document décrivant comment a été développé les applications pour
+ la carte à puce et comment sont-elles installés;
+ \item un document sur les protocoles cryptographiques mis en \oe{}uvre
+ dans ce projet.
+\end{itemize}
+\paragraph{}
+Les documents utilisées tout au long de la réalisation de ce projet sont : 
+(les relecteurs sont encore à préciser)
+\begin{itemize}
+ \item Analyse des risques (AdR) rédigé par \textsc{Yicheng};
+ \item Cahier des recettes \emph{smartCard} (CdR) rédigé par Giovanni 
+\textsc{Huet} et Romain \textsc{Pignard};
+ \item Cahier des recettes \emph{Secure Social Network} (CdR) rédigé par 
+ Baptiste \textsc{Dolbeau} et Florian \textsc{Guilbert};
+ \item Document d'architecture logicielle \emph{smartCard} (DAL) rédigé par 
+ Emmanuel \textsc{Mocquet};
+ \item Document d'architecture logicielle \emph{Secure Social Network} (DAL) 
+ rédigé par Zakaria \textsc{Addi} et Maxence \textsc{Péchoux};
+ \item Plan de développement (PdD) rédigé par Florian \textsc{Guilbert};
+ \item Spécification technique des besoins \emph{smartCard} (CdR) rédigé par 
+ Giovanni \textsc{Huet} et Romain \textsc{Pignard};
+ \item Spécification technique des besoins \emph{Secure Social Network} (CdR) 
+    rédigé par Baptiste \textsc{Dolbeau} et Florian \textsc{Guilbert};
+\end{itemize}
+
+\subsection{Gestion des configurations}
+Toutes les versions du programmes seront gérées par le logiciel de versionnage 
+\texttt{git}. Toutes les machines servant à développer devront
+avoir les même configurations du logiciel Java (1.5). De même, les 
+ordinateurs clients devront aussi posséder cette version de Java.
+
+\section{Revues et points clefs}
+Pas de revues officielles de prévues.
+
+\section{Procédures de suivi d'avancement}
+Le suivi d'avancement du projet sera effectué par l'intermédiaire de réunions
+régulières et de jalons. Ceux-ci permettront de contrôler l'état d'avancement
+de chaque module et de réagir rapidement à tout écart avec les prévisions en
+réorganisant le planning.
+
+\paragraph{}
+Il y aura par conséquent une réunion chaque semaine avec les clients respectifs
+les membres du groupe. À chaque validation, il y aura présentation au client du 
+travail effectué.
+
+Des réunions avec le client pourront aussi être organisées si le client en fait
+la demande ou bien qu'un membre du groupe souhaite bénéficier de son avis.
+
+Pour chaque réunion, un compte-rendu sera réalisé et placé à disposition du
+groupe par l'intermédiaire de \texttt{git}.
+
+\end{document}
