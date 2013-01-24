@@ -1,0 +1,329 @@
+	/* Blowfish */
+
+Algo : Blowfish/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/CBC/PKCS5Padding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : 0zScz+nGkmdWEXk1MCXo9LHfGffwZ43O
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/CFB/NoPadding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : GOqSFDGzqFXaeGHVGpo4t2M=
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/CFB/PKCS5Padding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : LIO3nP5KTMi9JgeLNazjhEdgmO0h+9qz
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/ECB/PKCS5Padding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : pl9UGxG2IUHOZDdD21ofbOgZPy4+W8XM
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/OFB/NoPadding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : Zeiql9Ywb0HzW1jxoBhwjjU=
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/OFB/PKCS5Padding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : NLT6Z93YyiU9L55pJ5n1wgbpfyGov7NX
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/PCBC/PKCS5Padding
+Taille de clef : 4
+Plaintext : texte à chiffrer
+Cyphertext : 0y22FPCncmf7aVmmBaFQRyQa3N0HNrBC
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/CBC/PKCS5Padding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : 3OAZuCbArXvmI9/pxGxW39VKaB9GkXPw
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/CFB/NoPadding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : DUuhpBAydzq+q8T8rOavMYM=
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/CFB/PKCS5Padding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : 8xZQVfqZMNaeBAQC4htpK34Vyxzk6S2U
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/ECB/PKCS5Padding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : r/+JkPGOzWPNkwkyuRdGjCoZ3XFzfeLz
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/OFB/NoPadding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : Xz70m8YgbMSxUFhMtKlqy5M=
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/OFB/PKCS5Padding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : hKFt4Md8hW6y/MXlckRynwDNnH1CXiwv
+Decrypted Text : texte à chiffrer
+
+Algo : Blowfish/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : Blowfish/PCBC/PKCS5Padding
+Taille de clef : 56
+Plaintext : texte à chiffrer
+Cyphertext : HyCW1Vm9NwcpKwnyECxWOIEZuO6Ye8TR
+Decrypted Text : texte à chiffrer
+
+
+	/* 3DES */
+
+Algo : DESede/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : DESede/CBC/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : 5Y1SoL/3Pl1H5zTFGGj//Pq5eyouOfX8
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/CFB/NoPadding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : 04zzZDOFi9Cv2RqqBRhqw68=
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/CFB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : rdfEwrlzz9YleJzYS5Smh9dYcC11/6Tf
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : DESede/ECB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : vHIy/gHKKq3oX2xElbfvNq+iSQleKkGa
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/OFB/NoPadding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : jDsXl89hUHL4qRjwF4d2ePo=
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/OFB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : YC3W/Y/Y/SQ+HMbRduBcy3IjdEFbgke/
+Decrypted Text : texte à chiffrer
+
+Algo : DESede/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 8 bytes
+
+Algo : DESede/PCBC/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : +c6LoL7td4W4aArXtO1Gd72HxonHv4aa
+Decrypted Text : texte à chiffrer
+
+
+	/* AES */
+
+Algo : AES/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/CBC/PKCS5Padding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : G9Br7cqBdA39kSWnyLVKM/8VD40Nlwdu8lKYCr7mqsg=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/NoPadding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : Z58sDPb4I4RYmK9RDCtPMew=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/PKCS5Padding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : KAydPFfK/Q9GTo7I/PqKIYJs0M/Zc3074eyiCWV/xKY=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/ECB/PKCS5Padding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : b+WPQGHcBvdQzwqUv9YhIg2bntYlJxQni9euzHH6O0w=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/NoPadding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : 9G5bf5kdEIMMqK+aG8y5bV0=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/PKCS5Padding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : YLIuVDoiqs7H2RlHNg/soxTLVbbK1Ie0HFjHeX9IHZY=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/PCBC/PKCS5Padding
+Taille de clef : 16
+Plaintext : texte à chiffrer
+Cyphertext : f/66URKx2mGA5P9kS5Xabykds81rqrG8AeKgYjiSL2E=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/CBC/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : KJYGIIDPasoz14jILzG6TAtsyauzJG82gqsCwqP0G34=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/NoPadding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : 6BeD52WliiU0X2IMJC9GSww=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : aqVrCDsyOBx0O7NEFx9ZVJK9S+3ZoEkxoyM8dlREDjM=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/ECB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : ZbyDfLQ/nQvSVfu8etbIIywFob/imxMtQi831D/AF6k=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/NoPadding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : dEC3jQAGN2C/5ZmOzCxzG4I=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : ZoQVAstMBLGOcTLFt3Ub1MmdDAyLpgrqPhVNG1A1UWs=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/PCBC/PKCS5Padding
+Taille de clef : 24
+Plaintext : texte à chiffrer
+Cyphertext : eR4pYaABl6daX124/V7gzQYpR/MA6YatHnf9P2Tp9d0=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/CBC/PKCS5Padding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : /LQb8mliPcSfYRXBdKHkoYXng55oC3MPyPJ1TurmNnQ=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/NoPadding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : xQG1pUIbKPgLFXGmhEZ7kd8=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/CFB/PKCS5Padding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : YTno0M2ioPMslf7xpmjqe2+AGTAMX0yD/5NZoTkT1bI=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/ECB/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/ECB/PKCS5Padding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : lVxgfJfmLjRPWmx6LR9a+m10eeYzIpZM4cGHUsZqRU0=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/NoPadding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : 1MU4oPJYsF0H3HicfRrQ8f4=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/OFB/PKCS5Padding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : C9uEXLaaj9LNUMZqU7aO+qUTQ70zJR20einhOR86D3Q=
+Decrypted Text : texte à chiffrer
+
+Algo : AES/PCBC/NoPadding
+javax.crypto.IllegalBlockSizeException: Input length not multiple of 16 bytes
+
+Algo : AES/PCBC/PKCS5Padding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : UHfck5WOzjrEsaj5VCXHU0X8zAn/12Q+Slw6Jo8sQxw=
+Decrypted Text : texte à chiffrer
+
+
+	/* RC4 */
+
+Algo : RC4/ECB/NoPadding
+Taille de clef : 5
+Plaintext : texte à chiffrer
+Cyphertext : uPs/Pa4fr2im1fJcl6UU0J8=
+Decrypted Text : texte à chiffrer
+
+Algo : RC4/ECB/NoPadding
+Taille de clef : 32
+Plaintext : texte à chiffrer
+Cyphertext : hiNHbAhT30DVrYjdJtyJsWQ=
+Decrypted Text : texte à chiffrer
+
