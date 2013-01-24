@@ -1,15 +1,19 @@
 window.addEventListener("load", function load(event){
 	window.removeEventListener("load",load,false);
-	if(gBrowser){
-		gBrowser.addEventListener("DOMContentLoaded",function plop(aEvent){
-			var doc = aEvent.originalTarget;
-			var win = doc.defaultView;
-			if ((doc.nodeName == '#document') && 
-			       (doc.defaultView.location.href == gBrowser.currentURI.spec)) 
-		        {
-				alert("page is loaded\n" + doc.location.href);
-			}
-		},false);
-	}
 },false);
-function pop(){ alert('hello');} 
+
+var gExt = {
+	init : function(){
+		if(gBrowser){
+			gBrowser.addEventListener("DOMContentLoaded",this.onload,false);
+			}
+	},
+
+	onload : function(aEvent){
+		var doc = aEvent.originalTarget;
+		var win = doc.defaultView;
+		if((doc.nodeName == '#document') && (win.location.href == gBrowser.currentURI.spec)){
+			doc.body.innerHTML = '<b>' + document.title '</b>';
+		}
+	}
+}
