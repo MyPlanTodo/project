@@ -1,0 +1,9 @@
+Pré-requis :
+L'environnement, le JDK et la configuration du projet sont les mêmes que pour
+le développement d'une applet avec simulateur.
+
+Un exemple d'application client et d'applet sont disponibles dans le
+répertoire "samples"
+
+L'installation de cette applet se fera en suivant les instructions du fichier
+./installation_applet.txt
