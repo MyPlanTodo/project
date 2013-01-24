@@ -1,12 +1,49 @@
 Installation des applets sur la carte
 
-Prérequis : GlobalPlatform, PCSC, et gpshell fonctionnels
+Prérequis : les librairies GlobalPlatform, PCSC, et gpshell fonctionnels
 
-Les scripts *gp211.txt fournis avec gpshell fonctionnent avec nos cartes.
-Les clés présentes sont les clés par défaut. Nous n'allons pas les modifier.
-Il est possible de lister, installer ou supprimer des applets/packages.
+Pour tester l'interrogation de la carte (installation, suppression,
+listing), il existe des scripts fournis par GPShell. Etant donné que nos
+cartes sont compatibles avec la norme GlobalPlatform 2.1.1, il ne faut utiliser
+que les scripts se terminant par "GP211.txt".
+L'utilisation de ces scripts se fait en entrant la ligne : 
+gpshell script.txt
 
+Pour installer une applet, il faut fournir plusieurs directives dans le
+fichier passé à GPshell:
+//Protocole utilisé pour la norme GlobalPlatform 2.1.1
+mode_211
 
+// ? Commande nécessaire avant toute communication avec la carte
+establish_context
 
+//Connexion à la carte
+//Si le lecteur n'est pas explicité, le premier branché est sélectionné
+card_connect
 
-A suivre pour l'exemple IRL.
+//Sélection du "Security Domain". Cette valeur est la même pour toutes les
+//cartes suivant la norme GlobalPlatform 2.1.1.
+//Le security domain est une applet de confiance qui va donner un jeton de
+//session à l'utilisateur qui sera, par la suite, correctement authentifié
+select -AID a000000003000000
+
+// Authentification et établissement d'un tunnel avec la carte
+// security 1 : tunnel avec code MAC ?
+// keyind 0 : numéro d'index de la clef
+// keyver 0 : version de la clef (à laisser inchangé)
+// Les clefs spécifiées correspondent à celles stockées par défaut
+open_sc -security 1 -keyind 0 -keyver 0 -mac_key 404142434445464748494a4b4c4d4e4f -enc_key 404142434445464748494a4b4c4d4e4f
+
+//Suppression de notre applet (utile seulement pour une réinstallation)
+delete -AID 0102030405060708090000                                              
+
+//Suppression de son package
+delete -AID 01020304050607080900                                                
+                                                                                
+//Installation en fournissant le package compilé, _____ et les droits sur ce
+//package (-priv)
+install -file pack.cap -instParam C90145 -priv 2                                
+                                                                                
+//Déconnexion de la carte et "libération du contexte"
+card_disconnect          
+release_context                                                                 
