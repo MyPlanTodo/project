@@ -4,7 +4,6 @@
 \documentclass[a4paper,11pt,french]{article}
 
 %Import des packages utilisés pour le document
-\usepackage[latin1]{inputenc}
 \usepackage[french]{babel}
 \usepackage{chngpage}
 \usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
@@ -86,7 +85,7 @@ considérées explicitement par l'utilisateur.
 % TODO préciser
 Le projet prendra la forme d'une extension pour le navigateur 
 \emph{Mozilla Firefox}
-s'interfaÃ§ant avec une carte à puce pour effectuer certaines tÃ¢ches de 
+s'interfaçant avec une carte à puce pour effectuer certaines tâches de 
 chiffrement.
 
 Il ne sera pas nécessaire de créer un compte, notre projet pourra fonctionner 
@@ -173,11 +172,11 @@ fait partie des personnes autorisées, il peut lire le message.\\
         \item[]
         \item[2.] L'extension demande à l'utilisateur quels amis vont-être
             autorisés à déchiffrer le message
-		\item[4.] L'extension récupère le message avant l'envoi sur le serveur 
-            de Facebook et l'envoi à FaceCrypt qui va le chiffrer avec une clef 
+		\item[4.] L'extension récupère le message avant l'envoie sur le serveur 
+            de Facebook et l'envoie à FaceCrypt qui va le chiffrer avec une clef 
         de chiffrement, récupèrer les clefs publiques des personnes autorisées 
         et chiffre la clef de chiffrement avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
+		\item[5.] FaceCrypt envoie ensuite une concaténation de 
         ce message et des clefs chiffrées à l'extension qui enverra le tout
         chiffré sur les serveurs de Facebook.
 	\end{itemize}
@@ -199,7 +198,6 @@ fait partie des personnes autorisées, il peut lire le message.\\
 	{Utilisateur}
 	{L'utilisateur déchiffre un message du mur d'un de ses amis}
 	{}
-    % TODO à discuter
 	{L'utilisateur souhaite déchiffrer un message}
 	{L'utilisateur a déchiffré un message, ou pas}
     {\begin{itemize}
@@ -210,15 +208,11 @@ fait partie des personnes autorisées, il peut lire le message.\\
     }
 	{\begin{itemize}
         \item[]
-		\item[1.] L'extension récupère le message et l'envoi à 
+		\item[2.] L'extension récupère le message et l'envoie à 
             FaceCrypt;
-        \item[2.] FaceCrypt envoie la concaténation des clefs à la carte
-            pour qu'elle tente de déchiffrer avec la clef privée de 
-            l'utilisateur la clef de chiffrement du message;
-		\item[3.] FaceCrypt reçoit la clef de chiffrement de message;
-        \item[4.] FaceCrypt déchiffre tout le message avec la clef
-            de chiffrement et envoi le message à l'extension.
-        \item[5.] L'extension affiche le résultat;
+        \item[3.] FaceCrypt déchiffre tout le message avec la clef
+            de chiffrement et envoie le message à l'extension.
+        \item[4.] L'extension affiche le résultat;
 	\end{itemize}
 	}
 	{}
@@ -250,8 +244,9 @@ par le réseau social.\\*
         autorisées}
 	{\begin{itemize}
 	    \item[]
-	  \item[1.] L'utilisateur téléverse un document et choisi de le chiffrer,
-          il spécifie les personnes autorisées;
+	  \item[1.] L'utilisateur téléverse un document et choisi de le chiffrer;
+      \item[3.] L'utilisateur précise des listes d'amis ou des amis, 
+          qui pourront lire son message;
 	\end{itemize}
 	}
 	{\begin{itemize}
@@ -260,8 +255,14 @@ par le réseau social.\\*
         de chiffrement, récupère les clefs publiques
         des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
-        du document chiffré et des clefs chiffrées aux serveurs de Facebook.
+		\item[4.] L'extension récupère le commentaire avant l'envoi sur le 
+            serveur de Facebook et l'envoie à FaceCrypt qui chiffre le 
+            document avec une clef de chiffrement, récupère  les clefs publiques
+            des personnes autorisées et chiffre la clef de chiffrement avec
+            ces clefs;
+		\item[5.] FaceCrypt envoie ensuite une concaténation de 
+        ce message et des clefs chiffrées à l'extension qui enverra le tout
+        chiffré aux serveurs de Facebook.
 	\end{itemize}
 	}
 	{}
@@ -282,17 +283,22 @@ par le réseau social.\\*
 	{Utilisateur}
 	{L'utilisateur déchiffre un document d'un de ses amis}
 	{}
-    % TODO à discuter
-	{L'utilisateur est arrivé sur une page contenant un document chiffré}
+	{L'utilisateur souhaite déchiffrer un message}
 	{L'utilisateur a déchiffré un message}
-    {}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton pour déchiffrer
+            le document
+    \end{itemize}
+    }
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
-            du document avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre tout le document avec la clef
+		\item[2.] L'extension récupère le message et l'envoi à 
+            FaceCrypt;
+		\item[3.] FaceCrypt déchiffre tout le document avec la clef
             de chiffrement, la télécharge dans le cas ou ce n'est pas
-            une image.
+            une image, sinon la renvoie à l'extension.
+        \item[4.] L'extension reçoit l'image et l'affiche.
 	\end{itemize}
 	}
 	{}
@@ -312,36 +318,135 @@ Afin d'améliorer l'ergonomie des opérations de chiffrement,
 l'utilisateur aura la possibilité d'organiser ses amis en
 différents groupes. \\*
 
-(Cas d'utilisation encore à déterminer)
-
 \fiche
 	{Création d'une liste d'amis}
 	{Utilisateur}
     {L'utilisateur crée une liste d'amis}
-    % TODO à discuter
     {}
     {L'utilisateur souhaite créer une liste d'amis}
 	{L'utilisateur a créé une liste d'amis}
     {\begin{itemize}
-        \item[]
-        \item[1.] L'utilisateur appuie sur le "bouton" création
+        \item[]        
+        \item[1.] L'utilisateur appuie sur le bouton "Gestion des listes";
+        \item[3.] L'utilisateur appuie sur le "bouton" création
             d'une liste;
         \item[3.] L'utilisateur entre le nom de sa liste et valide;
         
     \end{itemize}}
 	{\begin{itemize}
-        \item[]
-		\item[2.] FaceCrypt ouvre une popup pour inviter l'utilisateur
+        \item[]		
+        \item[2.] L'extension ouvre la fenêtre de gestion de liste;
+		\item[4.] L'extension ouvre une popup pour inviter l'utilisateur
             à choisir un nom pour sa liste;
-            du document avec la clef publique de l'utilisateur;
-		\item[4.] FaceCrypt créé une liste d'amis vide;
+		\item[5.] L'extension envoie une requête à FaceCrypt de création de 
+		liste et actualise ses listes;
+		\item[6.] FaceCrypt crée la liste dans sa base;
 	\end{itemize}
 	}
 	{}
 \flots
     {\begin{itemize}
     \item[]
-    \item[1.] Si l'utilisateur met un nom trop long à sa liste
+    \item[1.] Si l'utilisateur met un nom trop long (> 128) à sa liste
+    \end{itemize}
+    }
+    {}
+\\*
+
+\fiche
+	{Suppression d'une liste d'amis}
+	{Utilisateur}
+    {L'utilisateur supprime une liste existante d'amis}
+    {}
+    {L'utilisateur souhaite supprimer une liste d'amis}
+	{L'utilisateur a supprimé une liste d'amis}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton "Gestion des listes";
+        \item[3.] L'utilisateur selectionne une liste et appuie sur le bouton
+        "supprimer";
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+		\item[2.] L'extension ouvre la fenêtre de gestion de liste;
+		\item[4.] L'extension envoie la requête de suppression à FaceCrypt
+		et réactualiste les listes;
+		\item[5.] FaceCrypt supprime la liste de sa base;
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {}
+\\*
+
+\fiche
+	{Ajout d'un ami dans une liste}
+	{Utilisateur}
+    {L'utilisateur ajoute un ami dans une de ses listes}
+    {La liste d'amis doit déjà exister}
+    {L'utilisateur souhaite ajouter un ami dans une des liste d'amis}
+	{L'utilisateur a ajouté un ami dans une de ses liste d'amis}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton "Gestion des listes";
+        \item[3.] L'utilisateur selectionne une liste et clique sur 
+        "Gérer les amis";
+        \item[5] L'utilisateur coche l'ami voulu et valide;
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] L'extension ouvre la fenêtre de gestion de liste;
+		\item[4.] L'extension ouvre une popup contenant tous les amis de 
+		l'utilisateur;
+		\item[6.] L'extension envoie une requête d'actualisation de liste à
+		 FaceCrypt et actualise sa liste;
+		\item[7.] FaceCrypt ajoute un lien entre le(s) ami(s) et la liste
+		dans sa base;
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur choisit un ami qui ne dispose pas de notre 
+    système, celui ne peut pas être ajouté;
+    \end{itemize}
+    }
+    {}
+\\*
+
+\fiche
+	{Suppression d'un ami dans une liste}
+	{Utilisateur}
+    {L'utilisateur supprime un ami d'une de ses listes}
+    {La liste d'amis doit déjà exister, et l'ami doit y être présent}
+    {L'utilisateur souhaite supprimer un ami dans une des liste d'amis}
+	{L'utilisateur a supprimé un ami d'une de ses liste d'amis}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton "Gestion des listes";
+        \item[3.] L'utilisateur selectionne une liste et clique sur 
+        "Gérer les amis";
+        \item[5] L'utilisateur décoche l'ami voulu et valide;
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] L'extension ouvre la fenêtre de gestion de liste;
+		\item[4.] L'extension ouvre une popup contenant tous les amis de 
+		l'utilisateur;
+		\item[6.] L'extension envoie une requête d'actualisation de la liste à 
+		FaceCrypt et actualise la liste;
+		\item[7.] FaceCrypt supprime un lien entre le(s) ami(s) et la liste
+		dans sa base;
+	\end{itemize}
+	}
+	{}
+\flots
+    {\begin{itemize}
+    \item[]
+    \item[1.] Si l'utilisateur choisit un ami qui ne dispose pas de notre 
+    système, celui ne peut pas être ajouté;
     \end{itemize}
     }
     {}
@@ -362,18 +467,23 @@ s'il fait partie des personnes autorisées.
         autorisées}
 	{\begin{itemize}
 	    \item[]
-	  \item[1.] L'utilisateur saisie un commentaire et choisi de le chiffrer,
-          il spécifie les personnes autorisées à le déchiffrer;
+	  \item[1.] L'utilisateur saisie un commentaire et choisi de le chiffrer;
+      \item[3.] L'utilisateur précise des listes d'amis ou des amis, 
+          qui pourront lire son message;
 	\end{itemize}
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] FaceCrypt chiffre le commentaire avec une clef 
-        de chiffrement, récupère les clefs publiques
-        des personnes autorisées et chiffre la clef de chiffrement
+        \item[2.] L'extension demande à l'utilisateur quels amis vont-être
+            autorisés à déchiffrer le message
+		\item[4.] L'extension récupère le commentaire avant l'envoi sur le 
+            serveur de Facebook et l'envoie à FaceCrypt qui chiffre le 
+            commentaire avec une clef de chiffrement, récupère les clefs 
+            publiques des personnes autorisées et chiffre la clef de chiffrement
         avec ces clefs;
-		\item[3.] FaceCrypt envoi ensuite une concaténation de 
-        du commentaire chiffré et des clefs chiffrées aux serveurs de Facebook.
+		\item[5.] FaceCrypt envoie ensuite une concaténation de 
+        ce message et des clefs chiffrées à l'extension qui enverra le tout
+        chiffré aux serveurs de Facebook.
 	\end{itemize}
 	}
 	{}
@@ -393,16 +503,21 @@ s'il fait partie des personnes autorisées.
 	{L'utilisateur déchiffre un commentaire d'un de ses amis, présent sur la
         page}
 	{}
-    % TODO à discuter
-	{L'utilisateur est arrivé sur une page contenant un commentaire chiffré}
+	{L'utilisateur souhaite déchiffrer un commentaire}
 	{L'utilisateur a déchiffré un commentaire}
-    {}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur appuie sur le bouton pour 
+            déchiffrer un commentaire;
+    \end{itemize}
+    }
 	{\begin{itemize}
         \item[]
-		\item[1.] FaceCrypt tente de déchiffrer la clef de chiffrement
-            du commentaire avec la clef publique de l'utilisateur;
-		\item[2.] FaceCrypt déchiffre le commentaire avec la clef
-            de chiffrement et l'affiche
+		\item[2.] L'extension récupère le commentaire et l'envoie à 
+            FaceCrypt;
+        \item[3.] FaceCrypt déchiffre tout le commentaire avec la clef
+            de chiffrement et envoie le message à l'extension.
+        \item[4.] L'extension affiche le résultat;
 	\end{itemize}
 	}
 	{}
@@ -594,7 +709,5 @@ F-FR-\arabic{FRcount} & Seul le mot de passe nécessite de ne jamais être trans
 \hline
 \end{longtable}
 
-
-\end{document}
 
 \end{document}
