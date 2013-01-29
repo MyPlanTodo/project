@@ -1,5 +1,7 @@
 package crypto;
 
+import java.math.BigInteger;
+
 import javacard.framework.APDU;
 import javacard.framework.APDUException;
 import javacard.framework.Applet;
@@ -32,7 +34,7 @@ public class Cypher extends Applet {
 	/* Constructeur */
 	private Cypher(){
 		try{
-			kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short) KeyBuilder.LENGTH_RSA_512);
+			kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short) KeyBuilder.LENGTH_RSA_1024);
 			kp.genKeyPair();
 			privKey = (PrivateKey) kp.getPrivate();
 			pubKey = (PublicKey) kp.getPublic();
@@ -74,8 +76,8 @@ public class Cypher extends Applet {
 
 				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
-				apdu.setOutgoingLength((short) cipherLen);
-				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, (short) cipherLen);
+				apdu.setOutgoingLength(cipherLen);
+				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, cipherLen);
 
 				//apdu.setOutgoingAndSend((short) 0, (short) cipherLen);
 			}
@@ -98,18 +100,30 @@ public class Cypher extends Applet {
 				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
 				cipher.init(privKey, Cipher.MODE_DECRYPT);
-				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, ISO7816.OFFSET_CDATA);
+				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) ISO7816.OFFSET_CDATA);
 
 				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
-				apdu.setOutgoingLength((short) cipherLen);
-				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, (short) cipherLen);
+				apdu.setOutgoingLength(cipherLen);
+				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, cipherLen);
+//
+//				buffer[0] = (byte) dataLen;
+//				apdu.setOutgoingAndSend((short) ISO7816.OFFSET_CDATA, (short) dataLen);
+
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4247);
 			}
-			catch(CryptoException e){
-				ISOException.throwIt((short) 0x4248);
+			
+			catch(CryptoException ce){
+				 if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
+				        ISOException.throwIt((short) 0x4250);
+				    else if (ce.getReason() == CryptoException.INVALID_INIT)
+				        ISOException.throwIt((short) 0x4251);
+				    else if (ce.getReason() == CryptoException.ILLEGAL_USE)
+				        ISOException.throwIt((short) 0x4252);
+				    else
+					ISOException.throwIt(ISO7816.SW_RECORD_NOT_FOUND);
 			}
 			catch(SecurityException e){
 				ISOException.throwIt((short) 0x4249);
@@ -120,6 +134,7 @@ public class Cypher extends Applet {
 		case INS_GET_EXPONENT:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
+				
 				dataLen = rsaPubKey.getExponent(buffer, (short) 0);
 				apdu.setOutgoingAndSend((short) 0, (short) dataLen);
 			}
@@ -135,7 +150,9 @@ public class Cypher extends Applet {
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
 				dataLen = rsaPubKey.getModulus(buffer, (short) 0);
-				apdu.setOutgoingAndSend((short) 0, (short) dataLen);
+				apdu.setOutgoing();
+				apdu.setOutgoingLength((short) dataLen);
+				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, (short) dataLen);
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4242);
