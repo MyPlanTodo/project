@@ -19,8 +19,9 @@ public class client_PIN {
 	public static final byte INS_VERIF_PIN = 0x00;
 	public static final byte INS_REMAINING_TRIES = 0x01;
 	public static final byte INS_RESET_PIN = 0x02;
-
-	public static byte[] APPLET_AID= { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x00 };
+	public static final byte INS_UNLOCK_WITH_PUK = 0x03;
+	
+	public static byte[] APPLET_AID= { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00,(byte) 0x01};
 
 	public static void main(String[] args) {
 	        ResponseAPDU r;
@@ -55,11 +56,11 @@ public class client_PIN {
 				System.out.println("Application cliente Javacard");
 				System.out.println("----------------------------");
 				System.out.println();
-				System.out.println("1 - Interroger le compteur");
-				System.out.println("2 - Inrementer le compteur");
-				System.out.println("3 - Decrementer le compteur");
-				
-				System.out.println("4 - Quitter");
+				System.out.println("1 - Demander les essais restants");
+				System.out.println("2 - Mettre à 0 le compteur");
+				System.out.println("3 - Essayer code PIN");
+				System.out.println("4 - Essayer code PUK");
+				System.out.println("5 - Quitter");
 				System.out.println();
 				System.out.println("Votre choix ?");
 
@@ -108,8 +109,34 @@ public class client_PIN {
 						
 					}
 					break;
-
 				case '4':
+					byte[] donnees2 = new byte[4];
+					Scanner in2 = new Scanner(System.in); 
+					int PIN2 = in2.nextInt();
+					
+					donnees2[0] =   (byte) (PIN2/(256*256*256)) ;
+					
+					
+					donnees2[1] =  (byte) (PIN2/(256*256));
+					
+					
+					donnees2[2] =  (byte) (PIN2/(256));
+					
+					donnees2[3] = (byte) (PIN2 % 256);
+					
+	
+					r = channel.transmit(new CommandAPDU((byte)0xB0, INS_UNLOCK_WITH_PUK, (byte)0x04, (byte)0x00, donnees2));
+
+					if (r.getSW() != 0x9000) {
+						System.out.println("Erreur : status word different de 0x9000");
+					} else {
+						if(r.getData()[0] == 0)
+						{System.out.println("echec");}
+						else{System.out.println("reussite");}
+						
+					}
+					break;	
+				case '5':
 					fin = true;
 					break;
 				}
