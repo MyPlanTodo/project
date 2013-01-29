@@ -1,7 +1,4 @@
 package myPackage;
-/**
- * @author: DTGio
- */
 
 
 import javacard.framework.APDU;
@@ -15,7 +12,7 @@ import javacard.security.PrivateKey;
 import javacard.security.PublicKey;
 import javacard.security.Signature;
 
-public class Crypto extends Applet {
+Rublic class Sign extends Applet {
 
 
 	/* Constantes */
@@ -30,7 +27,7 @@ public class Crypto extends Applet {
 	private Signature signature1;
 
 	/* Constructeur */
-	private Crypto() {
+	private Sign() {
 		KeyPair kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short)1024);
 		kp.genKeyPair();
 		privKey = (PrivateKey) kp.getPrivate();
@@ -38,7 +35,7 @@ public class Crypto extends Applet {
 	}
 
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
-		new Crypto().register();
+		new Sign().register();
 	}
 
 	public void process(APDU apdu) throws ISOException {
@@ -63,10 +60,12 @@ public class Crypto extends Applet {
 			byte[] test1 = {0x01, 0x02, 0x04, 0x05, 0x06, 0x07, 0x08};
 
 			try {
+				/* Choix de l'algorithme de signature */
 				signature1 = Signature.getInstance(Signature.ALG_RSA_SHA_PKCS1, false);
+				/* On définit le mode de signature (vérification) */
 				signature1.init(pubKey, Signature.MODE_VERIFY);
 				
-				/* taille du message signé convertit en short positif */
+				/* taille du message signé converti en short positif */
 				short p1 = (short) (buffer[ISO7816.OFFSET_P1] & 0xFF);
 				
 				/* Si le message est authentifié alors on renvoie 0x00 */
@@ -92,9 +91,12 @@ public class Crypto extends Applet {
 			}
 			break;
 		
-		/* Signature du message clair*/
+			
+		/* Signature du message clair et envoie*/
 		case INS_ASK_AUTH:
+			/* Choix de l'algorithme de signature */
 			signature = Signature.getInstance(Signature.ALG_RSA_SHA_PKCS1, false);
+			/* On définit le mode de signature (signature) */
 			signature.init(privKey, Signature.MODE_SIGN);		
 			
 			/* Message clair à signé */
