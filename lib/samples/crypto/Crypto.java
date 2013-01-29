@@ -1,4 +1,7 @@
 package myPackage;
+/**
+ * @author: DTGio
+ */
 
 
 import javacard.framework.APDU;
