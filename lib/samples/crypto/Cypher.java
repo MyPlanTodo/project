@@ -1,7 +1,5 @@
 package crypto;
 
-import java.math.BigInteger;
-
 import javacard.framework.APDU;
 import javacard.framework.APDUException;
 import javacard.framework.Applet;
@@ -18,10 +16,15 @@ import javacardx.crypto.Cipher;
 
 public class Cypher extends Applet {
 
-
-	/* Constantes */
+	/* 
+	 * Identifiant de la classe
+	 */
 	public static final byte CLA_MONAPPLET = (byte) 0xB1;
 
+	/*
+	 * Identifiants pour un chiffrement, un déchiffrement, une récupération
+	 * d'exposant public et une récupération du modulus
+	 */
 	public static final byte INS_CIPHER = 0x00;
 	public static final byte INS_UNCIPHER = 0x01;
 	private static final byte INS_GET_EXPONENT = 0x02;
@@ -31,7 +34,9 @@ public class Cypher extends Applet {
 	private PublicKey pubKey;
 	private KeyPair kp;
 
-	/* Constructeur */
+	/* 
+	 * Génération de la paire de la clef 
+	 */
 	private Cypher(){
 		try{
 			kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short) KeyBuilder.LENGTH_RSA_1024);
@@ -44,11 +49,17 @@ public class Cypher extends Applet {
 		}
 	}
 
+	/*
+	 * Méthode appelée lors de l'installation de l'applet sur la carte
+	 * 
+	 */
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
-		// Register à comprendre
-		new Cypher().register();//bArray, (short) (bOffset + 1), bArray[bOffset]);
+		new Cypher().register();
 	}
 
+	/*
+	 * Méthode appelée lors de l'appel de l'applet
+	 */
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 		short dataLen;
@@ -84,8 +95,19 @@ public class Cypher extends Applet {
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4244);
 			}
-			catch(CryptoException e){
-				ISOException.throwIt((short) 0x4245);
+			catch(CryptoException ce){
+				if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
+					ISOException.throwIt((short) 0x0001);
+				else if (ce.getReason() == CryptoException.INVALID_INIT)
+					ISOException.throwIt((short) 0x0002);
+				else if (ce.getReason() == CryptoException.ILLEGAL_USE)
+					ISOException.throwIt((short) 0x0003);
+				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
+					ISOException.throwIt((short) 0x0004);
+				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
+					ISOException.throwIt((short) 0x0005);
+				else
+					ISOException.throwIt(ISO7816.SW_RECORD_NOT_FOUND);
 			}
 			catch(SecurityException e){
 				ISOException.throwIt((short) 0x4246);
@@ -93,7 +115,7 @@ public class Cypher extends Applet {
 
 			break;
 
-			// Requête de déchiffrement
+		// Requête de déchiffrement
 		case INS_UNCIPHER:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
@@ -106,23 +128,24 @@ public class Cypher extends Applet {
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(cipherLen);
 				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, cipherLen);
-//
-//				buffer[0] = (byte) dataLen;
-//				apdu.setOutgoingAndSend((short) ISO7816.OFFSET_CDATA, (short) dataLen);
 
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4247);
 			}
-			
+
 			catch(CryptoException ce){
-				 if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
-				        ISOException.throwIt((short) 0x4250);
-				    else if (ce.getReason() == CryptoException.INVALID_INIT)
-				        ISOException.throwIt((short) 0x4251);
-				    else if (ce.getReason() == CryptoException.ILLEGAL_USE)
-				        ISOException.throwIt((short) 0x4252);
-				    else
+				if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
+					ISOException.throwIt((short) 0x0001);
+				else if (ce.getReason() == CryptoException.INVALID_INIT)
+					ISOException.throwIt((short) 0x0002);
+				else if (ce.getReason() == CryptoException.ILLEGAL_USE)
+					ISOException.throwIt((short) 0x0003);
+				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
+					ISOException.throwIt((short) 0x0004);
+				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
+					ISOException.throwIt((short) 0x0005);
+				else
 					ISOException.throwIt(ISO7816.SW_RECORD_NOT_FOUND);
 			}
 			catch(SecurityException e){
@@ -131,10 +154,11 @@ public class Cypher extends Applet {
 
 			break;
 
+		// Requête d'obtention de l'exposant public
 		case INS_GET_EXPONENT:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
-				
+
 				dataLen = rsaPubKey.getExponent(buffer, (short) 0);
 				apdu.setOutgoingAndSend((short) 0, (short) dataLen);
 			}
@@ -146,6 +170,7 @@ public class Cypher extends Applet {
 			}
 			break;
 
+		// Requête d'obtention du modulus
 		case INS_GET_MODULUS:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
