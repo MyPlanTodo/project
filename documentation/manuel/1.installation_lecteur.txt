@@ -1,0 +1,12 @@
+Une étape indispensable et préalable est l'installation de quelques librairies.
+apt-get install libudev-dev libcurl4-openssl-dev pcscd pcsc-tools
+pcsc-lite : http://pcsclite.alioth.debian.org/
+globalplatform et gppcscconnectionplugin : http://sourceforge.net/projects/globalplatform/files/GlobalPlatform%20Library/GlobalPlatform%20Library%206.0.0/
+gpshell : http://sourceforge.net/projects/globalplatform/files/latest/download?source=files
+
+L'installation se fait en entrant les lignes :
+./configure --prefix=/usr
+make && make install
+
+Il est enfin possible de tester la reconnaissance du lecteur et de la carte
+via l'utilitaire "pcsc_scan".

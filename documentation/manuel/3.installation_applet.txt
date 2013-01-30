@@ -14,7 +14,8 @@ fichier passé à GPshell:
 //Protocole utilisé pour la norme GlobalPlatform 2.1.1
 mode_211
 
-// ? Commande nécessaire avant toute communication avec la carte
+// Commande nécessaire avant toute communication avec la carte : établissement
+// d'un contexte
 establish_context
 
 //Connexion à la carte
