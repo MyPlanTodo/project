@@ -83,12 +83,12 @@ public class Cypher extends Applet {
 				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
 				cipher.init(pubKey, Cipher.MODE_ENCRYPT);
-				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, ISO7816.OFFSET_CDATA);
+				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
 				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(cipherLen);
-				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, cipherLen);
+				apdu.sendBytesLong(buffer, (short) 0, cipherLen);
 
 				//apdu.setOutgoingAndSend((short) 0, (short) cipherLen);
 			}
@@ -122,12 +122,13 @@ public class Cypher extends Applet {
 				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
 				cipher.init(privKey, Cipher.MODE_DECRYPT);
-				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) ISO7816.OFFSET_CDATA);
+				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
 				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(cipherLen);
-				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, cipherLen);
+				apdu.sendBytesLong(buffer, (short) 0, cipherLen);
+				
 
 			}
 			catch(APDUException e){
@@ -177,7 +178,7 @@ public class Cypher extends Applet {
 				dataLen = rsaPubKey.getModulus(buffer, (short) 0);
 				apdu.setOutgoing();
 				apdu.setOutgoingLength((short) dataLen);
-				apdu.sendBytesLong(buffer, (short) ISO7816.OFFSET_CDATA, (short) dataLen);
+				apdu.sendBytesLong(buffer, (short) 0, (short) dataLen);
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4242);
