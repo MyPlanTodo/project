@@ -1,0 +1,181 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper,11pt,french]{article}
+
+%Import des packages utilisés pour le document
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{graphicx, amssymb, color, listings}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx, longtable}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{lastpage}
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+%Redéfinition des marges
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{1cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{1cm}
+
+
+%Import page de garde et structures pour la gestion de projet
+\usepackage{res/structures} 
+
+%Variables
+\def\matiere{Conduite de Projet}
+\def\filiere{Master 2 SSI}
+\def\projectDesc{Smart Social Network}
+\def\projectName{\emph{SSN}~}
+\def\completeName{\projectDesc ~- \projectName}
+\def\docType{Plan de Qualité}
+\def\docDate{\today}
+\def\version{0.1}
+\def\author{Baptiste \textsc{Dolbeau}}
+\def\checked{}
+\def\approved{}
+
+
+% -- Début du document -- %
+\begin{document}
+%Page de garde
+\makeFirstPage
+\clearpage
+
+%Tableau de mises à jour
+\vspace*{1cm}
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 07/01/2013 & Création\\
+	\hline
+	&&\\
+	\hline
+	&&\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+%La table des matières
+\clearpage
+\tableofcontents
+\clearpage
+
+\renewcommand\labelitemi{\textbullet} %style des puces
+\renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
+\section{Objet du Plan de Qualité}
+\subsection{Cadre}
+	Ce plan de qualité à été élaboré pour le projet "Smart Secured Network"
+associant la promotion de master 2 Sécurité des Systèmes Informatiques avec
+Madame Bardet ainsi que Monsieur Otmani.
+
+\subsection{Objectif}
+	Il a pour but de mettre en évidence la définition et les mesures à
+prendre pour le projet "Smart Secured Network" afin d'assurer un seuil de
+qualité défini et atteindre les résultats demandés.
+
+\subsection{Utilisation}
+	Le plan de qualité est un outil de suivi et de gestion du projet.
+De part sa nature, il est amené à être modifié selon les ajouts que l'on
+apportera au projet.
+
+\newpage
+\section{Données}
+\subsection{Contexte}
+	Dans le cadre de notre Master 2 Sécurité des Systèmes Informatiques,
+nous avons à réaliser un projet de fin d'année. Ce projet "Smart Secured
+Network" est devenu l'agrégat des deux sous-projets initiaux "Smart Card"
+et "Secured Social Network". L'effectif n'étant pas assez suffisant, il
+a été convenu par les deux clients "Madame Bardet" et "Monsieur Otmani"
+de réunir ces deux projets en un seul.
+
+
+	Ces projets sont nés d'une part du besoin d'un cas d'utilisation 
+de cartes à puce et d'autre part du besoin de rester propriétaire des
+données postées sur un réseau social.
+
+
+\subsection{Rappels}
+\subsubsection{Objectifs projet}
+	L'objectif de notre projet est l'authentification de la personne
+utilisant notre progiciel à l'aide d'une carte à puces et le chiffrement
+des données postées sur le réseau social "Facebook".
+
+	Notre projet possède deux objectifs principaux :
+\begin{itemize}
+	\item Authentification d'une personne via carte à puce.
+	\item Chiffrement des données déposées sur le réseau social
+"Facebook".
+\end{itemize}
+
+	Ainsi, \emph{Smart Social Network} fournit une solution utilisateur
+en permettant de rendre les informations illisibles pour leur
+hébergeur, ici Facebook. 
+
+\subsubsection{Livrables}
+\begin{itemize}
+	\item
+	\item
+\end{itemize}
+
+\subsubsection{Objectifs produit}
+	Ces deux objectifs s'articulent dans Smart Social Network dans le
+sens où, une fois la personne authentifiée, la carte à puce sera utilisée
+pour fournir des éléments utilisés pour le chiffrement et déchiffrement
+des données utilisateurs de Facebook.
+
+\subsubsection{Limites}
+\subsection{Moyens}
+\subsection{Organismes, parties prennantes}
+
+\section{Organisation}
+\subsection{Structure}
+\subsection{Acteurs}
+\subsection{Communications}
+\subsubsection{Documentation}
+\subsubsection{Signalement des anomalies}
+\subsubsection{Demandes de changement}
+\subsection{Procédures de validation des documents}
+
+\section{Plan de developpement}
+
+
+
+\section{Plan de gestion}
+
+
+
+\section{L'assurance qualité}
+
+
+
+
+
+\begin{description}
+	\item[SN :] Social Network, représente le réseau social que nous 
+	avons choisi comme support pour ce projet.
+    \item[FaceCrypt :] Application Java gérant les traitements lourds 
+    (chiffrement/déchiffrement) de l'extension et étant en relation avec
+	la carte à puce.
+    \item[Extension :] Programme incorporé dans le navigateur permettant
+    de manipuler les pages de \emph{Facebook}.
+    \item[SoftCard :] Application effectuant le relais entre la carte
+        et FaceCrypt.
+\end{description}
+
+\section{Exigences fonctionnelles}
+
+
+\end{document}

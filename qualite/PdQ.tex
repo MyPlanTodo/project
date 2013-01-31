@@ -1,0 +1,253 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper,11pt,french]{article}
+
+%Import des packages utilisés pour le document
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{graphicx, amssymb, color, listings}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx, longtable}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{lastpage}
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+%Redéfinition des marges
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{1cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{1cm}
+
+
+%Import page de garde et structures pour la gestion de projet
+\usepackage{res/structures} 
+
+%Variables
+\def\matiere{Conduite de Projet}
+\def\filiere{Master 2 SSI}
+\def\projectDesc{Smart Social Network}
+\def\projectName{\emph{SSN}~}
+\def\completeName{\projectDesc ~- \projectName}
+\def\docType{Plan de Qualité}
+\def\docDate{\today}
+\def\version{0.1}
+\def\author{Baptiste \textsc{Dolbeau}}
+\def\checked{}
+\def\approved{}
+
+
+% -- Début du document -- %
+\begin{document}
+%Page de garde
+\makeFirstPage
+\clearpage
+
+%Tableau de mises à jour
+\vspace*{1cm}
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 31/01/2013 & Création\\
+	\hline
+	&&\\
+	\hline
+	&&\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+%La table des matières
+\clearpage
+\tableofcontents
+\clearpage
+
+\renewcommand\labelitemi{\textbullet} %style des puces
+\renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
+\section{Objet du Plan de Qualité}
+\subsection{Cadre}
+	Ce plan de qualité a été élaboré pour le projet \emph{Smart Social
+Network} associant la promotion de master 2 Sécurité des Systèmes
+Informatiques avec Madame Bardet ainsi que Monsieur Otmani.
+
+\subsection{Objectif}
+	Il a pour but de mettre en évidence la définition et les mesures à
+prendre pour le projet \emph{Smart Social Network} afin d'assurer un seuil de
+qualité défini et atteindre les résultats demandés.
+
+\subsection{Utilisation}
+	Le plan de qualité est un outil de suivi et de gestion du projet.
+De part sa nature, il est amené à être modifié selon les ajouts que l'on
+apportera au projet.
+
+\newpage
+\section{Données}
+\subsection{Contexte}
+	Dans le cadre de notre master 2 Sécurité des Systèmes Informatiques,
+nous avons à réaliser un projet de fin d'année. Ce projet \emph{Smart Social
+Network} est devenu l'agrégat des deux sous-projets initiaux \emph{Smart
+Card} et \emph{Secure Social Network}. L'effectif n'étant pas assez 
+suffisant, il a été convenu par les deux clients "Mme Bardet" et "M Otmani"
+de réunir ces deux projets en un seul.
+
+
+	Ces projets sont nés d'une part du besoin d'un cas d'utilisation 
+de cartes à puce et d'autre part du besoin de rester propriétaire des
+données postées sur un réseau social.
+
+
+\subsection{Rappels}
+\subsubsection{Objectifs projet}
+	Notre projet possède deux objectifs principaux :
+\begin{itemize}
+	\item Authentification d'une personne via carte à puce.
+	\item Chiffrement des données déposées sur le réseau social
+"Facebook".
+\end{itemize}
+
+	Ainsi, \emph{Smart Social Network} fournit une solution utilisateur
+en permettant de rendre les informations illisibles pour leur hébergeur, ici
+Facebook, au moyen d'une carte à puce.
+
+\subsubsection{Livrables}
+\begin{itemize}
+	\item Void.
+	\item Void.
+	\item Void.
+	\item Projet Fini.
+\end{itemize}
+
+\subsubsection{Objectifs produit}
+	Ces deux objectifs s'articulent dans Smart Social Network dans le
+sens où, une fois la personne authentifiée, la carte à puce sera utilisée
+pour fournir des éléments utilisés pour le chiffrement et déchiffrement
+des données utilisateurs de Facebook.
+
+\subsubsection{Limites}
+	Ce projet, bien que pensé pour fonctionner avec plusieurs réseaux
+sociaux, est implanté, dans notre cas, uniquement pour Facebook. De plus,
+il ne fontionnera que sur un navigateur : \emph{Firefox}.
+
+
+	Un utilisateur \emph{Smart Social Network} pourra poster des données
+telles que des images, des messages ou des commentaires, tout ceci de manière
+chiffrée. Ainsi, ces données ne seront pas lisibles par Facebook ou les
+autres personnes non spécifiées. Cependant, la liste de ses amis, les
+conversations instantanées ainsi que ses données personnelles pourront être
+lues par Facebook.
+
+\subsection{Moyens}
+	Pour la réalisation de ce projet, nous avons mis en place plusieurs
+concept afin d'améliorer l'efficacité de notre travail :
+\begin{itemize}
+	\item Un espace partagé de travail (github)
+	\item Un environnement de developpement (eclipse)
+	\item Un kit de developpement pour firefox (addon-sdk)
+\end{itemize}
+
+	De plus, nous avons reçu des lecteurs de cartes à puces ainsi qu'un
+lot de cartes.
+
+
+\subsection{Organismes, parties prennantes}
+	Les parties prennantes du projet sont la promotion du master 2 SSI
+en tant que fournisseurs et Mme Bardet ainsi que M Otmani en tant que clients.
+
+
+\newpage
+
+\section{Organisation}
+\subsection{Structure}
+	Afin de réaliser notre projet, nous avons décidé de garder la même
+structure présente avant la réunion des deux projets. Il y a donc une équipe
+spécialisé pour l'authentification par carte à puce (équipe \emph{Smart 
+card}) et une équipe pour le chiffrement des données sur le réseau social
+(équipe \emph{Secure Social Network}). Le chef de projet aura pour rôle
+la coordination de ces deux équipes.
+
+\subsection{Acteurs}
+\subsubsection{Organismes participants}
+\begin{center}
+	\begin{tabularx}{16cm}{|X|X|X|X|}
+	\hline
+	\bfseries{Organisme} & \bfseries{Nom} & \bfseries{Fonctions} & \bfseries{Rôle}\\
+	\hline
+	Université de Rouen & Mme Bardet & Professeur & Client\\
+	\hline
+	Université de Rouen & M Otmani & Professeur & Client\\
+	\hline
+	Université de Rouen & Promotion M2SSI & Etudiants & Fournisseurs\\
+	\hline
+	\end{tabularx}
+\end{center}
+\vspace*{0cm}
+
+\subsubsection{Liste des acteurs de la promotions}
+\begin{center}
+	\begin{tabularx}{16cm}{|X|X|X|X|}
+	\hline
+	\bfseries{Equipe} & \bfseries{Nom} & \bfseries{Rôle}\\
+	\hline
+		& Guilbert Florian & Chef de Projet\\
+	\hline
+	Secure Social Network & Addi Zakaria & Developpeur\\
+	\hline
+	Secure Social Network & Péchoux Maxence & Developpeur\\
+	\hline
+	Secure Social Network & Dolbeau Baptiste & Testeur\\
+	\hline
+	Smart Card & Mocquet Emmanuel & Developpeur\\
+	\hline
+	Smart Card & Yicheng Gao & Developpeur\\
+	\hline
+	Smart Card & Pignard Romain & Testeur\\
+	\hline
+	Smart Card & Huet Giovanni & Testeur\\
+	\hline
+	\end{tabularx}
+\end{center}
+\vspace*{0cm}
+
+\subsection{Communications}
+\subsubsection{Documentation}
+\begin{itemize}
+	\item STB Secure Social Network
+	\item DAL Secure Social Network
+	\item Tutoriel d'utilisation
+	\item Plan de developpement
+	\item Manuel d'utilisation
+	\item Analyse des risques
+	\item Cahier de recette
+	\item Plan de qualité
+	\item STB Smart Card
+	\item DAL Smart Card
+	\item Comptes rendus
+\end{itemize}
+
+	Chaque document est soumis à une relecture par une personne tierce.
+Le document n'est pas présenté au client tant qu'il y a des remarques faites
+par la personne tierce. 
+
+	Une fois présenté au client, le document peut être accepté directement
+sinon, celui ci est a nouveau révisé en fonction des remarques du client.
+
+
+\newpage
+\section{L'assurance qualité}
+
+
+
+
+
+\end{document}
