@@ -13,6 +13,10 @@ import javacard.security.PublicKey;
 import javacard.security.RSAPublicKey;
 import javacardx.crypto.Cipher;
 
+/*
+ * Cette classe permet de générer, stocker et utiliser un biclef
+ * RSA pour chiffrer et déchiffrer.
+ */
 
 public class Cypher extends Applet {
 
