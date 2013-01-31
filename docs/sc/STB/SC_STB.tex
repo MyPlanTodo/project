@@ -1,0 +1,561 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper,11pt,french]{article}
+
+%Import des packages utilisés pour le document
+\usepackage[french]{babel}
+\usepackage{chngpage}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{graphicx, amssymb, color, listings}
+\usepackage{fontspec,xltxtra,xunicode,color}
+\usepackage{tabularx, longtable}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{lastpage}
+
+\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+
+%Redéfinition des marges
+\addtolength{\hoffset}{-2cm}
+\addtolength{\textwidth}{4cm}
+\addtolength{\topmargin}{-2cm}
+\addtolength{\textheight}{1cm}
+\addtolength{\headsep}{0.8cm} 
+\addtolength{\footskip}{1cm}
+
+
+%Import page de garde et structures pour la gestion de projet
+\usepackage{res/structures} 
+
+%Variables
+\def\matiere{Conduite de Projet}
+\def\filiere{Master 2 SSI}
+\def\projectDesc{Smart Social Network}
+\def\projectName{\emph{SSN}~}
+\def\completeName{\projectDesc ~- \projectName}
+\def\docType{Spécification technique des besoins}
+\def\docDate{\today}
+\def\version{1.0}
+\def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
+\def\checked{Florian \textsc{Guilbert}}
+\def\approved{}
+
+
+% -- Début du document -- %
+\begin{document}
+%Page de garde
+\makeFirstPage
+\clearpage
+
+%Tableau de mises à jour
+\vspace*{1cm}
+\begin{center}
+\textbf{\huge{MISES À JOUR}}\\
+\vspace*{3cm}
+	\begin{tabularx}{16cm}{|c|c|X|}
+	\hline
+	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
+	\hline
+	0.1 & 26/11/2013 & Création\\
+	\hline
+    0.2 & 02/01/2013 & Ajout des cas d'utilisation\\
+	\hline
+    0.3 & 30/01/2013 & Modifications mineures\\
+	\hline
+    1.0 & 31/01/2013 & Relecture \\
+	\hline
+	&&\\
+	\hline
+	\end{tabularx}
+\end{center}
+
+%La table des matières
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Objet}
+\renewcommand\labelitemi{\textbullet} %style des puces
+\renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
+Ce projet propose la mise en place de solutions cryptographiques pour 
+sécuriser les données qu’un utilisateur place sur un réseau social au moyen 
+d’authentifications fortes.
+
+\paragraph{}
+Il s’agirait donc ici de développer une extension pour le logiciel Mozilla 
+Firefox permettant à l’utilisateur de gérer le chiffrement de ses données sur 
+le réseau social Facebook. Cette extension utilisera
+une application Java pour assurer les traitements lourds. Pour gérer 
+l’authentification forte, cette application dialoguera avec une carte à puce 
+qui contiendra les données sensibles de l’utilisateur (login/mot de passe), 
+clef privée, ...
+Le dialogue avec cette carte à puce se fera par l’intermédiaire d’un 
+client Java. 
+
+Ce projet est une fusion de deux sous-projets :
+\begin{itemize}
+    \item Étude et mise en \oe{}uvre de solutions d’authentifications et de signatures 
+        par cartes à puce, proposé par Magali \textsc{Bardet} ;
+\item Solutions cryptographiques pour les réseaux sociaux, proposé par Ayoub 
+    \textsc{Otmani} ;
+\end{itemize}
+
+\paragraph{}
+Dans ce document, nous présentons le sous-projet SC (pour SmartCards) utilisé 
+par l'entité FaceCrypt du sous-projet SSN, cette utilisation est adaptable à 
+d'autres situations.
+
+\section{Documents applicables et de référence}
+\begin{itemize}
+    \item Manuel d'utilisation;
+    \item Tutoriel d'installation;
+    \item cartes-a-puce.pdf, le sujet du projet.
+\end{itemize}
+
+
+\section{Terminologie et sigles utilisés}
+\begin{description}
+    \item[CdR :] Cahier de Recettes;
+    \item[AdR :] Analyse des Risques;
+    \item[DAL :] Document d'Architecture Logicielle;
+    \item[PdD :] Plan de développement;
+    \item[STB :] Spécification Technique de Besoins;
+    \item[SC :] SmartCard, relatif au sous-projet sur les cartes à puce;
+    \item[SSN :] \emph{Secure Social Network};
+    \item[FaceCrypt :] Application Java gérant les traitements lourds 
+    (chiffrement/déchiffrement) de l'extension et étant en relation avec
+	la carte à puce;
+    \item[IHM :] Interface Homme-Machine, (interface graphique); 
+    \item[Utilisateur :] entité (humain ou programme) intéragissant ce 
+        sous-projet;
+    \item[Système :] ce sous-projet;
+    \item[SoftCard :] Application effectuant le relais entre la carte
+        et FaceCrypt;
+    \item[Extension :] programme incorporé dans le navigateur;
+    \item[Aléatoire :] indistinguable en temps polynomial, distribution
+        de probabilité uniforme;
+    \item[PRNG :] (Pseudo Random Number Generator), générateur de nombres
+        pseudo-aléatoires;
+    \item[PIN :] (Personal Identification Number), code servant à authentifier
+        l'utilisateur;
+    \item[PUK :] (Personal Unlock Key), code servant à débloquer la carte quand
+        trop de codes PIN erronés ont été entrés.
+\end{description}
+
+\clearpage
+
+\section{Exigences fonctionnelles}
+
+\subsection{Présentation de la mission du produit logiciel}
+\newcounter{FGcount}
+\begin{tabularx}{16cm}{|c|X|l|c|}
+\hline
+\rowcolor{blue}~{\color{white}\bfseries{Référence}}&~{\color{white}\bfseries{Fonctionalité Globale}}&~{\color{white}\bfseries{Acteur}}&~{\color{white}\bfseries{Priorité}}\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Génération de nombres aléatoires & SmartCard, SoftCard, Utilisateur & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Déblocage de la carte (\emph{via} authentification par code PIN et PUK) &
+SmartCard, SoftCard, Utilisateur & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Transmission de données & SmartCard, SoftCard, Utilisateur & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Chiffrement/déchiffrement de données & SmartCard, SoftCard, Utilisateur & \cellcolor{green!50}Indispensable\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Signature/Vérification de données & SmartCard, SoftCard, Utilisateur & \cellcolor{green!50}Indispensable\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Administration des cartes & Administrateur & \cellcolor{blue!50}Secondaire\\
+\hline
+\end{tabularx}
+
+\subsection{Communications sécurisées}
+La communication sécurisé est une précondition pour tous les prochains cas 
+d'utilisation. Les composants établissent des secrets cryptographiques pour 
+des tunnels sécurisés après s’être mutuellement authentifiés.
+
+
+\subsection{Génération de nombres aléatoire}
+La SmartCard doit être capable de générer des nombres aléatoires de façon 
+sécurisée afin qu'on ne puisse prédire la génération.\\
+
+\fiche
+	{Génération de nombres aléatoire}
+	{SmartCard, SoftCard}
+    {SmartCard génère un nombre aléatoire de la taille demandée}
+	{SmartCard est programmée}
+    {Demande de SoftCard}
+    {SmartCard renvoie un nombre aléatoire à SoftCard}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] SoftCard demande à SmartCard un nombre aléatoire de longueur 
+          donnée.
+      \item[3.] SoftCard récupère le nombre.
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+        \item[2.] SmartCard génère un nombre grâce au PRNG intégré et le renvoie à SoftCard
+            autorisés à déchiffrer le message.
+	\end{itemize}
+    }
+	{}
+\flots
+    {}
+    {}
+    {}
+\\*
+
+\subsection{Déblocage de la carte}
+Pour utiliser une SmartCard, l'utilisateur devra entrer son code PIN afin de 
+\og{}débloquer \fg{} celle-ci.\\
+
+\fiche
+    {Authentification d'un utilisateur/Déblocage de la carte}
+	{Utilisateur, SmartCard, SoftCard}
+	{Le système authentifie l'utilisateur grâce au code PIN contenu sur SmartCard.}
+	{L'utilisateur a une carte valide et connaît le code PIN, SoftCard et SmartCard sont authentifiés.}
+    {SoftCard a besoin d'utiliser SmartCard}
+    {L'authentification a réussi ou a échoué.}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur insère la carte et demande à SoftCard 
+            d'utiliser SmartCard
+        \item[3.] L'utilisateur tape le code PIN
+    \end{itemize}
+    }
+	{\begin{itemize}
+        \item[]
+		\item[2.] SoftCard demande le code PIN à l'utilisateur
+        \item[4.] SoftCard envoie le code PIN à SmartCard
+        \item[5.] SmartCard vérifie le code PIN et passe en état 
+            \og{}débloqué \fg{} pendant 30 minutes s'il est correct
+        \item[6.] SoftCard informe l’utilisateur du résultat
+	\end{itemize}
+	}
+	{}
+\flots
+{\begin{itemize}
+        \item[]
+        \item[7.] SoftCard redemande le code PIN à l'utilisateur.
+\end{itemize}}
+    {\begin{itemize}
+    \item[]
+    \item[7 bis.] L'utilisateur a tapé 3 mauvais codes. La carte se verrouille.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+Si l'utilisateur a entré plusieurs mauvais codes PIN, la carte se bloque et il 
+peut la débloquer avec le code PUK.\\
+
+\fiche
+{Déblocage de la carte par code PUK}
+	{Utilisateur, SmartCard, SoftCard}
+    {L'utilisateur débloque sa carte avec le code PUK}
+	{L'utilisateur a une carte valide mais bloquée, il connaît le code PUK, 
+    SoftCard et SmartCard sont authentifiés}
+    {SoftCard a besoin d'utiliser SmartCard}
+    {La carte est déverrouillée ou inutilisable}
+	{\begin{itemize}
+	    \item[]
+	  \item[1.] L'utilisateur insère la carte et demande à SoftCard 
+          d'utiliser SmartCard
+      \item[3.] L'utilisateur tape le code PUK
+	\end{itemize}
+	}
+	{\begin{itemize}
+        \item[]
+		\item[2.] SoftCard indique que le code PIN est verrouillée et que la 
+            carte doit être débloquée par le code PUK
+		\item[4.] SoftCard envoie le code PUK à SmartCard
+		\item[5.] SmartCard vérifie le code PUK, génère un nouveau code PIN 
+            aléatoire et le renvoie à SoftCard.
+        \item[6.] SoftCard informe l’utilisateur de son nouveau code PIN
+	\end{itemize}
+	}
+	{}
+\flots
+{\begin{itemize}
+        \item[]
+        \item[7.] SoftCard redemande le code PUK à l'utilisateur.
+\end{itemize}}
+    {\begin{itemize}
+    \item[]
+    \item[7 bis.] L'utilisateur a tapé 3 mauvais codes PUK. La carte se verrouille
+        définitivement et doit être remplacée.
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Transmission de données}
+SmartCard contient des données propres à l'utilisateur, elle doit alors 
+permettre la transmission de ces  données. Ici, c'est FaceCrypt qui souhaite 
+récupérer les données de l'utilisateur.\\
+
+\fiche
+{Transmission login/mot de passe au SocialNetwork}
+	{SmartCard, SoftCard, FaceCrypt, Social Network}
+    {SmartCard transmet le couple login/mdp à FaceCrypt}
+	{SmartCard est débloquée avec le bon code PIN, SoftCard et FaceCrypt sont 
+    authentifiés. SoftCard et SmartCard sont authentifiés}
+    {L'utilisateur veut se loguer sur SocialNetwork}
+    {L'utilisateur est logué auprès de SocialNetwork.}
+    {\begin{itemize}
+        \item[]
+        \item[1.] FaceCrypt demande à SoftCard le login/mdp du Social Network
+        \item[5.] FaceCrypt envoie au Social Network le login/mdp.
+    \end{itemize}
+    }
+	{\begin{itemize}
+        \item[]
+		\item[2.] SoftCard demande à SmartCard le login/mdp du SN.
+		\item[3.] SmartCard envoie le login/mdp à SoftCard
+        \item[4.] SoftCard envoie à FaceCrypt le login/mdp du Social Network.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {\begin{itemize}
+    \item[]
+    \item[1.] Authentification invalide
+    \end{itemize}
+    }
+	{}    
+\\*
+
+\subsection{Chiffrement/Déchiffrement}
+La carte procède au chiffrement et au déchiffrement de la clef de chiffrement 
+symétrique pour chaque message avec les clés asymétriques adéquates.
+
+Pour le chiffrement, SmartCard utilise la clef publique du destinataire. 
+Pour le déchiffrement, SmartCard utilise la clef privée stockée en mémoire sur
+la carte.
+
+Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre système.
+
+\fiche
+{Déchiffrement de données}
+	{SmartCard, SoftCard, FaceCrypt}
+    {SmartCard déchiffre des données avec la clé privée de chiffrement stockée 
+    sur la carte, envoyées par FaceCrypt}
+    {SmartCard est débloquée avec le bon code PIN, Authentification entre 
+    SoftCard et FaceCrypt.  SoftCard et SmartCard sont authentifiés}
+    {Demande de FaceCrypt}
+    {SmartCard renvoie un résultat du déchiffrement à SoftCard qui transmet à 
+    FaceCrypt}
+    {\begin{itemize}
+        \item[]        
+        \item[1.] FaceCrypt envoie des données chiffrées à SoftCard
+        \item[5.] FaceCrypt récupère les données déchiffrées
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]		
+        \item[2.] SoftCard transmet les données chiffrées à SmartCard
+	\item[3.] SmartCard déchiffre les données avec la clé privée de 
+        chiffrement stockée et renvoie le résultat du déchiffrement à SoftCard
+	\item[4.] SoftCard transmet le résultat à FaceCrypt
+		liste et actualise ses listes.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {}
+\\*
+
+La demande de chiffrement de données à SmartCard peut venir de SoftCard ou 
+tout autre application tierce dans le cas d'une utilisation plus générale.\\
+
+\fiche
+{Chiffrement de données}
+	{SmartCard, SoftCard}
+    {SmartCard chiffre les donnés avec sa clé privée}
+    {SmartCard est débloquée avec le bon code PIN.   SoftCard et SmartCard 
+    sont authentifiés, partage une clé secrète et sont en accord sur un 
+    algorithme symétrique}
+    {Demande de SoftCard}
+    {SmartCard renvoie les données chiffrées}
+    {\begin{itemize}
+        \item[]
+        \item[1.] SoftCard demande des données à SmartCard
+        \item[4.] SoftCard récupère les données chiffrées 
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] SmartCard chiffre les données à envoyer avec la clef secrète.
+		\item[3.] SmartCard envoie les données demandées.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {}
+\\*
+
+\subsection{Signature/Vérification de données}
+
+\fiche
+{Signature de données}
+	{SoftCard, SmartCard}
+    {SmartCard utilise la clef privée pour signer des données fournies par 
+    SoftCard}
+    { SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Les données sont signées ou l'utilisateur annule}
+    {\begin{itemize}
+        \item[]
+        \item[1.] SoftCard envoie les données qu'il faut signer à SmartCard.
+        \item[3.] SoftCard récupère les données.
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] SmartCard signe les données et envoie la signature a SoftCard 
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {}
+\\*
+
+\pagebreak
+
+\section{Exigences opérationnelles}
+
+\newcounter{FOcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & Le système fonctionne & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FOcount}{10}
+F-FO-\arabic{FOcount} & La caractéristique aléatoire d'un nombre généré 
+(par le générateur aléatoire) est vérifiable & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences d'interface}
+
+\newcounter{FIcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & SoftCard communique de manière sécurisée avec FaceCrypt
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & SoftCard présente une interface pour demander le code 
+PIN & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FIcount}{10}
+F-FI-\arabic{FIcount} & SoftCard communique de manière sécurisée avec SmartCard
+& \cellcolor{red!20}Important \\
+\hline
+\end{longtable}
+
+\section{Exigences de qualité}
+
+\newcounter{FQcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Une documentation de développement est fournie
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Le système est adaptable
+& \cellcolor{red!20}Important \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & L'utilisation d'une fonction cryptographique ne doit pas ralentir le système
+& \cellcolor{green!50}Indispensable \\
+\hline
+\addtocounter{FQcount}{10}
+F-FQ-\arabic{FQcount} & Authentification mutelle entre toutes les entités (SmartCard, SoftCard et FaceCrypt)
+& \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+\section{Exigences de réalisation}
+
+\newcounter{FRcount}
+
+\begin{longtable}{|p{2cm}|p{10cm}|p{2.5cm}|}
+
+% Header for the first page of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endfirsthead
+% Header for next pages of the table
+\multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Référence}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Fonctionalité}} & \multicolumn{1}{|>{\color{white}\columncolor{blue}}l|}{\bfseries{Priorité}}
+\endhead
+
+%This is the footer for all pages except the last page of the table...
+\endfoot
+%This is the footer for the last page of the table...
+\endlastfoot
+
+\hline
+\addtocounter{FRcount}{10}
+F-FR-\arabic{FRcount} & Un SDK et un manuel sont fournis & \cellcolor{green!50}Indispensable \\
+\hline
+\end{longtable}
+
+
+\end{document}
