@@ -7,8 +7,6 @@ import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
-import java.security.Security;
-import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.List;
@@ -24,8 +22,6 @@ import javax.smartcardio.CardTerminal;
 import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
-
-import org.apache.commons.codec.binary.Base64;
 
 public class Crypto {
 	/* Constantes */
@@ -69,7 +65,6 @@ public class Crypto {
 
 			/* Menu principal */
 			boolean fin = false;
-			byte[] chiffre = null;
 
 			PublicKey publicKey = null;
 
@@ -127,8 +122,8 @@ public class Crypto {
 						System.out.println("Erreur : " + r.getSW1() + " " + r.getSW2());
 					} else {
 						data = r.getData();
-						System.out.println("|" + bytesToHexString("hello world".getBytes()) + "|");
-						System.out.println("|" + bytesToHexString(data) + "|");
+//						System.out.println("|" + bytesToHexString("hello world".getBytes()) + "|");
+//						System.out.println("|" + bytesToHexString(data) + "|");
 					}
 					break;
 
@@ -137,9 +132,9 @@ public class Crypto {
 					byte[] clearText = new String("hello world").getBytes();
 					c.init(Cipher.ENCRYPT_MODE, publicKey);
 					byte[] ciphered = c.doFinal(clearText);
-					System.out.println("Clair : " + bytesToHexString(clearText));
-					System.out.println("Chiffré : " + bytesToHexString(ciphered));
-					System.out.println("Taille chiffré : " + ciphered.length);
+//					System.out.println("Clair : " + bytesToHexString(clearText));
+//					System.out.println("Chiffré : " + bytesToHexString(ciphered));
+//					System.out.println("Taille chiffré : " + ciphered.length);
 
 					r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_UNCIPHER, (byte) 0x00, (byte)0x00, ciphered));
 
@@ -147,7 +142,7 @@ public class Crypto {
 						System.out.println("Erreur : " + r.getSW());
 					} else {
 						data = r.getData();
-						System.out.println(bytesToHexString(data));
+//						System.out.println(bytesToHexString(data));
 					}
 					break;
 

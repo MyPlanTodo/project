@@ -58,4 +58,4 @@ samples/client_gen_random.java. Notons que contrairement à l'applet, il est
 possible d'utiliser une version de Java en version supérieure à 1.5.
 
 L'installation de cette applet se fera en suivant les instructions du fichier
-./installation_applet.txt
+3.installation_applet.txt

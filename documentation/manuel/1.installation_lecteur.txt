@@ -1,3 +1,4 @@
+\document
 Une étape indispensable et préalable est l'installation de quelques librairies.
 apt-get install libudev-dev libcurl4-openssl-dev pcscd pcsc-tools
 pcsc-lite : http://pcsclite.alioth.debian.org/
