@@ -1,0 +1,10 @@
+Signature:
+
+base: Nous utilisons un crypto-système asymétrique RSA 1024 bits, et la méthode de signature "ALG_RSA_SHA_PKCS1" qui repose également sur
+SHA-1. Cette algo de signature utilise un padding, et retourne une donnée signée de 128 octets.
+
+Les tests révèlent que la taille du clair ne doit pas dépasser une certaine valeur, qui est de 255 sans quoi une erreur se produit.
+
+
+
+
