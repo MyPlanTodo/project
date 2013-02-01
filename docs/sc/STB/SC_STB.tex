@@ -36,7 +36,7 @@
 \def\projectDesc{Smart Social Network}
 \def\projectName{\emph{SSN}~}
 \def\completeName{\projectDesc ~- \projectName}
-\def\docType{Spécification technique des besoins}
+\def\docType{Spécification technique de besoins}
 \def\docDate{\today}
 \def\version{1.0}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
@@ -92,6 +92,7 @@ une application Java pour assurer les traitements lourds. Pour gérer
 l’authentification forte, cette application dialoguera avec une carte à puce 
 qui contiendra les données sensibles de l’utilisateur (login/mot de passe), 
 clef privée, ...
+
 Le dialogue avec cette carte à puce se fera par l’intermédiaire d’un 
 client Java. 
 
@@ -129,19 +130,19 @@ d'autres situations.
     (chiffrement/déchiffrement) de l'extension et étant en relation avec
 	la carte à puce;
     \item[IHM :] Interface Homme-Machine, (interface graphique); 
-    \item[Utilisateur :] entité (humain ou programme) intéragissant ce 
+    \item[Utilisateur :] entité (humain ou programme) intéragissant avec ce 
         sous-projet;
     \item[Système :] ce sous-projet;
     \item[SoftCard :] Application effectuant le relais entre la carte
         et FaceCrypt;
     \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] indistinguable en temps polynomial, distribution
+    \item[Aléatoire :] indistingable en temps polynomial, distribution
         de probabilité uniforme;
-    \item[PRNG :] (Pseudo Random Number Generator), générateur de nombres
+    \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
         pseudo-aléatoires;
-    \item[PIN :] (Personal Identification Number), code servant à authentifier
+    \item[PIN :] (Personal Identification Number) code servant à authentifier
         l'utilisateur;
-    \item[PUK :] (Personal Unlock Key), code servant à débloquer la carte quand
+    \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
         trop de codes PIN erronés ont été entrés.
 \end{description}
 
@@ -177,7 +178,7 @@ F-Gl-\arabic{FGcount} & Administration des cartes & Administrateur & \cellcolor{
 \end{tabularx}
 
 \subsection{Communications sécurisées}
-La communication sécurisé est une précondition pour tous les prochains cas 
+La communication sécurisée est une précondition pour tous les prochains cas 
 d'utilisation. Les composants établissent des secrets cryptographiques pour 
 des tunnels sécurisés après s’être mutuellement authentifiés.
 
@@ -274,7 +275,7 @@ peut la débloquer avec le code PUK.\\
 	}
 	{\begin{itemize}
         \item[]
-		\item[2.] SoftCard indique que le code PIN est verrouillée et que la 
+		\item[2.] SoftCard indique que le code PIN est verrouillé et que la 
             carte doit être débloquée par le code PUK
 		\item[4.] SoftCard envoie le code PUK à SmartCard
 		\item[5.] SmartCard vérifie le code PUK, génère un nouveau code PIN 
@@ -308,8 +309,8 @@ récupérer les données de l'utilisateur.\\
     {SmartCard transmet le couple login/mdp à FaceCrypt}
 	{SmartCard est débloquée avec le bon code PIN, SoftCard et FaceCrypt sont 
     authentifiés. SoftCard et SmartCard sont authentifiés}
-    {L'utilisateur veut se loguer sur SocialNetwork}
-    {L'utilisateur est logué auprès de SocialNetwork.}
+    {L'utilisateur veut se connecter sur SocialNetwork}
+    {L'utilisateur est connecté auprès de SocialNetwork.}
     {\begin{itemize}
         \item[]
         \item[1.] FaceCrypt demande à SoftCard le login/mdp du Social Network
@@ -422,6 +423,32 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
 	{\begin{itemize}
         \item[]
         \item[2.] SmartCard signe les données et envoie la signature a SoftCard 
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {}
+\\*
+
+\fiche
+{Vérification de données}
+	{SoftCard, SmartCard}
+    {SmartCard utilise la clef publique pour vérifier des données fournies par 
+    SoftCard (données signées et données en clair)}
+    { SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Les données sont vérifiées, ou non}
+    {\begin{itemize}
+        \item[]
+        \item[1.] SoftCard envoie les données en clair et leur signé à SmartCard
+        \item[3.] SoftCard récupère le résultat.
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] SmartCard vérifie les données et envoie "vrai" à Softcard si la signature et
+	son équivalent en clair correspondent; faux sinon.
 	\end{itemize}
 	}
 	{}
