@@ -5,6 +5,36 @@ SHA-1. Cette algo de signature utilise un padding, et retourne une donnée sign�
 
 Les tests révèlent que la taille du clair ne doit pas dépasser une certaine valeur, qui est de 255 sans quoi une erreur se produit.
 
+Cryptographie:
+	ATTENTION: ne pas créer plusieurs instance sans référence, car la mémoire sera vite saturée du à l'absence du Garbage Collecteur.
+
+	Résultat: pour 10000 chiffrements; 
+		real	7m58.694s
+		user	0m3.652s
+		sys	0m0.580s
+
+		soit environs 0,0479s = 47.9ms par chiffrement.
+
+	Résultat: pour 10000 déchiffrements;
+		real	29m37.142s
+		user	0m2.276s
+		sys	0m0.532s
+
+                soit environs 0,1777s = 177.7ms par déchiffrement.
+
+	Résultat: pour 10000 signatures;
+		real	24m4.813s
+		user	0m3.684s
+		sys	0m1.068s
+
+		soit environs 0,1445s = 144,5ms par signature.
+
+	Résultat: pour 10000 vérification de signatures;
+                real	19m10.223s
+		user	0m4.840s
+		sys	0m0.612s
+
+                soit environs 0,1150s = 115ms par vérification.
 
 
 
