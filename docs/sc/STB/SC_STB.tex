@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique de besoins}
 \def\docDate{\today}
-\def\version{1.1}
+\def\version{1.2}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
 \def\checked{Florian \textsc{Guilbert}, Emmanuel \textsc{Mocquet}}
 \def\approved{}
@@ -68,6 +68,8 @@
     1.0 & 31/01/2013 & Relecture \\
 	\hline
     1.1 & 06/02/2013 & Corrections après rdv client \\
+	\hline
+    1.2 & 06/02/2013 & Corrections \\
 	\hline
 	&&\\
 	\hline
@@ -108,7 +110,7 @@ Ce projet est une composition de deux sous-projets :
 
 \paragraph{}
 Dans ce document, nous présentons le sous-projet SC (pour SmartCards) utilisé 
-par l'entité FaceCrypt du sous-projet SSN (Secure Social Network) , cette
+par l'entité FaceCrypt du sous-projet SSN (Secure Social Network), cette
 utilisation est adaptable à d'autres situations.
 
 \section{Documents applicables et de référence}
@@ -193,14 +195,14 @@ des tunnels sécurisés après s’être mutuellement authentifiés.
 
 
 \subsection{Génération de nombres aléatoire}
-SoftCard doit être capable d'utiliser le générateur de nombres aléatoire de façon 
-sécurisée afin qu'on ne puisse prédire la génération.\\
+SoftCard doit être capable d'utiliser le générateur de nombres aléatoire de
+SmartCard.\\
 
 \fiche
 	{Génération de nombres aléatoire}
 	{SmartCard, SoftCard}
     {SmartCard génère un nombre aléatoire de la taille demandée}
-	{SmartCard est programmée}
+	{}
     {Demande de SoftCard}
     {SmartCard renvoie un nombre aléatoire à SoftCard}
 	{\begin{itemize}
@@ -384,15 +386,14 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
     permettant pas de connaître sa cause}
 \\*
 
-La demande de chiffrement de données vient :
-tout autre application tierce dans le cas d'une utilisation plus générale.\\
+La demande de chiffrement de données vient de l'utilisateur ou de toute autre 
+application tierce, dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Chiffrement de données}
-	{SmartCard, SoftCard}
-    {SmartCard chiffre les donnés avec sa clef publique}
-    {SoftCard et SmartCard sont authentifiés, partagent une clé secrète et 
-        sont en accord sur un algorithme symétrique}
+	{Utilisateur, SoftCard}
+    {SoftCard chiffre les donnés avec la clef publique du destinataire}
+    {}
     {Demande de l'utilisateur}
     {SoftCard renvoie les données chiffrées}
     {\begin{itemize}
@@ -427,7 +428,7 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
     {\begin{itemize}
         \item[]
         \item[1.] SoftCard envoie les données qu'il faut signer à SmartCard.
-        \item[3.] SoftCard récupère les données.
+        \item[3.] SoftCard récupère la signature.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
@@ -492,6 +493,34 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
     {}
     {Si le compte n'existe pas, une erreur est générée.}
 \\*
+
+\fiche
+{Modification du mot de passe}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
+    {L'utilisateur souhaite changer son mot de passe Facebook}
+    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Le mot de passe a été modifié}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
+        non de générer un nouveau mot de passe. 
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
+        et de signature sur la carte, génère un nouveau mot de passe si besoin,
+        stocke les identifiants Facebook et crée un code PIN, qu'il transmet
+        à l'utilisateur.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {Si le compte n'existe pas, une erreur est générée.}
+\\*
+
 
 \section{Exigences opérationnelles}
 
