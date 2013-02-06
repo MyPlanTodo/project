@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique de besoins}
 \def\docDate{\today}
-\def\version{1.0}
+\def\version{1.1}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
 \def\checked{Florian \textsc{Guilbert}, Emmanuel \textsc{Mocquet}}
 \def\approved{}
@@ -66,6 +66,8 @@
     0.3 & 30/01/2013 & Modifications mineures\\
 	\hline
     1.0 & 31/01/2013 & Relecture \\
+	\hline
+    1.1 & 06/02/2013 & Corrections après rdv client \\
 	\hline
 	&&\\
 	\hline
@@ -136,11 +138,13 @@ utilisation est adaptable à d'autres situations.
     \item[Système :] ce sous-projet;
     \item[Sécurisé :] ce terme sous-entend un chiffrement des données
         et une vérification de leur intégrité;
-    \item[SoftCard :] Application effectuant le relais entre la carte
+    \item[SoftCard :] application effectuant le relais entre la carte
         et FaceCrypt;
     \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] la distribution des résultats ont une probabilité 
-        uniforme;
+    \item[Aléatoire :] les résultats suivent une distribution de
+        probabilité uniforme;
+    \item[Pseudo-aléatoire :] les résultats sont indistingables en temps polynomial 
+        d'une distribution de probabilité uniforme;
     \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
         pseudo-aléatoires;
     \item[RNG :] (Random Number Generator) générateur de nombres
@@ -376,37 +380,37 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
 	{}
 \flots
     {}
-    {}
+    {Une erreur de déchiffrement provoque l'envoi d'un message d'erreur, ne
+    permettant pas de connaître sa cause}
 \\*
 
-La demande de chiffrement de données à SmartCard peut venir de SoftCard ou 
+La demande de chiffrement de données vient :
 tout autre application tierce dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Chiffrement de données}
 	{SmartCard, SoftCard}
-    {SmartCard chiffre les donnés avec sa clé privée}
-    {SmartCard est débloquée avec le bon code PIN.   SoftCard et SmartCard 
-    sont authentifiés, partagent une clé secrète et sont en accord sur un 
-    algorithme symétrique}
-    {Demande de SoftCard}
-    {SmartCard renvoie les données chiffrées}
+    {SmartCard chiffre les donnés avec sa clef publique}
+    {SoftCard et SmartCard sont authentifiés, partagent une clé secrète et 
+        sont en accord sur un algorithme symétrique}
+    {Demande de l'utilisateur}
+    {SoftCard renvoie les données chiffrées}
     {\begin{itemize}
         \item[]
-        \item[1.] SoftCard demande des données à SmartCard
-        \item[4.] SoftCard récupère les données chiffrées 
+        \item[1.] L'utilisateur transmet des données à chiffrer à SoftCard,
+            ainsi que la clef publique du destinataire;
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard chiffre les données à envoyer avec la clef secrète.
-		\item[3.] SmartCard envoie les données demandées.
+        \item[2.] SoftCard reçoit les données en clair et les chiffre 
+        avec la clef publique du destinataire;
+		\item[3.] SoftCard renvoie les données chiffrées à l'utilisateur.
 	\end{itemize}
 	}
 	{}
 \flots
     {}
-    {Une erreur de déchiffrement provoque l'envoi d'un message d'erreur, ne
-    permettant pas de connaître sa cause}
+    {}
 \\*
 
 \subsection{Signature/Vérification de données}
@@ -458,7 +462,36 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
     {}
 \\*
 
-\pagebreak
+
+\subsection{Administration des cartes}
+
+\fiche
+{Initialisation d'une carte}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
+    {L'utilisateur paramètre la carte avec ses identifiants}
+    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Les applets ont été installées sur la carte. Les clefs ont été 
+        initialisées, l'identifiant et le mot de passe ont été stockés}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
+        non de générer un nouveau mot de passe. 
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
+        et de signature sur la carte, génère un nouveau mot de passe si besoin,
+        stocke les identifiants Facebook et crée un code PIN, qu'il transmet
+        à l'utilisateur.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {Si le compte n'existe pas, une erreur est générée.}
+\\*
 
 \section{Exigences opérationnelles}
 
