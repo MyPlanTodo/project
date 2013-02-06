@@ -96,7 +96,7 @@ clef privée, ...
 Le dialogue avec cette carte à puce se fera par l’intermédiaire d’un 
 client Java. 
 
-Ce projet est une fusion de deux sous-projets :
+Ce projet est une composition de deux sous-projets :
 \begin{itemize}
     \item Étude et mise en \oe{}uvre de solutions d’authentifications et de signatures 
         par cartes à puce, proposé par Magali \textsc{Bardet} ;
@@ -106,8 +106,8 @@ Ce projet est une fusion de deux sous-projets :
 
 \paragraph{}
 Dans ce document, nous présentons le sous-projet SC (pour SmartCards) utilisé 
-par l'entité FaceCrypt du sous-projet SSN, cette utilisation est adaptable à 
-d'autres situations.
+par l'entité FaceCrypt du sous-projet SSN (Secure Social Network) , cette
+utilisation est adaptable à d'autres situations.
 
 \section{Documents applicables et de référence}
 \begin{itemize}
@@ -124,22 +124,27 @@ d'autres situations.
     \item[DAL :] Document d'Architecture Logicielle;
     \item[PdD :] Plan de développement;
     \item[STB :] Spécification Technique de Besoins;
-    \item[SC :] SmartCard, relatif au sous-projet sur les cartes à puce;
-    \item[SSN :] \emph{Secure Social Network};
+    \item[SC :] \emph{SmartCard}, relatif au sous-projet sur les cartes à puce;
+    \item[SSN :] \emph{Secure Social Network}, relatif au sous-projet sur 
+        Facebook;
     \item[FaceCrypt :] Application Java gérant les traitements lourds 
     (chiffrement/déchiffrement) de l'extension et étant en relation avec
 	la carte à puce;
     \item[IHM :] Interface Homme-Machine, (interface graphique); 
-    \item[Utilisateur :] entité (humain ou programme) intéragissant avec ce 
+    \item[Utilisateur :] entité (humain ou programme) interagissant avec ce 
         sous-projet;
     \item[Système :] ce sous-projet;
+    \item[Sécurisé :] ce terme sous-entend un chiffrement des données
+        et une vérification de leur intégrité;
     \item[SoftCard :] Application effectuant le relais entre la carte
         et FaceCrypt;
     \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] indistingable en temps polynomial, distribution
-        de probabilité uniforme;
+    \item[Aléatoire :] la distribution des résultats ont une probabilité 
+        uniforme;
     \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
         pseudo-aléatoires;
+    \item[RNG :] (Random Number Generator) générateur de nombres
+        aléatoires;
     \item[PIN :] (Personal Identification Number) code servant à authentifier
         l'utilisateur;
     \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
@@ -184,7 +189,7 @@ des tunnels sécurisés après s’être mutuellement authentifiés.
 
 
 \subsection{Génération de nombres aléatoire}
-La SmartCard doit être capable de générer des nombres aléatoires de façon 
+SoftCard doit être capable d'utiliser le générateur de nombres aléatoire de façon 
 sécurisée afin qu'on ne puisse prédire la génération.\\
 
 \fiche
@@ -203,8 +208,8 @@ sécurisée afin qu'on ne puisse prédire la génération.\\
 	}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard génère un nombre grâce au PRNG intégré et le renvoie à SoftCard
-            autorisés à déchiffrer le message.
+        \item[2.] SmartCard génère un nombre grâce au RNG intégré et le renvoie
+            à SoftCard.
 	\end{itemize}
     }
 	{}
@@ -223,7 +228,7 @@ Pour utiliser une SmartCard, l'utilisateur devra entrer son code PIN afin de
 	{Utilisateur, SmartCard, SoftCard}
 	{Le système authentifie l'utilisateur grâce au code PIN contenu sur SmartCard.}
 	{L'utilisateur a une carte valide et connaît le code PIN, SoftCard et SmartCard sont authentifiés.}
-    {SoftCard a besoin d'utiliser SmartCard}
+    {SoftCard a besoin d'utiliser SmartCard.}
     {L'authentification a réussi ou a échoué.}
     {\begin{itemize}
         \item[]
@@ -319,7 +324,7 @@ récupérer les données de l'utilisateur.\\
     }
 	{\begin{itemize}
         \item[]
-		\item[2.] SoftCard demande à SmartCard le login/mdp du SN.
+		\item[2.] SoftCard demande à SmartCard le login/mdp du Social Network.
 		\item[3.] SmartCard envoie le login/mdp à SoftCard
         \item[4.] SoftCard envoie à FaceCrypt le login/mdp du Social Network.
 	\end{itemize}
@@ -339,7 +344,7 @@ récupérer les données de l'utilisateur.\\
 La carte procède au chiffrement et au déchiffrement de la clef de chiffrement 
 symétrique pour chaque message avec les clés asymétriques adéquates.
 
-Pour le chiffrement, SmartCard utilise la clef publique du destinataire. 
+Pour le chiffrement, SoftCard utilise la clef publique du destinataire. 
 Pour le déchiffrement, SmartCard utilise la clef privée stockée en mémoire sur
 la carte.
 
@@ -348,8 +353,8 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
 \fiche
 {Déchiffrement de données}
 	{SmartCard, SoftCard, FaceCrypt}
-    {SmartCard déchiffre des données avec la clé privée de chiffrement stockée 
-    sur la carte, envoyées par FaceCrypt}
+    {SmartCard déchiffre des données, envoyées par FaceCrypt avec la clé privée
+    de chiffrement stockée sur la carte.}
     {SmartCard est débloquée avec le bon code PIN, Authentification entre 
     SoftCard et FaceCrypt.  SoftCard et SmartCard sont authentifiés}
     {Demande de FaceCrypt}
@@ -365,8 +370,7 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
         \item[2.] SoftCard transmet les données chiffrées à SmartCard
 	\item[3.] SmartCard déchiffre les données avec la clé privée de 
         chiffrement stockée et renvoie le résultat du déchiffrement à SoftCard
-	\item[4.] SoftCard transmet le résultat à FaceCrypt
-		liste et actualise ses listes.
+	\item[4.] SoftCard transmet le résultat à FaceCrypt.
 	\end{itemize}
 	}
 	{}
@@ -383,7 +387,7 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
 	{SmartCard, SoftCard}
     {SmartCard chiffre les donnés avec sa clé privée}
     {SmartCard est débloquée avec le bon code PIN.   SoftCard et SmartCard 
-    sont authentifiés, partage une clé secrète et sont en accord sur un 
+    sont authentifiés, partagent une clé secrète et sont en accord sur un 
     algorithme symétrique}
     {Demande de SoftCard}
     {SmartCard renvoie les données chiffrées}
@@ -401,7 +405,8 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
 	{}
 \flots
     {}
-    {}
+    {Une erreur de déchiffrement provoque l'envoi d'un message d'erreur, ne
+    permettant pas de connaître sa cause}
 \\*
 
 \subsection{Signature/Vérification de données}
@@ -433,22 +438,18 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Vérification de données}
-	{SoftCard, SmartCard}
-    {SmartCard utilise la clef publique pour vérifier des données fournies par 
-    SoftCard (données signées et données en clair)}
-    { SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
-    déverrouillé la carte}
+	{SoftCard}
+    {SoftCard utilise la clef publique pour vérifier des données signées}
+    {}
     {Demande de l'utilisateur}
     {Les données sont vérifiées, ou non}
     {\begin{itemize}
         \item[]
-        \item[1.] SoftCard envoie les données en clair et leur signé à SmartCard
-        \item[3.] SoftCard récupère le résultat.
+        \item[2.] SoftCard vérifie les données et renvoie "vrai" si la signature
+            et son équivalent en clair correspondent; faux sinon.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard vérifie les données et envoie "vrai" à Softcard si la signature et
-	son équivalent en clair correspondent; faux sinon.
 	\end{itemize}
 	}
 	{}
@@ -540,7 +541,7 @@ F-FI-\arabic{FIcount} & SoftCard communique de manière sécurisée avec SmartCa
 
 \hline
 \addtocounter{FQcount}{10}
-F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolor{green!50}Indispensable \\
+F-FQ-\arabic{FQcount} & Le système sera livré pour le 01 mars 2013 & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FQcount}{10}
 F-FQ-\arabic{FQcount} & Une documentation de développement est fournie
