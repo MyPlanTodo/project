@@ -1,6 +1,5 @@
 package Default;
 
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -11,8 +10,6 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.smartcardio.CardException;
-
-
 
 
 /**
@@ -60,7 +57,6 @@ public class SoftCard {
 			System.out.println("Problème Socket");
 			System.exit(2);
 		}
-
 	}
 
 	/**
@@ -80,7 +76,7 @@ public class SoftCard {
 	 */
 	public void listening() {
 		SSLSocket sock = null;
-		while (true) {  	
+		while (true) {
 			try {
 				sock = (SSLSocket) servSocket.accept();
 				ps = new ProcessusSock(sock);
@@ -97,7 +93,7 @@ public class SoftCard {
  * This class represents a client thread.
  * It has few methods for its management.
  * 
- * @author Baptiste Dolbeau
+ * @author Baptiste Dolbeau, Emmanuel Mocquet
  * @version 1.0
  */
 class ProcessusSock extends Thread {

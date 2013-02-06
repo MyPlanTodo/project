@@ -45,6 +45,8 @@ public class Crypto {
 	private static Crypto instance = null;
 	private static Card card = null;
 	private static CardChannel channel = null;
+	private boolean unlocked = false;
+	
 	/*
 	private static String bytesToHexString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
@@ -68,6 +70,8 @@ public class Crypto {
 			/* Connexion à la carte */
 			card = terminal.connect("T=1");
 			channel = card.getBasicChannel();
+			)
+					
 		}
 
 		return instance;
@@ -103,6 +107,7 @@ public class Crypto {
 	public void disconnect() throws CardException{
 		card.disconnect(false);
 		instance = null;
+		unlocked = false;
 	}
 
 	public byte[] getRandomNumber() throws Exception{
