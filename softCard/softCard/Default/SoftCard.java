@@ -80,8 +80,6 @@ public class SoftCard {
 	 */
 	public void listening() {
 		SSLSocket sock = null;
-
-		System.out.println("En attente de clients !");
 		while (true) {  	
 			try {
 				sock = (SSLSocket) servSocket.accept();
@@ -153,7 +151,6 @@ class ProcessusSock extends Thread {
 				
 				// Send public key
 				if (id == this.GET_KEY) {
-					System.out.println("1");
 					try {
 						sendMessage(this.getPublicKey());
 					} catch(CardException ce) {
@@ -165,7 +162,6 @@ class ProcessusSock extends Thread {
 
 				// Send random number
 				if (id == this.GET_RANDOM_NUMBER) {
-					System.out.println("2");
 					try {
 						sendMessage(this.getRandomNumber());
 						System.out.println("2");
@@ -177,7 +173,6 @@ class ProcessusSock extends Thread {
 				}
 				// retrieve the ciphered data and decrypt it
 				if (id == this.DECRYPT) {
-					System.out.println("3");
 					byte[] data = new byte[mess.length - 1];
 
 					if (mess.length < 1) {
@@ -186,10 +181,7 @@ class ProcessusSock extends Thread {
 
 					System.arraycopy(mess, 1, data, 0, mess.length - 1);
 					try {
-
-						System.out.println("3");
 						sendMessage(this.decryptData(data));
-						System.out.println("4");
 					} catch(CardException ce) {
 						sendMessage(ce.getMessage().getBytes());
 					} catch (Exception e) {
@@ -199,7 +191,6 @@ class ProcessusSock extends Thread {
 
 				// Send encrypted data
 				if (id == this.ENCRYPT){
-					System.out.println("4");
 					byte[] data = new byte[mess.length - 1];
 
 					if (mess.length < 1) {
