@@ -1,0 +1,23 @@
+fusion --> composé
+définir "sécurisé" dans la terminologie (chiffrement, intégrité)
+    rajouter intégrité partout
+définition d'un générateur de nombre aléatoire
+
+priorité intégrité > aléatoire
+Possibilité de tronquer le code MAC si nécessaire (mais justifier)
+
+"La carte doit être capable de générer un nombre aléatoire" -> "ON" doit être
+capable d'utiliser le générateur
+
+PRN --> à remplacer par RN ("fourni par la carte")
+
+nouveau use case : administration de la carte en permettant à l'utilisateur
+de fournir/changer ses credentials
+
+Déchiffrement : flot d'exception : uniformiser les messages d'erreurs
+
+chiffrement : avec clef secrète à la place de "privée"
+
+vérification de données par softcard pas par smartcard
+
+livraison le 1er
