@@ -1,0 +1,17 @@
+package network;
+
+/**
+ * This class allows us to test
+ * the Server class.
+ * @author Baptiste Dolbeau
+ * @version 1.0 
+ */
+public class TestServer {
+
+	public static void main(String[] args) {
+		
+		SoftCard serv = new SoftCard("192.168.34.10", 4242, 15);
+
+	}
+	
+}

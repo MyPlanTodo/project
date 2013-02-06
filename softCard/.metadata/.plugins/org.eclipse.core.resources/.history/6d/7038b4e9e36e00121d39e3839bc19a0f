@@ -1,0 +1,168 @@
+// TODO : créer classe d'exception personelle
+
+package Default;
+
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.List;
+
+import javax.smartcardio.Card;
+import javax.smartcardio.CardChannel;
+import javax.smartcardio.CardException;
+import javax.smartcardio.CardTerminal;
+import javax.smartcardio.CommandAPDU;
+import javax.smartcardio.ResponseAPDU;
+import javax.smartcardio.TerminalFactory;
+
+public class Crypto {
+	public static final byte CLA_CIPHER = (byte) 0xB1;
+
+	// Constants identifying each applet on the smartcard
+	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x00 };
+	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
+	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
+
+	// Constants associated with the generation of random number's applet
+	public static final byte INS_GEN = 0x00;
+	public static final byte P1_GEN = 0x00;
+	
+	// Constants associated with the ciphering applet
+	public static final byte INS_CIPHER = 0x00;
+	public static final byte INS_UNCIPHER = 0x01;
+	public static final byte INS_GET_EXPONENT = 0x02;
+	public static final byte INS_GET_MODULUS = 0x03;
+
+	private TerminalFactory factory;
+	private static List<CardTerminal> terminals;
+	private static Crypto instance = null;
+	private static Card card = null;
+	private static CardChannel channel = null;
+	/*
+	private static String bytesToHexString(byte[] bytes) {
+		StringBuffer sb = new StringBuffer();
+		for (byte b : bytes) {
+			sb.append(String.format("0x%02x ", b));
+		}
+		return new String(sb);
+	}
+	 */
+	private Crypto() throws CardException {
+		factory = TerminalFactory.getDefault();
+		terminals = factory.terminals().list();
+
+	}
+
+	public static Crypto getInstance() throws CardException{	
+		instance = new Crypto();
+		CardTerminal terminal = terminals.get(0);
+
+		/* Connexion à la carte */
+		card = terminal.connect("T=1");
+		channel = card.getBasicChannel();
+		return instance;
+	}
+
+	public byte[] getPublicKey() throws Exception {
+		/* Sélection de l'applet */
+		ResponseAPDU r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, CIPHER_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+
+		// Récupération de l'exposant
+		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_EXPONENT, (byte)0x00, (byte)0x00, 1));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not retrieve the exponent.");
+		}
+		BigInteger exp = new BigInteger(1, r.getData());
+
+		// Récupération du modulus
+		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_MODULUS, (byte)0x00, (byte)0x00, 1));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not retrieve the modulus.");
+		}
+		BigInteger mod = new BigInteger(1, r.getData());
+
+		KeyFactory kf = KeyFactory.getInstance("RSA");
+		RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(mod, exp);
+		PublicKey publicKey = kf.generatePublic(pubKeySpec);
+		return publicKey.getEncoded();
+	}
+
+	public void disconnect() throws CardException{
+		card.disconnect(false);
+	}
+
+	public byte[] getRandomNumber() throws Exception{
+		byte[] random = null;
+
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, GEN_RANDOM_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+
+		// 
+		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GEN, (byte)0x7f, (byte)0x00, 1));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not retrieve the exponent.");
+		}
+		BigInteger exp = new BigInteger(1, r.getData());
+
+
+		return random;
+
+	}
+}
+/*
+
+case '2':
+	r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_CIPHER, (byte)0x00, (byte)0x00, ("hello world").getBytes()));
+	byte[] data = null;
+	if (r.getSW() != 0x9000) {
+		System.out.println("Erreur : " + r.getSW1() + " " + r.getSW2());
+	} else {
+		data = r.getData();
+		//						System.out.println("|" + bytesToHexString("hello world".getBytes()) + "|");
+		//						System.out.println("|" + bytesToHexString(data) + "|");
+	}
+	break;
+
+case '3':
+	Cipher c = Cipher.getInstance("RSA");
+	byte[] clearText = new String("hello world").getBytes();
+	c.init(Cipher.ENCRYPT_MODE, publicKey);
+	byte[] ciphered = c.doFinal(clearText);
+	//					System.out.println("Clair : " + bytesToHexString(clearText));
+	//					System.out.println("Chiffré : " + bytesToHexString(ciphered));
+	//					System.out.println("Taille chiffré : " + ciphered.length);
+
+	r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_UNCIPHER, (byte) 0x00, (byte)0x00, ciphered));
+
+	if (r.getSW() != 0x9000) {
+		System.out.println("Erreur : " + r.getSW());
+	} else {
+		data = r.getData();
+		//						System.out.println(bytesToHexString(data));
+	}
+	break;
+
+case '4':
+	fin = true;
+	break;
+}
+}
+
+//Mise hors tension de la carte 
+card.disconnect(false);
+
+} catch (CardException e) {
+	e.printStackTrace();
+} catch (IOException e) {
+	e.printStackTrace();
+}
+}
+
+}*/
