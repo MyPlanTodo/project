@@ -186,54 +186,6 @@ public class Crypto {
 		}
 		return r.getData();
 	}
+
+
 }
-/*
-
-case '2':
-	r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_CIPHER, (byte)0x00, (byte)0x00, ("hello world").getBytes()));
-	byte[] data = null;
-	if (r.getSW() != 0x9000) {
-		System.out.println("Erreur : " + r.getSW1() + " " + r.getSW2());
-	} else {
-		data = r.getData();
-		//						System.out.println("|" + bytesToHexString("hello world".getBytes()) + "|");
-		//						System.out.println("|" + bytesToHexString(data) + "|");
-	}
-	break;
-
-case '3':
-	Cipher c = Cipher.getInstance("RSA");
-	byte[] clearText = new String("hello world").getBytes();
-	c.init(Cipher.ENCRYPT_MODE, publicKey);
-	byte[] ciphered = c.doFinal(clearText);
-	//					System.out.println("Clair : " + bytesToHexString(clearText));
-	//					System.out.println("Chiffré : " + bytesToHexString(ciphered));
-	//					System.out.println("Taille chiffré : " + ciphered.length);
-
-	r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_UNCIPHER, (byte) 0x00, (byte)0x00, ciphered));
-
-	if (r.getSW() != 0x9000) {
-		System.out.println("Erreur : " + r.getSW());
-	} else {
-		data = r.getData();
-		//						System.out.println(bytesToHexString(data));
-	}
-	break;
-
-case '4':
-	fin = true;
-	break;
-}
-}
-
-//Mise hors tension de la carte 
-card.disconnect(false);
-
-} catch (CardException e) {
-	e.printStackTrace();
-} catch (IOException e) {
-	e.printStackTrace();
-}
-}
-
-}*/

@@ -30,22 +30,17 @@
 <presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
 <part id="0"/>
 <part id="1"/>
-<part id="2"/>
 </presentation>
 </folder>
 </info>
 </editorArea>
 <editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SoftCard.java" partName="SoftCard.java" path="/home/duck/Documents/cours/m2/project/softCard/softCard/Default/SoftCard.java" title="SoftCard.java" tooltip="softCard/Default/SoftCard.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/softCard/Default/SoftCard.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6092" selectionTopPixel="3048"/>
-</editor>
-<editor id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TestServer.java" partName="TestServer.java" path="/home/duck/Documents/cours/m2/project/softCard/softCard/Default/TestServer.java" title="TestServer.java" tooltip="softCard/Default/TestServer.java" workbook="DefaultEditorWorkbook">
-<input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/softCard/Default/TestServer.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="112" selectionTopPixel="0"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="658" selectionTopPixel="669"/>
 </editor>
 <editor activePart="true" focus="true" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Crypto.java" partName="Crypto.java" path="/home/duck/Documents/cours/m2/project/softCard/softCard/Default/Crypto.java" title="Crypto.java" tooltip="softCard/Default/Crypto.java" workbook="DefaultEditorWorkbook">
 <input factoryID="org.eclipse.ui.part.FileEditorInputFactory" path="/softCard/Default/Crypto.java"/>
-<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="3682" selectionTopPixel="572"/>
+<editorState selectionHorizontalPixel="0" selectionLength="0" selectionOffset="6233" selectionTopPixel="264"/>
 </editor>
 </editors>
 <views>
@@ -105,7 +100,7 @@
 <fastViewBars>
 <fastViewBar fastViewLocation="16384" id="org.eclipse.ui.internal.ViewStack@153f072" orientation="512" selectedTabId="org.eclipse.ui.navigator.ProjectExplorer" style="0">
 <fastViews>
-<view id="org.eclipse.ui.navigator.ProjectExplorer" ratio="0.299389"/>
+<view id="org.eclipse.ui.navigator.ProjectExplorer" ratio="0.29852322"/>
 </fastViews>
 </fastViewBar>
 <fastViewBar fastViewLocation="1024" id="bottomRight" orientation="256" selectedTabId="org.eclipse.ui.views.TaskList" style="0">
@@ -171,63 +166,17 @@
 <navigationHistory>
 <editors>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/Crypto.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/SoftCard.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
-<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/SoftCard.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/SoftCard.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/SoftCard.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/Crypto.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/Crypto.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/TestServer.java"/>
+<editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/SoftCard.java"/>
 <editor factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" path="/softCard/Default/Crypto.java"/>
 </editors>
-<item historyLabel="Crypto.java" index="0">
-<position info="not_deleted" x="4468" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="2">
-<position info="not_deleted" x="5026" y="0"/>
-</item>
-<item historyLabel="TestServer.java" index="1">
-<position info="not_deleted" x="119" y="0"/>
-</item>
-<item historyLabel="Crypto.java" index="0">
-<position info="not_deleted" x="4468" y="0"/>
-</item>
-<item historyLabel="TestServer.java" index="3">
-<position info="not_deleted" x="119" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="4">
-<position info="not_deleted" x="5038" y="0"/>
-</item>
-<item historyLabel="TestServer.java" index="3">
-<position info="not_deleted" x="119" y="0"/>
-</item>
-<item historyLabel="Crypto.java" index="0">
-<position info="not_deleted" x="4429" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="4">
-<position info="not_deleted" x="5038" y="0"/>
-</item>
-<item historyLabel="TestServer.java" index="3">
-<position info="not_deleted" x="119" y="0"/>
-</item>
-<item historyLabel="Crypto.java" index="0">
-<position info="not_deleted" x="4429" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="5">
-<position info="not_deleted" x="5086" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="5">
-<position info="not_deleted" x="5955" y="0"/>
-</item>
-<item historyLabel="SoftCard.java" index="5">
-<position info="not_deleted" x="6557" y="0"/>
-</item>
-<item historyLabel="Crypto.java" index="0">
-<position info="not_deleted" x="4992" y="6"/>
-</item>
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="4999" y="0"/>
 </item>
@@ -237,28 +186,28 @@
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="5047" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="6">
+<item historyLabel="TestServer.java" index="2">
 <position info="not_deleted" x="119" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="5">
+<item historyLabel="SoftCard.java" index="1">
 <position info="not_deleted" x="5744" y="40"/>
 </item>
-<item historyLabel="TestServer.java" index="6">
+<item historyLabel="TestServer.java" index="2">
 <position info="not_deleted" x="119" y="0"/>
 </item>
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="5376" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="129" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="5372" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="129" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="6579" y="0"/>
 </item>
 <item historyLabel="Crypto.java" index="0">
@@ -267,71 +216,116 @@
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="2538" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="6579" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="6089" y="0"/>
 </item>
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="2538" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="6089" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="5300" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="129" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="3425" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="208" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="8283" y="0"/>
 </item>
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="671" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="8283" y="0"/>
 </item>
 <item historyLabel="Crypto.java" index="0">
 <position info="not_deleted" x="671" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="112" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="8283" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="8230" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="7">
+<item historyLabel="TestServer.java" index="3">
 <position info="not_deleted" x="112" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="8230" y="0"/>
 </item>
-<item historyLabel="TestServer.java" index="9">
+<item historyLabel="TestServer.java" index="5">
 <position info="not_deleted" x="112" y="0"/>
 </item>
-<item historyLabel="Crypto.java" index="10">
+<item historyLabel="Crypto.java" index="6">
 <position info="not_deleted" x="671" y="0"/>
 </item>
-<item historyLabel="SoftCard.java" index="8">
+<item historyLabel="SoftCard.java" index="4">
 <position info="not_deleted" x="4297" y="0"/>
 </item>
-<item active="true" historyLabel="Crypto.java" index="11">
-<position info="not_deleted" x="671" y="0"/>
+<item historyLabel="Crypto.java" index="7">
+<position info="not_deleted" x="3682" y="0"/>
+</item>
+<item historyLabel="TestServer.java" index="8">
+<position info="not_deleted" x="112" y="0"/>
+</item>
+<item historyLabel="SoftCard.java" index="9">
+<position/>
+</item>
+<item historyLabel="TestServer.java" index="8">
+<position info="not_deleted" x="112" y="0"/>
+</item>
+<item historyLabel="Crypto.java" index="7">
+<position info="not_deleted" x="750" y="0"/>
+</item>
+<item historyLabel="TestServer.java" index="8">
+<position info="not_deleted" x="112" y="0"/>
+</item>
+<item historyLabel="Crypto.java" index="7">
+<position info="not_deleted" x="750" y="0"/>
+</item>
+<item historyLabel="SoftCard.java" index="9">
+<position/>
+</item>
+<item historyLabel="TestServer.java" index="8">
+<position info="not_deleted" x="112" y="0"/>
+</item>
+<item historyLabel="Crypto.java" index="7">
+<position info="not_deleted" x="6073" y="0"/>
+</item>
+<item historyLabel="TestServer.java" index="8">
+<position info="not_deleted" x="112" y="0"/>
+</item>
+<item historyLabel="SoftCard.java" index="9">
+<position info="not_deleted" x="2337" y="0"/>
+</item>
+<item historyLabel="SoftCard.java" index="9">
+<position info="not_deleted" x="0" y="0"/>
+</item>
+<item historyLabel="SoftCard.java" index="9">
+<position info="not_deleted" x="658" y="0"/>
+</item>
+<item historyLabel="Crypto.java" index="10">
+<position info="not_deleted" x="6235" y="0"/>
+</item>
+<item active="true" historyLabel="Crypto.java" index="10">
+<position info="not_deleted" x="0" y="0"/>
 </item>
 </navigationHistory>
 <input factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/" type="8"/>
@@ -357,11 +351,14 @@
 </trimLayout>
 </window>
 <mruList>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GenerateNumber.java" tooltip="softCard/Default/GenerateNumber.java">
-<persistable path="/softCard/Default/GenerateNumber.java"/>
-</file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="Crypto.java" tooltip="softCard/Default/Crypto.java">
 <persistable path="/softCard/Default/Crypto.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SoftCard.java" tooltip="softCard/Default/SoftCard.java">
+<persistable path="/softCard/Default/SoftCard.java"/>
+</file>
+<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="GenerateNumber.java" tooltip="softCard/Default/GenerateNumber.java">
+<persistable path="/softCard/Default/GenerateNumber.java"/>
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="cipher.java" tooltip="softCard/Default/cipher.java">
 <persistable path="/softCard/Default/cipher.java"/>
@@ -371,9 +368,6 @@
 </file>
 <file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="TestServer.java" tooltip="softCard/Default/TestServer.java">
 <persistable path="/softCard/Default/TestServer.java"/>
-</file>
-<file factoryID="org.eclipse.ui.part.FileEditorInputFactory" id="org.eclipse.jdt.ui.CompilationUnitEditor" name="SoftCard.java" tooltip="softCard/Default/SoftCard.java">
-<persistable path="/softCard/Default/SoftCard.java"/>
 </file>
 </mruList>
 </workbench>
