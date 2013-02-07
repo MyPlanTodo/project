@@ -107,7 +107,6 @@ class ProcessusSock extends Thread {
 	private final byte GET_KEY = (byte) 0x42;
 	private final byte GET_RANDOM_NUMBER = (byte) 0x43;
 	private final byte DECRYPT= (byte) 0x44;
-	private final byte ENCRYPT = (byte) 0x45;
 
 	/**
 	 * This constructor links a reader and
@@ -128,6 +127,14 @@ class ProcessusSock extends Thread {
 		}
 	}
 
+	private static String bytesToHexString(byte[] bytes) {
+		StringBuffer sb = new StringBuffer();
+		for (byte b : bytes) {
+			sb.append(String.format("0x%02x ", b));
+		}
+		return new String(sb);
+	}
+
 	/**
 	 * This method will be executed by the
 	 * thread. It follows the rule :
@@ -144,11 +151,13 @@ class ProcessusSock extends Thread {
 			try {
 				mess = receiveMessages();
 				id = mess[0];
-				
+
 				// Send public key
 				if (id == this.GET_KEY) {
+					System.out.println("get key");
 					try {
-						sendMessage(this.getPublicKey());
+						byte[] key = this.getPublicKey();
+						sendMessage(key);
 					} catch(CardException ce) {
 						sendMessage("Error while establishing connection with the card.".getBytes());
 					} catch (Exception e) {
@@ -157,56 +166,48 @@ class ProcessusSock extends Thread {
 				}
 
 				// Send random number
-				if (id == this.GET_RANDOM_NUMBER) {
-					try {
-						sendMessage(this.getRandomNumber());
-						System.out.println("2");
-					} catch(CardException ce) {
-						sendMessage("Error while establishing connection with the card.".getBytes());
-					} catch (Exception e) {
-						sendMessage("Error while obtaining the public key.".getBytes());
+				else if (id == this.GET_RANDOM_NUMBER) {
+					System.out.println("get random number");
+
+					if (mess.length < 1) {
+						sendMessage("Insufficient parameters".getBytes());
+					}
+					else {
+						System.out.println("nb : "+ mess[1]);
+						byte nb = mess[1];
+						try {
+							sendMessage(this.getRandomNumber(nb));
+						} catch(CardException ce) {
+							sendMessage("Error while establishing connection with the card.".getBytes());
+						} catch (Exception e) {
+							sendMessage(e.getMessage().getBytes());
+						}
 					}
 				}
 				// retrieve the ciphered data and decrypt it
-				if (id == this.DECRYPT) {
+				else if (id == this.DECRYPT) {
+					System.out.println(("decrypt"));
 					byte[] data = new byte[mess.length - 1];
 
 					if (mess.length < 1) {
 						sendMessage("Insufficient parameters".getBytes());
 					}
-
-					System.arraycopy(mess, 1, data, 0, mess.length - 1);
-					try {
-						sendMessage(this.decryptData(data));
-					} catch(CardException ce) {
-						sendMessage(ce.getMessage().getBytes());
-					} catch (Exception e) {
-						sendMessage(e.getMessage().getBytes());
+					else {
+						System.arraycopy(mess, 1, data, 0, mess.length - 1);
+						try {
+							sendMessage(this.decryptData(data));
+						} catch(CardException ce) {
+							sendMessage(ce.getMessage().getBytes());
+						} catch (Exception e) {
+							sendMessage(e.getMessage().getBytes());
+						}
 					}
 				}
-
-				// Send encrypted data
-				if (id == this.ENCRYPT){
-					byte[] data = new byte[mess.length - 1];
-
-					if (mess.length < 1) {
-						sendMessage("Insufficient parameters".getBytes());
-					}
-
-					System.arraycopy(mess, 1, data, 0, mess.length - 1);
-
-					try {
-						sendMessage(this.encryptData(data));
-						//sendMessage(this.decryptData(this.encryptData(data)));	
-					} catch(CardException ce) {
-						sendMessage(ce.getMessage().getBytes());
-					} catch (Exception e) {
-						sendMessage(e.getMessage().getBytes());
-					}
+				else if (id == this.QUIT){
+					disconnected = true;
 				}
-
 			} catch (IOException e) {
-				System.err.println(e.getMessage());
+				System.err.println("Err : " + e.getMessage());
 				disconnected = true;
 			}
 		} while (id != this.QUIT && !disconnected);
@@ -239,9 +240,9 @@ class ProcessusSock extends Thread {
 	 * @throws Exception - with the reason message
 	 * @see Crypto
 	 */
-	private byte[] getRandomNumber() throws Exception {
+	private byte[] getRandomNumber(byte nb) throws Exception {
 		Crypto c = Crypto.getInstance();
-		return c.getRandomNumber();
+		return c.getRandomNumber(nb);
 	}
 
 	/**
@@ -254,19 +255,6 @@ class ProcessusSock extends Thread {
 	private byte[] decryptData(byte[] data) throws Exception {
 		Crypto c = Crypto.getInstance();
 		return c.decryptData(data);
-	}
-
-	/**
-	 * This method calls encryptData from {@link Crypto} to obtain
-	 * encrypted data.
-	 * @param data - the plain data to be encrypted
-	 * @return encrypted data in a bytes' array
-	 * @throws Exception - with the reason message
-	 * @see Crypto
-	 */
-	private byte[] encryptData(byte[] data) throws Exception {
-		Crypto c = Crypto.getInstance();
-		return c.encryptData(data);
 	}
 
 	/**
@@ -292,11 +280,11 @@ class ProcessusSock extends Thread {
 	 */
 	private byte[] receiveMessages() throws IOException {
 		int i = in.readInt();
-		
+
 		if (i > 2560 ) {
 			throw new IOException("Data too big");
 		}
-		
+
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
 		return b;
