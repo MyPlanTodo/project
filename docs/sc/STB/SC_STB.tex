@@ -479,13 +479,18 @@ application tierce, dans le cas d'une utilisation plus générale.\\
         \item[]
         \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
         non de générer un nouveau mot de passe. 
+        \item[4.] FaceCrypt enregistre le nouveau mot de passe et envoie la
+        confirmation de modification à SoftCard.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
         \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
         et de signature sur la carte, génère un nouveau mot de passe si besoin,
-        stocke les identifiants Facebook et crée un code PIN, qu'il transmet
-        à l'utilisateur.
+        stocke temporairement les identifiants Facebook (anciens et nouveaux)
+        et crée un code PIN, qu'il transmet à l'utilisateur.
+        \item[3.] SoftCard envoie le nouveau mot de passe à FaceCrypt.
+        \item[5.] SoftCard transmet la confirmation à SmartCard qui stocke
+            définitivement le mot de passe et efface l'ancien.
 	\end{itemize}
 	}
 	{}
@@ -501,18 +506,20 @@ application tierce, dans le cas d'une utilisation plus générale.\\
     {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
     déverrouillé la carte}
     {Demande de l'utilisateur}
-    {Le mot de passe a été modifié}
+    {Le mot de passe a été modifié et enregistré sur Facebook et sur la carte.}
     {\begin{itemize}
         \item[]
-        \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
-        non de générer un nouveau mot de passe. 
+        \item[1.] L'utilisateur choisit l'option permettant de générer un 
+            nouveau mot de passe.
+        \item[3.] FaceCrypt enregistre la modification et envoie une confirmation
+            du changement de mot de passe à SoftCard.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
-        et de signature sur la carte, génère un nouveau mot de passe si besoin,
-        stocke les identifiants Facebook et crée un code PIN, qu'il transmet
-        à l'utilisateur.
+        \item[2.] SoftCard transmet le mot de passe à SmartCard qui le stocke 
+            temporairement. Il notifie ensuite FaceCrypt de la modification.
+        \item[4.] SoftCard transmet la confirmation à SmartCard qui stocke 
+            définitivement le mot de passe et efface l'ancien.
 	\end{itemize}
 	}
 	{}
