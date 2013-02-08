@@ -29,12 +29,16 @@ Cryptographie:
 
 		soit environs 0,1445s = 144,5ms par signature.
 
-	Résultat: pour 10000 vérification de signatures;
+	Résultat: pour 10000 vérifications de signatures;
                 real	19m10.223s
 		user	0m4.840s
 		sys	0m0.612s
 
                 soit environs 0,1150s = 115ms par vérification.
 
-
-
+	Résultat: pour 10000 générations de nombre aléatoire.
+		real	4m40.511s
+		user	0m2.880s
+		sys	0m0.380s
+		
+		Soit environs 0,0281s = 28.1ms par génération.
