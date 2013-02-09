@@ -31,6 +31,8 @@ public class Crypto {
 	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
 	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
 	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
+	public static byte[] STORE_ID_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
+
 
 	// Constants associated with the generation of random number's applet
 	public static final byte INS_GEN = 0x00;
@@ -217,17 +219,34 @@ public class Crypto {
 		if (r.getSW() == 0x4247) {
 			throw new Exception("APDU Exception");
 		}
-		
+
 		if (r.getData()[0] < 0) {
 			return false;
 		}
 		else {
+			// Verify PIN
 			r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_VERIF_PIN, 0x00, 0x00, pin));
 			if (r.getSW() == 0x4247) {
 				throw new Exception("APDU Exception");
 			}
-			
+
+			return (r.getData()[0] == 0) ? true : false;
 		}
-		return unlocked;
+	}
+
+
+	public boolean storeData() throws Exception {
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+		
+		//  
+		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_REMAINING_TRIES, 0x00, 0x00));
+		if (r.getSW() == 0x4247) {
+			throw new Exception("APDU Exception");
+		}
+		return false;
 	}
 }
