@@ -19,7 +19,6 @@ public class StoreID extends Applet {
 	/* Constructeur */
 	private StoreID() {
 		credentials = null;
-		//	buffer = JCSystem.makeTransientByteArray((short) 96, JCSystem.CLEAR_ON_RESET);
 	}
 
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
@@ -40,14 +39,17 @@ public class StoreID extends Applet {
 		case INS_STORE:
 			try{
 				dataLen = apdu.setIncomingAndReceive();
-				Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, credentials, (short) 0, dataLen);
-				buffer[0] = 0;
-				apdu.setOutgoingAndSend((short) 0, (short) 1);
-			} catch(Exception e) {
+				//Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, credentials, (short) 0, dataLen);
+				for (byte i = 0; i < (byte) ((dataLen >> 8) & 0xff); i++) {
+					credentials[i] = buffer[ISO7816.OFFSET_CDATA + i];
+				}
 				buffer[0] = 1;
 				apdu.setOutgoingAndSend((short) 0, (short) 1);
-				break;
+			} catch(Exception e) {
+				buffer[0] = 0;
+				apdu.setOutgoingAndSend((short) 0, (short) 1);
 			}
+			break;
 
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);

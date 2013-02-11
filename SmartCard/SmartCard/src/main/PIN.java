@@ -84,11 +84,11 @@ public class PIN extends Applet {
 				//en cas d'erreur, le nombre d'essais restants est décrémenté automatiquement
 				if(pin.check(buffer, (short) ISO7816.OFFSET_CDATA, (byte) buffer[ISO7816.OFFSET_P1]))
 				{
-					buffer[0] = 0;
+					buffer[0] = 1;
 				}
 				else
 				{
-					buffer[0] = 1;
+					buffer[0] = 0;
 				}
 				apdu.setOutgoingAndSend((short) 0, (short) 1);
 				break;

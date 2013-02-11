@@ -1,10 +1,12 @@
 package main;
 
 import javacard.framework.APDU;
+import javacard.framework.APDUException;
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
 import javacard.framework.JCSystem;
+import javacard.framework.SystemException;
 import javacard.security.CryptoException;
 import javacard.security.RandomData;
 
@@ -20,14 +22,9 @@ public class gen_random extends Applet {
 
 	private static RandomData rng;
 	private short[] lg;
-	private byte[] buffer;
 
 
-
-
-	private gen_random() {
-		//générateur non sur
-		// à remplacer par ALG_SECURE_RANDOM sur la carte
+	private gen_random() throws SystemException, NegativeArraySizeException {
 		rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
 		lg = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);
 		// longueur de la séquence d'octets désirée
@@ -35,17 +32,22 @@ public class gen_random extends Applet {
 
 	}
 
-
-	public static void install(byte bArray[], short bOffset, byte bLength)
-			throws ISOException {
-		new gen_random().register();
+	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
+		try {
+			new gen_random().register();
+		}
+		catch (SystemException se) {
+			ISOException.throwIt((short) 0x0042);
+		}
+		catch (NegativeArraySizeException se) {
+			ISOException.throwIt((short) 0x0043);
+		}
 	}
 
-
-	public static  void genRandom(byte[] buff , short nb)
+	public static void genRandom(byte[] buff , short nb)
 	{
 		try{
-			rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);	
+			rng = RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);	
 			rng.generateData(buff,(short) 0,(short) nb);
 		}
 		catch(CryptoException ce)
@@ -59,16 +61,17 @@ public class gen_random extends Applet {
 			else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
 			{ISOException.throwIt((short) 0x04);}
 			else if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
-			{ISOException.throwIt((short) 0x05);}
+			{ISOException.throwIt((short) 0x05);
+			} else{
+				ISOException.throwIt((short) 0x06);
+			}
 
 		}
 	}
 
 	public void process(APDU apdu) throws ISOException {
 		//récupération du buffer
-		buffer = apdu.getBuffer();
-
-
+		byte[] buffer = apdu.getBuffer();
 
 		if (this.selectingApplet()) return;
 
@@ -76,25 +79,30 @@ public class gen_random extends Applet {
 			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 		}
 
-		/*if (ver_PIN.getState() != (short) 0x9000)
-		{ISOException.throwIt(ver_PIN.getState());
-
-		return;}*/
 		switch (buffer[ISO7816.OFFSET_INS]) {
 
 		case INS_NOUVEL_ALEA:
 			//récupération du nombre d'octets demandés
 			lg[0] = buffer[ISO7816.OFFSET_P1];
 			//génération de lg nombres et mise
-			rng.generateData(buffer, (short) 0,(short) lg[0]);
-			//envoi de 
-			apdu.setOutgoingAndSend((short) 0, (short) lg[0]);
+			try {
+				rng.generateData(buffer, (short) 0,(short) lg[0]);	
+			}
+			catch(CryptoException ce) {
+				ISOException.throwIt((short) 0x0001);
+			}
+
+			try {
+				apdu.setOutgoingAndSend((short) 0, (short) lg[0]);	
+			}
+			catch(APDUException ae) {
+				ISOException.throwIt((short) 0x0002);
+			}
 			break;
 
 		default:
 			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 		}	
-
 	}
 
 }

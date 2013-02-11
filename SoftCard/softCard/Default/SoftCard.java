@@ -54,6 +54,7 @@ public class SoftCard {
 			servSocket = (SSLServerSocket) sslSrvFact.createServerSocket(port, maxConn, adresse);
 			this.listening();
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.out.println("Problème Socket");
 			System.exit(2);
 		}
@@ -65,9 +66,9 @@ public class SoftCard {
 	 * and its public key. 
 	 */
 	public void setContext() {
-		System.setProperty("javax.net.ssl.keyStore", "/home/duck/certs/carte.jks");
+		System.setProperty("javax.net.ssl.keyStore", "/home/maguy/certs/carte.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "lolilol");
-		System.setProperty("javax.net.ssl.trustStore", "/home/duck/certs/trust.jks");
+		System.setProperty("javax.net.ssl.trustStore", "/home/maguy/certs/trustClientFaceCrypt.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "lolilol");
 	}
 
@@ -130,13 +131,13 @@ class ProcessusSock extends Thread {
 		}
 	}
 
-	private static String bytesToHexString(byte[] bytes) {
-		StringBuffer sb = new StringBuffer();
-		for (byte b : bytes) {
-			sb.append(String.format("0x%02x ", b));
-		}
-		return new String(sb);
-	}
+//	private static String bytesToHexString(byte[] bytes) {
+//		StringBuffer sb = new StringBuffer();
+//		for (byte b : bytes) {
+//			sb.append(String.format("0x%02x ", b));
+//		}
+//		return new String(sb);
+//	}
 
 	/**
 	 * This method will be executed by the
@@ -194,11 +195,13 @@ class ProcessusSock extends Thread {
 				} catch(CardException ce) {
 					sendMessage("Error while establishing connection with the card.".getBytes());
 				} catch (Exception e) {
+					e.printStackTrace();
 					sendMessage("Error while obtaining a random number".getBytes());
 				}
 			}
 			// retrieve the ciphered data and decrypt it.
 			else if (id == this.DECRYPT) {
+				System.out.println("decrypt");
 				byte[] data = new byte[mess.length - 1];
 
 				System.arraycopy(mess, 1, data, 0, mess.length - 1);
