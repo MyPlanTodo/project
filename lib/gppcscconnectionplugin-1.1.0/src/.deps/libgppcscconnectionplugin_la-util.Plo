@@ -1,6 +1,6 @@
 libgppcscconnectionplugin_la-util.lo: util.c util.h \
- /usr/local/include/globalplatform/types.h /usr/include/PCSC/wintypes.h \
- /usr/local/include/globalplatform/library.h /usr/include/string.h \
+ /usr/include/globalplatform/types.h /usr/include/PCSC/wintypes.h \
+ /usr/include/globalplatform/library.h /usr/include/string.h \
  /usr/include/features.h /usr/include/i386-linux-gnu/bits/predefs.h \
  /usr/include/i386-linux-gnu/sys/cdefs.h \
  /usr/include/i386-linux-gnu/bits/wordsize.h \
@@ -16,11 +16,11 @@ libgppcscconnectionplugin_la-util.lo: util.c util.h \
 
 util.h:
 
-/usr/local/include/globalplatform/types.h:
+/usr/include/globalplatform/types.h:
 
 /usr/include/PCSC/wintypes.h:
 
-/usr/local/include/globalplatform/library.h:
+/usr/include/globalplatform/library.h:
 
 /usr/include/string.h:
 

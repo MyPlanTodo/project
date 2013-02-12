@@ -54,6 +54,7 @@ public class SoftCard {
 			servSocket = (SSLServerSocket) sslSrvFact.createServerSocket(port, maxConn, adresse);
 			this.listening();
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.out.println("Problème Socket");
 			System.exit(2);
 		}
@@ -65,8 +66,10 @@ public class SoftCard {
 	 * and its public key. 
 	 */
 	public void setContext() {
-		System.setProperty("javax.net.ssl.keyStore", "/home/duck/certs/server.jks");
+		System.setProperty("javax.net.ssl.keyStore", "/home/maguy/certs/carte.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "lolilol");
+		System.setProperty("javax.net.ssl.trustStore", "/home/maguy/certs/trustClientFaceCrypt.jks");
+		System.setProperty("javax.net.ssl.trustStorePassword", "lolilol");
 	}
 
 	/**
@@ -97,12 +100,10 @@ public class SoftCard {
  * @version 1.0
  */
 class ProcessusSock extends Thread {
-	
+
 	private SSLSocket socket = null;
 	private DataInputStream in = null;
 	private DataOutputStream out = null;
-
-
 
 	private final byte QUIT = (byte) 0x00;
 	private final byte GET_KEY = (byte) 0x42;
@@ -110,7 +111,7 @@ class ProcessusSock extends Thread {
 	private final byte DECRYPT= (byte) 0x44;
 	private final byte IS_UNLOCKED = (byte) 0x45;
 	private final byte UNLOCK = (byte) 0x46;
-
+	private final byte STORE_CREDENTIALS = (byte) 0x47;
 	/**
 	 * This constructor links a reader and
 	 * a printer to the socket and start
@@ -130,13 +131,13 @@ class ProcessusSock extends Thread {
 		}
 	}
 
-	private static String bytesToHexString(byte[] bytes) {
-		StringBuffer sb = new StringBuffer();
-		for (byte b : bytes) {
-			sb.append(String.format("0x%02x ", b));
-		}
-		return new String(sb);
-	}
+//	private static String bytesToHexString(byte[] bytes) {
+//		StringBuffer sb = new StringBuffer();
+//		for (byte b : bytes) {
+//			sb.append(String.format("0x%02x ", b));
+//		}
+//		return new String(sb);
+//	}
 
 	/**
 	 * This method will be executed by the
@@ -167,10 +168,9 @@ class ProcessusSock extends Thread {
 		} catch (CardException e) {
 			System.err.println("An error occured while disconnecting the card.");
 		}
-	} 
+	}
 
-
-	private boolean doAction(byte[] mess) throws IOException{
+	private boolean doAction(byte[] mess) throws IOException {
 		boolean res = true;
 		if (mess.length > 0) {
 			byte id = mess[0];
@@ -195,11 +195,13 @@ class ProcessusSock extends Thread {
 				} catch(CardException ce) {
 					sendMessage("Error while establishing connection with the card.".getBytes());
 				} catch (Exception e) {
+					e.printStackTrace();
 					sendMessage("Error while obtaining a random number".getBytes());
 				}
 			}
 			// retrieve the ciphered data and decrypt it.
 			else if (id == this.DECRYPT) {
+				System.out.println("decrypt");
 				byte[] data = new byte[mess.length - 1];
 
 				System.arraycopy(mess, 1, data, 0, mess.length - 1);
@@ -218,10 +220,22 @@ class ProcessusSock extends Thread {
 				}
 			}
 			else if (id == this.UNLOCK) {
+				byte[] data = new byte[mess.length - 1];
+				System.arraycopy(mess, 1, data, 0, mess.length - 1);
 				try {
-					sendMessage(locked())? new byte[]{1} : new byte[]{0});
-				} catch (CardException e) {
-					sendMessage("An error occured while checking the card's activation".getBytes());
+					sendMessage(unlock(data)? new byte[]{1} : new byte[]{0});
+				} catch (Exception e) {
+					sendMessage("An error occured while unlocking card".getBytes());
+				}
+			}
+			else if (id == this.STORE_CREDENTIALS) {
+				byte[] data = new byte[mess.length - 1];
+					
+				try {
+					sendMessage(storeData(data)? new byte[]{1} : new byte[]{0});
+				} catch (Exception e) {
+					sendMessage("An error occured while storing data".getBytes());
+
 				}
 			}
 			// client wants to disconnect.
@@ -229,10 +243,22 @@ class ProcessusSock extends Thread {
 				res = false;
 			}
 		}
-		
+
 		return res;
 	}
 
+	/**
+	 * This method calls the eponymous method of {@link Crypto} to 
+	 * store the user's login and password. 
+	 * @param data 
+	 * @return true if the all went well.
+	 * @throws Exception - with the reason message, if an error
+	 * occured on the smartcard's side.
+	 */
+	private boolean storeData(byte[] data) throws Exception {
+		return Crypto.getInstance().storeData();
+	}
+	
 	/**
 	 * This method calls the eponymous method of {@link Crypto} to 
 	 * verify the unlocking of the smartcard.
@@ -244,10 +270,17 @@ class ProcessusSock extends Thread {
 		return Crypto.getInstance().isUnlocked();		
 	}
 
-	private boolean unlock(byte[] pin) throws CardException {
+	/**
+	 * This method calls the eponymous method of {@link Crypto} to 
+	 * verify the PIN.
+	 * @return true if the Card if the PIN is correct, false otherwise
+	 * @throws Exception - with the reason message, if an error
+	 * occured on the smartcard's side.
+	 */
+	private boolean unlock(byte[] pin) throws Exception {
 		return Crypto.getInstance().unlock(pin);
 	}
-	
+
 	/**
 	 * This method calls disconnectCard from {@link Crypto} to
 	 * obtain a random number.

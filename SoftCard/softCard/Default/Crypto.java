@@ -26,11 +26,13 @@ public class Crypto {
 	public static final byte CLA_CIPHER = (byte) 0xB0;
 
 	// Constants identifying each applet on the smartcard
-	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x00 };
-	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
+	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
 	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
+	public static byte[] STORE_ID_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
+	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
 	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
 	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
+
 
 	// Constants associated with the generation of random number's applet
 	public static final byte INS_GEN = 0x00;
@@ -50,6 +52,9 @@ public class Crypto {
 	public static final byte INS_REMAINING_TRIES = 0x01;                        
 	public static final byte INS_RESET_PIN = 0x02;                              
 	public static final byte INS_UNLOCK_WITH_PUK = 0x03;  
+
+	// Constants associated with the applet storing user's credentials
+	public static final byte INS_STORE = 0x00;
 
 	private TerminalFactory factory;
 	private static List<CardTerminal> terminals;
@@ -96,7 +101,7 @@ public class Crypto {
 		// Récupération de l'exposant
 		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_EXPONENT, 0x00, 0x00, 1));
 		if (r.getSW() != 0x9000) {
-			//			throw new Exception("Could not retrieve the exponent.");
+			//throw new Exception("Could not retrieve the exponent.");
 			System.out.println("Err code : " + r.getSW());
 			throw new Exception("Err code : " + r.getSW());
 		}
@@ -120,11 +125,11 @@ public class Crypto {
 		unlocked = false;
 	}
 
-	public byte[] getRandomNumber(byte nb) throws Exception{
+	public byte[] getRandomNumber(byte nb) throws CardException, Exception{
 		// Selecting the applet
-		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, GEN_RANDOM_AID));
+		ResponseAPDU r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, GEN_RANDOM_AID));
 		if (r.getSW() != 0x9000) {
-			throw new Exception("Could not select the applet.");
+			throw new Exception("Could not select the applet. : " + r.getSW());
 		}
 
 		// Generating number 
@@ -217,17 +222,35 @@ public class Crypto {
 		if (r.getSW() == 0x4247) {
 			throw new Exception("APDU Exception");
 		}
-		
+
 		if (r.getData()[0] < 0) {
 			return false;
 		}
 		else {
+			// Verify PIN
 			r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_VERIF_PIN, 0x00, 0x00, pin));
 			if (r.getSW() == 0x4247) {
 				throw new Exception("APDU Exception");
 			}
-			
+
+			return (r.getData()[0] == 1) ? true : false;
 		}
-		return unlocked;
+	}
+
+
+	public boolean storeData() throws Exception {
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+
+		//
+		r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_STORE, 0x00, 0x00));
+		if (r.getSW() == 0x4247) {
+			throw new Exception("APDU Exception");
+		}
+
+		return (r.getData()[0] == 1) ? true : false;
 	}
 }

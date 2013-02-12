@@ -14,10 +14,10 @@ library_names='libgppcscconnectionplugin.so.1.0.1 libgppcscconnectionplugin.so.1
 old_library='libgppcscconnectionplugin.a'
 
 # Linker flags that can not go in dependency_libs.
-inherited_linker_flags=''
+inherited_linker_flags=' -pthread'
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/usr/local/lib /usr/local/lib/libglobalplatform.la -ldl -lcrypto -lz -lpcsclite'
+dependency_libs=' /usr/lib/libglobalplatform.la -ldl -lcrypto -lz /usr/lib/libpcsclite.la -lrt'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''

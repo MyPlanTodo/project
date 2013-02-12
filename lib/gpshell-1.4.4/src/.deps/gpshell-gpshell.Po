@@ -29,17 +29,16 @@ gpshell-gpshell.o: gpshell.c /usr/include/stdlib.h \
  /usr/include/i386-linux-gnu/bits/stat.h \
  /usr/include/i386-linux-gnu/sys/stat.h \
  /usr/include/i386-linux-gnu/sys/time.h \
- /usr/local/include/globalplatform/globalplatform.h \
- /usr/local/include/globalplatform/types.h /usr/include/PCSC/wintypes.h \
- /usr/local/include/globalplatform/unicode.h \
- /usr/local/include/globalplatform/error.h \
- /usr/local/include/globalplatform/errorcodes.h \
- /usr/local/include/globalplatform/library.h \
- /usr/local/include/globalplatform/connection.h \
- /usr/include/PCSC/winscard.h /usr/include/PCSC/pcsclite.h \
- /usr/include/PCSC/wintypes.h \
- /usr/local/include/globalplatform/security.h \
- /usr/local/include/globalplatform/stringify.h
+ /usr/include/globalplatform/globalplatform.h \
+ /usr/include/globalplatform/types.h /usr/include/PCSC/wintypes.h \
+ /usr/include/globalplatform/unicode.h \
+ /usr/include/globalplatform/error.h \
+ /usr/include/globalplatform/errorcodes.h \
+ /usr/include/globalplatform/library.h \
+ /usr/include/globalplatform/connection.h /usr/include/PCSC/winscard.h \
+ /usr/include/PCSC/pcsclite.h /usr/include/PCSC/wintypes.h \
+ /usr/include/globalplatform/security.h \
+ /usr/include/globalplatform/stringify.h
 
 /usr/include/stdlib.h:
 
@@ -123,21 +122,21 @@ gpshell-gpshell.o: gpshell.c /usr/include/stdlib.h \
 
 /usr/include/i386-linux-gnu/sys/time.h:
 
-/usr/local/include/globalplatform/globalplatform.h:
+/usr/include/globalplatform/globalplatform.h:
 
-/usr/local/include/globalplatform/types.h:
+/usr/include/globalplatform/types.h:
 
 /usr/include/PCSC/wintypes.h:
 
-/usr/local/include/globalplatform/unicode.h:
+/usr/include/globalplatform/unicode.h:
 
-/usr/local/include/globalplatform/error.h:
+/usr/include/globalplatform/error.h:
 
-/usr/local/include/globalplatform/errorcodes.h:
+/usr/include/globalplatform/errorcodes.h:
 
-/usr/local/include/globalplatform/library.h:
+/usr/include/globalplatform/library.h:
 
-/usr/local/include/globalplatform/connection.h:
+/usr/include/globalplatform/connection.h:
 
 /usr/include/PCSC/winscard.h:
 
@@ -145,6 +144,6 @@ gpshell-gpshell.o: gpshell.c /usr/include/stdlib.h \
 
 /usr/include/PCSC/wintypes.h:
 
-/usr/local/include/globalplatform/security.h:
+/usr/include/globalplatform/security.h:
 
-/usr/local/include/globalplatform/stringify.h:
+/usr/include/globalplatform/stringify.h:
