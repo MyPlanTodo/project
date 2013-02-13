@@ -7,7 +7,7 @@ Participants :
     Giovanni Huet, Emmanuel Mocquet, Maxence Péchoux, Romain Pignard.
 
 ----
-Ordre du jour : Livraison de la seconde itération
+Ordre du jour : Livraison de la seconde itération SC.
 
 1) Remarque sur le STB
 
