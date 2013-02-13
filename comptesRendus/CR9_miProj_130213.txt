@@ -27,13 +27,15 @@ Baptiste Dolbeau : (Travaille à 100% sur FaceCrypt)
     Prochains objectifs : mettre en place la communication avec l'extension
         via des objets JSon. 
 
-Yicheng Gao : (Par mail)
-    - La mise en place de l'environnement de développement pour un simulateur 
-        et vrais carte est terminé.
-    - Les documentations d'applet Cypher est terminés
-    - Le test pour vérifier si les nombres sont aléatoires générés par 
-        l'applet gen_random est terminé, et je suis en train de rédiger le 
-        rapport pour ça.
+Yicheng Gao : (Travaille à 100% sur le projet SmartCard)
+    Accompli pour le moment : La mise en place de l'environnement de 
+        développement de JAVAcard, compiler et charger une applet Javacard sur 
+        une carte physique ainsi l'’application cliente pour un simulateur et 
+        une vrais carte, les documentations d'applet Cypher
+    Prochains objectifs :  - Test sur l'applet Gen_radom pour les bits 
+        différents (en ce moment le test concerne 2 bits) et le compte-rendu 
+        complet.
+
 
 Giovanni Huet : (Travaille à 50-50 entre SmartCard et SoftCard) 
     Accompli pour le moment : développement d'une applet réalisant la 
