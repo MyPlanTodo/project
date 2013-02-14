@@ -1,0 +1,53 @@
+
+
+
+Mise en place du tunnel
+
+Etablissement d'une clé de session 
+
+- Mise en place de l'objet CBC-MAC avec un IV de 0 et de la clé de session.
+- Etablissement de la clé de session
+		
+	 
+
+
+
+
+
+Etablissement de la clé de session
+
+- Génération d'un nonce client
+- Envoi du nonce client à la carte
+- La carte récupère le nonce client, génère un nonce carte, un IV et une clé de session
+- La carte envoie la clé, le nonce client et le nonce carte chiffrés avec la cle partagée et l'IV.
+- Le client extrait l'IV et déchiffre le message avec la clé partagée.
+- Le client vérifie si le nonce client est présent, extrait la clé de session et récupère le nonce carte.
+// à ce niveau le client a authentifié la carte
+- Le client génère un IV et renvoie le nonce carte avec la clé de session établie.
+- La carte récupère le nonce carte et vérifie s'il est identique à celui envoyé.
+// la carte a authentifié le client.
+
+
+
+
+
+Fonctionnement des appels
+
+Pour utiliser les applets sur la carte, il faut envoyer les données vers la carte à travers le tunnel.
+
+- Envoi vers la carte - 
+La fonction <tunnel>.request() est une fonction identique à <channel>.transmit(new CommandAPDU(...)). Elle prend les mêmes paramètres et
+s'occupe de la segmentation avant envoi.
+La fonction utilise le tunnel précédemment créé pour assurer l'authentification, l'intégrité et la confidentialité des paquets en transit.
+L'applet <tunnel> sur la carte récupère l'APDU, vérifie le MAC, extrait l'IV, déchiffre la payload et donne cette payload à l'applet datastore qui s'occupe du stockage. Si plusieurs APDU sont nécessaires, le processus est répété.
+
+- Exécution des instructions - 
+Une fois les données stockées dans le datastore, la fonction tunnel.execute envoie une commande à la carte pour qu'elle agisse conformément aux données envoyées. L'applet datastore analyse le premier octet des données stockée pour lire le numéro de l'applet demandée et appelle la fonction <applet>.execute(data) où <applet> est l'applet définie par le premier octet (utilisation d'une liste de correspondance) et data correspond aux données locales stockées par le datastore. Ce fonctionnement permet aux applets d'utiliser le tunnel avec des adaptations mineures.
+
+- Récupération des données - 
+Une fois que l'applet a exécuté son travail sur les données en entrée, il est possible de récupérer le résultat.
+La fonction <tunnel>.getResponse() renvoie les données de la carte vers le client en les réassemblant. 
+ 
+
+
+	
