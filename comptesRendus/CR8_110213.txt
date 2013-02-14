@@ -1,0 +1,23 @@
+
+Réunion 11/02/13
+
+Participants : 
+    - Ayoub Otmani.
+    - Zakaria Addi, Baptiste Dolbeau, Florian Guilbert, 
+    Emmanuel Mocquet, Maxence Péchoux, Romain Pignard.
+
+Absent (justifié) : Giovanni Huet.
+Absent : Yicheng Gao.
+
+----
+Ordre du jour : Livraison de la seconde itération SSN
+
+- Discussion au niveau du problème du dialogue entre FaceCrypt et l'extension
+(résolu peu après).
+
+- L'initialisation de la clef publique non fonctionnelle lors de la 
+démonstration mais résolue après la réunion.
+
+Client globalement satisfait de notre avancement.
+
+Prochaine réunion : Mardi 19 16h
