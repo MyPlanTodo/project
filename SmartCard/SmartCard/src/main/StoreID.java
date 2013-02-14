@@ -11,12 +11,14 @@ import javacard.framework.Util;
 
 public class StoreID extends Applet {
 	/* Constantes */
-	public static final byte CLA_STORE = (byte) 0xB0;
-	public static final byte INS_STORE_LOGIN = 0x00;
-	public static final byte INS_STORE_MDP = 0x01;
-	public static final byte INS_GET = 0x02;		
+	private static final byte CLA_STORE = (byte) 0xB0;
+	private static final byte INS_STORE_LOGIN = 0x00;
+	private static final byte INS_STORE_PWD = 0x01;
+	private static final byte INS_VALIDATE_PWD = 0x02;
+	private static final byte INS_GET = 0x03;
+	private static final byte INS_GET_PWD = 0x04;		
 
-	private byte[] login, delimiter, mdp;
+	private byte[] login, delimiter, pwd, tmpPwd;
 	private short[] dataLen;
 
 	/* Constructeur */
@@ -24,7 +26,8 @@ public class StoreID extends Applet {
 		login = null; 
 		// This delimiter represent a ' ' (space).
 		delimiter = new byte[]{0x20};
-		mdp = null;
+		pwd = null;
+		tmpPwd = null;
 
 		// Will contain the length of the received data.
 		dataLen = JCSystem.makeTransientShortArray((short) 1, JCSystem.CLEAR_ON_DESELECT);
@@ -69,13 +72,13 @@ public class StoreID extends Applet {
 			break;
 
 			/**
-			 * Store the provided password.
+			 * Store the provided password, temporary.
 			 */
-		case INS_STORE_MDP:
+		case INS_STORE_PWD:
 			try{
 				dataLen[0] = apdu.setIncomingAndReceive();
-				mdp = new byte[dataLen[0]];
-				Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, mdp, (short) 0, dataLen[0]);
+				tmpPwd = new byte[dataLen[0]];
+				Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, tmpPwd, (short) 0, dataLen[0]);
 
 				buffer[0] = 1;
 				apdu.setOutgoingAndSend((short) 0, (short) 1);
@@ -90,6 +93,31 @@ public class StoreID extends Applet {
 			}
 			break;
 
+			
+		/**
+		 * This block is called when the password has been successfully 
+		 * modified/saved in Facebook.
+		 */
+		case INS_VALIDATE_PWD:
+			try{
+				if (tmpPwd != null) {
+					pwd = new byte[tmpPwd.length];
+					Util.arrayCopy(tmpPwd, (short)0, pwd, (short) 0, (short) tmpPwd.length);
+					tmpPwd = null;
+				}
+
+				buffer[0] = 1;
+				apdu.setOutgoingAndSend((short) 0, (short) 1);
+			} catch(APDUException e) {
+				ISOException.throwIt((short) 0x0001);
+			} catch(NullPointerException e) {
+				ISOException.throwIt((short) 0x0002);
+			} catch(ArrayIndexOutOfBoundsException e) {
+				ISOException.throwIt((short) 0x0003);
+			} catch(TransactionException e) {
+				ISOException.throwIt((short) 0x0004);
+			}
+			break;
 
 			/**
 			 * Copy login+delimiter+password into the buffer and send it
@@ -98,11 +126,37 @@ public class StoreID extends Applet {
 			try{
 				Util.arrayCopy(login, (short) 0, buffer, (short) 0, (short) login.length);
 				Util.arrayCopy(delimiter, (short) 0, buffer, (short) login.length, (short) delimiter.length);
-				Util.arrayCopy(mdp, (short) 0, buffer, (short) (login.length + delimiter.length), (short) mdp.length);
+				Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) pwd.length);
 
 				apdu.setOutgoing();
-				apdu.setOutgoingLength((short)(login.length + mdp.length + delimiter.length));
-				apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + mdp.length + delimiter.length));
+				apdu.setOutgoingLength((short)(login.length + pwd.length + delimiter.length));
+				apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + pwd.length + delimiter.length));
+			} catch(APDUException e) {
+				ISOException.throwIt((short) 0x0001);
+			} catch(NullPointerException e) {
+				ISOException.throwIt((short) 0x0002);
+			} catch(ArrayIndexOutOfBoundsException e) {
+				ISOException.throwIt((short) 0x0003);
+			} catch(TransactionException e) {
+				ISOException.throwIt((short) 0x0004);
+			}
+			break;
+
+		/**
+		 * Whenever the user wants to change his password, this block is called.
+		 */
+		case INS_GET_PWD:
+			try{
+				if (pwd != null) {
+					Util.arrayCopy(pwd, (short) 0, buffer, (short) 0, (short) pwd.length);
+
+					apdu.setOutgoing();
+					apdu.setOutgoingLength((short)(pwd.length));
+					apdu.sendBytesLong(buffer, (short) 0, (short)(pwd.length));
+				}
+				else {
+					ISOException.throwIt((short) 0x0005);
+				}
 			} catch(APDUException e) {
 				ISOException.throwIt((short) 0x0001);
 			} catch(NullPointerException e) {

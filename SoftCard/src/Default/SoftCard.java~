@@ -16,6 +16,8 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
+import org.apache.commons.codec.binary.Base64;
+
 /**
  * This class allow user to send requests to the smartcard :
  * cipher, uncipher, get the public key, sign data or verify it
@@ -36,32 +38,32 @@ public class SoftCard {
 
 	// Constants associated with the generation of random number's applet
 	public static final byte INS_GEN = 0x00;
-	
+
 	// Default size of the generated password
-	private static final int SIZE_PWD = 0x40;
-	
+	private static final byte SIZE_PWD = 0x64;
+
 	// Constants for verification and signature of data with the associated applet
-	public static final byte INS_SIGN = 0x04;
-	public static final byte INS_VERIF = 0x05;
+	private static final byte INS_SIGN = 0x04;
+	private static final byte INS_VERIF = 0x05;
 
 	// Constants associated with the ciphering applet
-	public static final byte INS_CIPHER = 0x00;
-	public static final byte INS_UNCIPHER = 0x01;
-	public static final byte INS_GET_EXPONENT = 0x02;
-	public static final byte INS_GET_MODULUS = 0x03;
+	private static final byte INS_CIPHER = 0x00;
+	private static final byte INS_UNCIPHER = 0x01;
+	private static final byte INS_GET_EXPONENT = 0x02;
+	private static final byte INS_GET_MODULUS = 0x03;
 
-	// Constants associated with the applet handling the PIN code
-	public static final byte INS_VERIF_PIN = 0x00;                              
-	public static final byte INS_REMAINING_TRIES = 0x01;                        
-	public static final byte INS_RESET_PIN = 0x02;
-	public static final byte INS_UNLOCK_WITH_PUK = 0x03;
-	public static final byte INS_GET_PIN = 0x04;
-	public static final byte INS_GET_PUK = 0x05;
+	// Constants stants associated with the applet handling the PIN code
+	private static final byte INS_VERIF_PIN = 0x00;                              
+	private static final byte INS_REMAINING_TRIES = 0x01;                        
+	private static final byte INS_UNLOCK_WITH_PUK = 0x02;
+	private static final byte INS_GET_PIN = 0x03;
+	private static final byte INS_GET_PUK = 0x04;
 
 	// Constants associated with the applet storing user's credentials
-	public static final byte INS_STORE_LOGIN = 0x00;
-	public static final byte INS_STORE_MDP = 0x01;
-	private static final byte INS_GET_CRED = 0x02;
+	private static final byte INS_STORE_LOGIN = 0x00;
+	private static final byte INS_STORE_PWD = 0x01;
+	private static final byte INS_VALIDATE_PWD = 0x02;
+	private static final byte INS_GET_CRED = 0x03;
 
 
 	private TerminalFactory factory;
@@ -69,16 +71,16 @@ public class SoftCard {
 	private static SoftCard instance = null;
 	private static Card card = null;
 	private static CardChannel channel = null;
-	private boolean unlocked = false;
+	private boolean unlocked = true; //false;
 
 
-//	private static String bytesToHexString(byte[] bytes) {
-//		StringBuffer sb = new StringBuffer();
-//		for (byte b : bytes) {
-//			sb.append(String.format("0x%02x ", b));
-//		}
-//		return new String(sb);
-//	}
+	//	private static String bytesToHexString(byte[] bytes) {
+	//		StringBuffer sb = new StringBuffer();
+	//		for (byte b : bytes) {
+	//			sb.append(String.format("0x%02x ", b));
+	//		}
+	//		return new String(sb);
+	//	}
 
 	private SoftCard() throws CardException {
 		factory = TerminalFactory.getDefault();
@@ -250,17 +252,12 @@ public class SoftCard {
 	}
 
 
+	
 	public boolean storeCredentials(byte[] data) throws Exception {
-		// Selecting the applet
-		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
-		if (r.getSW() != 0x9000) {
-			throw new Exception("Could not select the applet.");
-		}
-		
 		String strData = new String(data);
 		int i = 0;
 		boolean found = false; 
-		
+
 		// Recherche du motif " "(espace) servant de délimiteur
 		while (i < strData.length() && !found) {
 			if (strData.charAt(i) == ' ') {
@@ -270,31 +267,79 @@ public class SoftCard {
 				i++;
 			}
 		}
-		
+
 		if (found) {
 			byte[] login = new byte[i];
 			byte[] mdp = new byte[data.length - i - 1];
 			System.arraycopy(login, 0, data, 0, i);
 			System.arraycopy(mdp, 0, data, i, data.length - i - 1);
 
-			// Store login
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_LOGIN, 0x00, 0x00, login));
-			if (r.getSW() != 0x9000) {
-				throw new Exception("Could not store data.");
-			}
-			
-			// Store mdp
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_MDP, 0x00, 0x00, mdp));
-			if (r.getSW() != 0x9000) {
-				throw new Exception("Could not store data.");
-			}
-			return (r.getData()[0] == 1) ? true : false;
+			return storeLogin(login) && storePassword(mdp);
 		}
 		else {
 			throw new Exception("Could not store data");
 		}
 	}
 
+	
+	private boolean storeLogin(byte[] login) throws Exception {
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+		// Store login
+		r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_LOGIN, 0x00, 0x00, login));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not store data.");
+		}
+		return (r.getData()[0] == 1) ? true : false;
+	}
+
+/**
+ * 
+ * @param pwd
+ * @return
+ * @throws Exception
+ */
+	private boolean storePassword(byte[] pwd) throws Exception {
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte) 0xA4, 0x04, 0x00, STORE_ID_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+		// Store temporary password
+		r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_PWD, 0x00, 0x00, pwd));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not store data.");
+		}
+		return (r.getData()[0] == 1) ? true : false;
+	}
+
+
+	/**
+	 * This method is called whenever FaceCrypt send the message validating the password.
+	 * @return true if no error occured while removing the old and the temporary password 
+	 * @throws Exception - if the applet on the card could not be selected or if the data
+	 * could not be stored. 
+	 */
+	private boolean validatePassword() throws Exception {
+		// Selecting the applet
+		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not select the applet.");
+		}
+		
+		// Send validation
+		r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_VALIDATE_PWD, 0x00, 0x00));
+		if (r.getSW() != 0x9000) {
+			throw new Exception("Could not store data.");
+		}
+		return true;
+	}
+	
+
+	
 	public byte[] retrieveCredentials() throws Exception {
 		// Selecting the applet
 		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
@@ -362,20 +407,11 @@ public class SoftCard {
 	 * @throws Exception - if an error occured on the smarcard's side.
 	 * @return the new password, as a bytes' array
 	 */
-	public byte[] resetPassword() throws Exception{ 
-		if (isUnlocked()) {
-			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, GEN_RANDOM_AID));
-			if (r.getSW() != 0x9000) {
-				throw new Exception("Could not select the applet.");
-			}
-
-			// Generate a new password
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GEN, SIZE_PWD, 0x00));
-			if (r.getSW() != 0x9000) {
-				throw new Exception("Could not change the password");
-			}
-			return r.getData();
+	public byte[] resetPassword() throws Exception {
+		if (isUnlocked()) { 
+			// Convert the generated password as something "readable"
+			String password = Base64.encodeBase64String(getRandomNumber(SIZE_PWD));
+			return storePassword(password.getBytes()) ? password.getBytes() : null;
 		}
 		else {
 			throw new Exception("Card locked");
