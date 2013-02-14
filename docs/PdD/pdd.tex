@@ -39,9 +39,9 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Plan de développement}
 \def\docDate{\today}
-\def\version{0.1}
+\def\version{1.1}
 \def\author{Florian \textsc{Guilbert}}
-\def\checked{}
+\def\checked{Emmanuel \textsc{Mocquet}}
 \def\approved{}
 
 
@@ -61,6 +61,8 @@
 	\bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
 	\hline
 	0.1 & 07/01/2013 & Création\\
+	\hline
+	1.0 & 08/01/2013 & Relecture par Emmanuel \textsc{Mocquet}\\
 	\hline
 	&&\\
 	\hline
@@ -246,8 +248,8 @@ processus de développement.
 \tikzstyle{suite}=[->,>=stealth,thick,rounded corners=4pt]
 % placement des nœuds
 \node[coach] (coach) at (4.5,7.5) {\begin{tabular}{c}\textbf{Coach} \\Florian \textsc{Guilbert}\end{tabular}};
-\node[group] (sc) at (1.5,5.5) {Smart Card};
-\node[group] (ssn) at (8.5,5.5) {Secure Social Network};
+\node[group] (sc) at (0.5,5.5) {\begin{tabular}{c}Smart Card, \\responsable : Emmanuel \textsc{Mocquet}\end{tabular}};
+\node[group] (ssn) at (8.5,5.5) {\begin{tabular}{c}Secure Social Network, \\responsable : Florian \textsc{Guilbert}\end{tabular}};
 \node[prog] (prog1) at (-1.5,2){\begin{tabular}{c}\textbf{Programmeur} \\Yicheng \textsc{Gao}\\Emmanuel \textsc{Mocquet}\end{tabular}};
 \node[cliTest] (test1) at (2.8,2) {\begin{tabular}{c}\textbf{Client/Testeur} \\Giovanni \textsc{Huet}\\Romain \textsc{Pignard}\end{tabular}};
 \node[prog] (prog2) at (7,2) {\begin{tabular}{c}\textbf{Programmeur} \\Zakaria \textsc{Addi}\\Maxence \textsc{Péchoux}\end{tabular}};
@@ -257,10 +259,10 @@ processus de développement.
 \draw (coach) -- (4.5, 5.5);
 \draw (sc) -- (4.5, 5.5);
 \draw (ssn) -- (4.5, 5.5);
-\draw (sc) -- (1.5,3.5);
+\draw (sc) -- (0.5,3.5);
 \draw (ssn) -- (8.5,3.5);
-\draw (prog1) |- (1.5,3.5);
-\draw (test1) |- (1.5,3.5);
+\draw (prog1) |- (0.5,3.5);
+\draw (test1) |- (0.5,3.5);
 \draw (prog2) |- (8.5,3.5);
 \draw (test2) |- (8.5,3.5);
 
@@ -316,7 +318,7 @@ ou de déchiffrer des données.
 
 \paragraph{Version 0.2}  
 Dans la deuxième version, l'application et la carte à puce doivent pouvoir
-chiffrer et déchiffrer des données. De plus, il devrait être possible
+chiffrer/déchiffrer/signer/vérifier des données. De plus, il devrait être possible
 de stocker des données, tels que des certificats, sur la partie cachée. Pour la
 partie \emph{Secure Social Network}, l'extension devrait pouvoir injecter
 du code dans la page du réseau social tandis qu'en parallèle, FaceCrypt 
@@ -324,27 +326,55 @@ devrait pouvoir stocker des informations de manière permanente.
 
 \paragraph{Version 0.3}
 La troisième version se résume principalement en la mise en place
-d'un dialogue entre l'extension et FaceCrypt.
+d'un dialogue entre l'extension et FaceCrypt, un autre entre FaceCrypt et 
+SoftCard et encore un autre entre la carte et SoftCard. Tous ces dialogues
+devront être sécurisés (dans le sens défini dans les STB).
 
 \paragraph{Version 1.0, finale} 
-La version finale correspond à la fusion des deux sous-projets.
+La version finale correspond à la fusion des deux sous-projets, l'intégration
+finale des composants et de leurs connexions.
 
 \section{Planning général}
 \begin{center}
 \begin{figure}[!h]
-\includegraphics[scale=0.70]{ganttArray.png}
-\caption{Diagramme de Gantt, tâches}
+\includegraphics[scale=0.70]{iteration1.png}
+\caption{Diagramme de Gantt, itération 1}
 \end{figure}
-% \newpage
+\end{center}
+
+\begin{center}
 \begin{figure}[!h]
-\includegraphics[scale=0.70]{ganttDiag.png}
+\includegraphics[scale=0.70]{iteration2.png}
+\caption{Diagramme de Gantt, itération 2}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[!h]
+\includegraphics[scale=0.70]{iteration3.png}
+\caption{Diagramme de Gantt, itération 3}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[!h]
+\includegraphics[scale=0.70]{iteration4.png}
+\caption{Diagramme de Gantt, itération 4}
+\end{figure}
+\end{center}
+
+% \newpage
+\begin{center}
+\begin{figure}[!h]
+\includegraphics[scale=0.70]{diagramme.PNG}
 \caption{Diagramme de Gantt, graphes}
 \end{figure}
 \end{center}
-Sur ce graphe, on peut observer trois couleurs, le tâche bleue correspond
+Sur le graphe ci-dessous, on peut observer trois couleurs, le tâche bleue correspond
 aux tâches correspondants au sous-projet \emph{smartCards}, le rouge aux
 tâches du sous-projet \emph{Secure Social Network} et enfin le violet
-correspond à la tâche fusion.
+correspond aux tâches ayant trait aux deux sous-projets.
+\clearpage
 \section{Procédés de gestion}
 
 \subsection{Gestion de la documentation}
@@ -373,10 +403,11 @@ Les documents utilisées tout au long de la réalisation de ce projet sont :
  \item Document d'architecture logicielle \emph{Secure Social Network} (DAL) 
  rédigé par Zakaria \textsc{Addi} et Maxence \textsc{Péchoux};
  \item Plan de développement (PdD) rédigé par Florian \textsc{Guilbert};
+ \item Plan qualité (PQ) rédigé par Baptiste \textsc{Dolbeau};
  \item Spécification technique des besoins \emph{smartCard} (CdR) rédigée par 
  Giovanni \textsc{Huet} et Romain \textsc{Pignard};
- \item Spécification technique des besoins \emph{Secure Social Network} (CdR) 
-    rédigée par Baptiste \textsc{Dolbeau} et Florian \textsc{Guilbert};
+ \item Spécification technique des besoins \emph{Secure Social Network} (STB) 
+    rédigée Florian \textsc{Guilbert};
 \end{itemize}
 
 \subsection{Gestion des configurations}
