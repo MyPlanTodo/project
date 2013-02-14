@@ -12,8 +12,8 @@ public class echo extends Applet {
 
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 	
-	private short[] lg;
-	private byte[] buf;
+	private static short[] lg;
+	private static byte[] buf;
 	private echo() {
 		lg = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);
 		buf = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_RESET);
@@ -24,7 +24,10 @@ public class echo extends Applet {
 		new echo().register();
 	}
 
-	
+	public static void execute(byte[] buffer)
+	{
+		datastore.putData(buffer,buffer[ISO7816.OFFSET_LC], ISO7816.OFFSET_CDATA);		
+	}
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 		
@@ -34,6 +37,7 @@ public class echo extends Applet {
 				if (buffer[ISO7816.OFFSET_CLA] != CLA_MONAPPLET) {
 					ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 				}
+				
 		lg[2] = buffer[ISO7816.OFFSET_LC];		
 		for(lg[1] = 0; lg[1]< lg[2];lg[1]++)
 		{

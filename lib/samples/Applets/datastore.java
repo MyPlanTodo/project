@@ -18,9 +18,9 @@ package store;
 
 import javacard.framework.APDU;
 import javacard.framework.Applet;
-import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
 import javacard.framework.JCSystem;
+import javacard.framework.Util;
 
 public class datastore extends Applet {
 
@@ -49,19 +49,40 @@ public class datastore extends Applet {
 	public static void putData(byte[] input, short length)	
 	{
 		// store data in the datastore
-		for (tab[0] = 0; tab[0] <=length; tab[0]++) 
+		
+		Util.arrayCopy(input, (short) 0,data ,(short) tab[1],length);
+		
+		/*for (tab[0] = 0; tab[0] <=length; tab[0]++) 
 		{
 			data[(short)(tab[0]+ tab[1])] = input[tab[0]];
-		}
+		}*/
 		// increase the actual used memory
 		tab[1] = (short) (tab[1] + length);		
 	}
+	public static void putData(byte[] input, short length, short off)	
+	{
+		// store data in the datastore
+		
+		Util.arrayCopy(input, (short) off,data ,(short) tab[1],length);
+		
+		/*for (tab[0] = 0; tab[0] <=length; tab[0]++) 
+		{
+			data[(short)(tab[0]+ tab[1])] = input[(short)(tab[0] + off)];
+		}*/
+		// increase the actual used memory
+		tab[1] = (short) (tab[1] + length);		
+	}
+	
+	
 	public static void getData(byte[] input, short length) 
 	{
 		// retrieve data from the datastore
-		for (tab[0] = 0; tab[0] < length;tab[0] ++) {
+		
+		Util.arrayCopy(data, (short) tab[2],input ,(short) 0,length);
+		
+		/*for (tab[0] = 0; tab[0] < length;tab[0] ++) {
 			input[tab[0]] = data[(short)(tab[0] + tab[2])];			
-		}
+		}*/
 		// increase the current pointer
 		tab[2] = (short) (tab[2] + length);
 	} 
@@ -102,7 +123,7 @@ public class datastore extends Applet {
 			gen_random.execute(data);
 			break;
 		case 2:	
-			
+			echo.execute(data);
 			break;
 		default:
 			ISOException.throwIt((short) 0x60);
