@@ -8,10 +8,10 @@ import javacard.framework.Applet;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
 import javacard.framework.JCSystem;
+import javacard.framework.Util;
 import javacard.security.AESKey;
 import javacard.security.CryptoException;
 import javacard.security.KeyBuilder;
-import javacard.security.Signature;
 import javacardx.crypto.Cipher;
 
 
@@ -43,12 +43,16 @@ public class tunnel2 extends Applet {
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 	public static final byte SECRET = 42;
 	public static final short AES_BLOCK_LENGTH = 16;
+	
+	private static short FIXED_MSG_LENGTH = 16;
 	//public static final byte INS_CRYPT = 0x00;
 	public static final byte INS_DECRYPT = 0x01;
 	public static final byte INS_SET_TUNNEL = 0x02;
 	public static final byte INS_ECHO_PLUS_ONE = 0x03;
 	public static final byte INS_VERIF_TUNNEL = 0x04;
 	public static final byte INS_GENERATE_IV = 0x05; 
+	
+	
 	
 	public static final byte IV_LENGTH = 16;
 	public static final byte MAC_LENGTH = 16;
@@ -103,8 +107,8 @@ public class tunnel2 extends Applet {
 		
 		// variables locales en RAM.
 		// sert à stocker les octets après chiffrement/déchiffrement
-		padded = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_RESET);
-		padded2 = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_RESET);
+		padded = JCSystem.makeTransientByteArray((short) 256, JCSystem.CLEAR_ON_RESET);
+		padded2 = JCSystem.makeTransientByteArray((short) 256, JCSystem.CLEAR_ON_RESET);
 		auth_iv = JCSystem.makeTransientByteArray((short) 16, JCSystem.CLEAR_ON_RESET);
 		// sert de compteur de boucle et pour stocker des longueurs
 		tab = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);
@@ -127,11 +131,13 @@ public class tunnel2 extends Applet {
 		chiff.doFinal(buffer, (short)(ISO7816.OFFSET_CDATA+IV_LENGTH),tab[2] , padded,(short) 0);
 		
 		
-		//brutal unpadding		
-		for( tab[0] = (short)0;tab[0]< (short)(tab[2] - padded[(short)(tab[2] - 1)]);tab[0]++)	
+		//brutal unpadding	
+		
+		Util.arrayCopy(padded, (short) 0,buffer ,(short)0,(short) (tab[2] - padded[(short)(tab[2] - 1)]));
+		/*for( tab[0] = (short)0;tab[0]< (short)(tab[2] - padded[(short)(tab[2] - 1)]);tab[0]++)	
 		{
 			buffer[tab[0]] = padded[tab[0]]; 				
-		}
+		}*/
 		tab[2] = (short)( tab[2] - padded[(short)(tab[2] - 1)]);	
 	}
 	
@@ -139,14 +145,39 @@ public class tunnel2 extends Applet {
 	private static void compute_MAC(byte[] buffer)
 	{
 		
+		Util.arrayCopy(buffer, (short) 0,padded2 ,(short)16,(short) (tab[2] + IV_LENGTH));
 		
-		// (all MAC) HMAC.doFinal(buffer,(short) IV_LENGTH , tab[2], padded, (short) 0);	
-		HMAC.doFinal(buffer,(short) 0 , (short)(tab[2]+ IV_LENGTH), padded, (short) 0);		
-		for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
+		/*for(tab[0] =0; tab[0] < (short)(tab[2] + IV_LENGTH);tab[0]++ )
 		{
-			buffer[(short)( tab[2]+ tab[0] + IV_LENGTH)] = padded[(short)(tab[2] - MAC_LENGTH +  tab[0] + IV_LENGTH)];				
-		}	
+			padded2[(short)(tab[0] + 16)] = buffer[tab[0]];  			
+		}	*/
 		
+		Util.arrayFillNonAtomic(padded2, (short) 0,(short) 16,(byte) 0);
+		
+		/*for(tab[0] = 0; tab[0] < 16;tab[0]++ )
+		{
+			padded2[(short)(tab[0] )] = 0;		
+		}	*/
+				
+				
+		padded2[0] =  (byte) (((short)(tab[2] + IV_LENGTH)) % 256);
+		padded2[1] =  (byte) (((short)(tab[2] + IV_LENGTH)) / 256);
+				
+		
+		
+		
+		
+		HMAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + 16), padded, (short) 0);	
+		
+		
+		
+		Util.arrayCopy(padded, (short) (tab[2] - MAC_LENGTH  + IV_LENGTH + 16),buffer ,(short)(tab[2] + IV_LENGTH),(short) MAC_LENGTH);
+		
+		/*for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
+		{
+			buffer[(short)( tab[2]+ tab[0] + IV_LENGTH)] = padded[(short)(tab[2] - MAC_LENGTH +  tab[0] + IV_LENGTH + 16)];				
+		}	
+		*/
 		
 		
 		
@@ -157,37 +188,56 @@ public class tunnel2 extends Applet {
 	{
 		// message length (w/o IV or MAC)
 		tab[2] = (short ) (buffer[ISO7816.OFFSET_LC] - IV_LENGTH - MAC_LENGTH);
+		
+		// whole message length
 		tab[1] = buffer[ISO7816.OFFSET_LC];
 				
 		// (all mac) HMAC.doFinal(buffer, (short)(ISO7816.OFFSET_CDATA + IV_LENGTH), tab[2], padded, (short) 0);
-		HMAC.doFinal(buffer, (short)(ISO7816.OFFSET_CDATA ), (short)(tab[2]+ IV_LENGTH), padded, (short) 0);
+		//HMAC.doFinal(buffer, (short)(ISO7816.OFFSET_CDATA ), (short)(tab[2]+ IV_LENGTH), padded, (short) 0);
+		
+		/**/
+		
+		
+		// copy of the original message into padded2 for MAC computation
+		
+		Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded2 ,(short)16,(short) (tab[2] + IV_LENGTH));
+		
+		/*for(tab[0] = 0; tab[0] < (short)(tab[2] + IV_LENGTH);tab[0]++ )
+		{
+			padded2[(short)(tab[0] + 16)] = buffer[(short)(tab[0]+ ISO7816.OFFSET_CDATA)];  			
+		}	*/
+		
+		
+		Util.arrayFillNonAtomic(padded2, (short)0, (short)16,(byte) 0);
+		/*for(tab[0] = 0; tab[0] < 16;tab[0]++ )
+		{
+			padded2[(short)(tab[0] )] = 0;		
+		}	*/
+		
+		
+				
+				
+		padded2[0] =  (byte) ((short)(tab[2] + IV_LENGTH) % 256);
+		padded2[1] =  (byte) ((short)(tab[2] + IV_LENGTH) / 256);
+				
+		
+		
+		
+		
+		HMAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + 16), padded, (short) 0);
+		
+		/**/
+		
+		
 		for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
 		{
-			if(buffer[(short)(ISO7816.OFFSET_CDATA + tab[1] - MAC_LENGTH + tab[0])] != padded[(short)(tab[0] + tab[2]- MAC_LENGTH + IV_LENGTH )])
+			if(buffer[(short)(ISO7816.OFFSET_CDATA + tab[1] - MAC_LENGTH + tab[0])] != padded[(short)(tab[0] + tab[2]- MAC_LENGTH + IV_LENGTH + 16 )])
 			{
 				ISOException.throwIt((short) 0x66);
 			}	
 		}	
 		
 	}
-	
-	
-	private static void extract_MAC(byte[] buffer)
-	{
-		// full message length
-		tab[1] = buffer[ISO7816.OFFSET_LC];
-		for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
-		{
-			padded[tab[0]] = buffer[(short)(ISO7816.OFFSET_CDATA + tab[1] - MAC_LENGTH + tab[0])];			
-		}	
-		for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
-		{
-			buffer[tab[0]] = padded[tab[0]]; 			
-		}					
-		
-		
-	}
-	
 	
 	
 	private static void decrypt_tunnel(byte[] buffer)
@@ -202,12 +252,13 @@ public class tunnel2 extends Applet {
 		chiff_decrypt.doFinal(buffer, (short) ((short)(ISO7816.OFFSET_CDATA) + IV_LENGTH),tab[2] , padded,(short) 0);
 		
 		
+		Util.arrayCopy(padded, (short) 0,buffer ,(short)0,(short) tab[2]);
 		
 		
-		for( tab[0] = (short)0;tab[0]< (short)(tab[2]);tab[0]++)	
+		/*for( tab[0] = (short)0;tab[0]< (short)(tab[2]);tab[0]++)	
 		{
 			buffer[tab[0]] = padded[tab[0]]; 				
-		}
+		}*/
 		
 		
 		tab[3] = tab[2];
@@ -220,15 +271,16 @@ public class tunnel2 extends Applet {
 		gen_random.genRandom(iv_crypt, IV_LENGTH);
 		
 		// padding 
-		tab[2] = padding.pad(padded, buffer, AES_BLOCK_LENGTH, length, (byte) 0);
+		tab[2] = padding.pad(padded, buffer, FIXED_MSG_LENGTH, length, (byte) 0);
 		
 		
 		
-		for(tab[0] = (short)0;tab[0]< IV_LENGTH ;tab[0]++)
+		Util.arrayCopy(iv_crypt, (short) 0,buffer ,(short)0,(short) IV_LENGTH);
+		
+		/*for(tab[0] = (short)0;tab[0]< IV_LENGTH ;tab[0]++)
 		{
 			buffer[tab[0]] = iv_crypt[tab[0]];			
-		}
-		
+		}	*/	
 		
 		
 		// setting of the IV		
@@ -238,10 +290,13 @@ public class tunnel2 extends Applet {
 		// encryption with the IV
 		chiff_crypt.doFinal(padded, (short) 0, tab[2], padded2, (short) 0 );
 		
-		for( tab[0] = (short)0;tab[0]< tab[2] ;tab[0]++)	
+		
+		Util.arrayCopy(padded2, (short) 0,buffer ,(short)IV_LENGTH,(short) tab[2]);
+		
+		/*for( tab[0] = (short)0;tab[0]< tab[2] ;tab[0]++)	
 		{
 			buffer[(short)(tab[0] + IV_LENGTH)] = padded2[tab[0]]; 				
-		}
+		}*/
 	}
 	
 	
@@ -273,11 +328,14 @@ public class tunnel2 extends Applet {
 			//génération de [IV_échange: clé_tunnel]
 			gen_random.genRandom(padded,  (short) (KeyBuilder.LENGTH_AES_128/8));
 			
-			for( tab[0] = 0;tab[0]<0 + KeyBuilder.LENGTH_AES_128/8;tab[0]++)
+			
+			Util.arrayCopy(padded, (short) 0,cle ,(short)0,(short) (KeyBuilder.LENGTH_AES_128/8));
+			
+			/*for( tab[0] = 0;tab[0]<0 + KeyBuilder.LENGTH_AES_128/8;tab[0]++)
 			{
 				cle[tab[0]] = padded[(short)(tab[0] )]; 
 				
-			}	
+			}	*/
 			
 			gen_random.genRandom(auth_iv, IV_LENGTH);
 			// initialisation du générateur avec les paramètres secrets
@@ -287,29 +345,38 @@ public class tunnel2 extends Applet {
 			// envoi du "secret" pour vérifier le bon chiffrement.
 			
 			// récupération de Rcl 
-			for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
+			Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded ,(short) (KeyBuilder.LENGTH_AES_128/8),AES_BLOCK_LENGTH);
+			
+			
+			/*for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
 			{
 				padded[(short)(tab[0] +  (KeyBuilder.LENGTH_AES_128/8))] = buffer[(short)(tab[0] + ISO7816.OFFSET_CDATA)]; 
 				
-			}
+			}*/
 			
 			gen_random.genRandom(padded2, AES_BLOCK_LENGTH);
 			
-			for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
+			Util.arrayCopy(padded2, (short)0,padded ,(short) (KeyBuilder.LENGTH_AES_128/8 + AES_BLOCK_LENGTH),AES_BLOCK_LENGTH);
+			
+			
+			/*for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
 			{
 				padded[(short)(tab[0] +  (KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH)] = padded2[(short)(tab[0])]; 				
-			}
+			}*/
 			
 			
 			
 			
 			
 			tab[3] = (short) (padding.pad(padded2,padded , AES_BLOCK_LENGTH, (short) (( KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH + AES_BLOCK_LENGTH), (byte) 0));
-			for( tab[0] = 0;tab[0]<IV_LENGTH;tab[0]++)
+			
+			Util.arrayCopy(auth_iv, (short) 0,buffer ,(short) 0,IV_LENGTH);
+			
+			/*for( tab[0] = 0;tab[0]<IV_LENGTH;tab[0]++)
 			{
 				buffer[tab[0]] = auth_iv[tab[0]]; 
 				
-			}
+			}*/
 			chiff_exchange.doFinal(padded2, (short)0,
 					(short) tab[3],buffer,(short) IV_LENGTH);
 			
@@ -378,18 +445,26 @@ public class tunnel2 extends Applet {
 		case INS_GENERATE_IV:
 			
 			
-			for(tab[0] = 0; tab[0]< IV_LENGTH;tab[0]++)
+			
+			Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,iv_decrypt ,(short) 0,IV_LENGTH);
+			
+		/*	for(tab[0] = 0; tab[0]< IV_LENGTH;tab[0]++)
 			{
 				iv_decrypt[tab[0]] = buffer[(short)(tab[0] + ISO7816.OFFSET_CDATA)];				
 				
-			}				
+			}*/				
 			chiff_decrypt.init(aesk, Cipher.MODE_DECRYPT, iv_decrypt, (short) 0, IV_LENGTH);
 			gen_random.genRandom(iv_crypt, IV_LENGTH);
-			for(tab[0] = 0; tab[0]< IV_LENGTH;tab[0]++)
+			
+			 
+			
+			Util.arrayCopy(iv_crypt, (short) 0,buffer ,(short) 0,IV_LENGTH);
+			
+			/*for(tab[0] = 0; tab[0]< IV_LENGTH;tab[0]++)
 			{
 				buffer[tab[0]] = iv_crypt[tab[0]];				
 				
-			}
+			}*/
 			chiff_crypt.init(aesk, Cipher.MODE_ENCRYPT, iv_crypt, (short) 0, IV_LENGTH);
 			
 			apdu.setOutgoingAndSend((short)0,(short) IV_LENGTH);			
@@ -400,16 +475,7 @@ public class tunnel2 extends Applet {
 				tab[4] = buffer[ISO7816.OFFSET_LC];				
 				check_MAC(buffer);	
 				decrypt_tunnel(buffer);	
-				datastore.putData(buffer, (short) tab[2]);
-				
-				
-				
-				
-				
-				datastore.getData(buffer, (short) tab[2]);				
-				encrypt_tunnel(buffer,(short)(tab[2]));
-				compute_MAC(buffer);
-			apdu.setOutgoingAndSend((short)0,(short) ((short)tab[2]+ IV_LENGTH + MAC_LENGTH));
+				datastore.putData(buffer, (short) tab[2]);	
 			}
 			
 			catch(CryptoException ce)
@@ -446,7 +512,11 @@ public class tunnel2 extends Applet {
 			break;
 			
 		case GET_DATA:			
-			tab[2] = (short) (datastore.getRemainingData((short) 80));			
+			tab[2] = (short) (datastore.getRemainingData((short)208));
+			if(tab[2] == 0)
+			{
+				ISOException.throwIt((short) 0x6666);
+			}	
 			datastore.getData(buffer, tab[2]);				
 			encrypt_tunnel(buffer,(short)(tab[2]));
 			compute_MAC(buffer);			
