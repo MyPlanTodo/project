@@ -14,24 +14,24 @@ public class getCode {
 	public static void main(String[] args) {
 		try {
 			byte[] b;
-			short value1, value2;
+			int value1, value2;
 			
 			/*
-			 * XX & 0xFF : conversion en non signé
+			 * XX & 0xFF : cast to unsigned int
 			 */
 			if (args.length == 1) {
 				SoftCard soft = SoftCard.getInstance();
 				if (args[0].equals("PIN")) {
 					b = soft.getPIN();
-					value1 = (short) ((b[0] < 0) ? (b[0] & 0xFF) : b[0]);
-					value2 = (short) ((b[1] < 0) ? (b[1] & 0xFF) : b[1]);
-					System.out.println(String.format("%05d", (short)(value1 * 256 + value2)));
+					value1 = (int) (b[0] & 0xFF);
+					value2 = (int) (b[1] & 0xFF);
+					System.out.println(String.format("%05d", (int) (value1 << 8 | value2)));
 				}
 				else if (args[0].equals("PUK")) {
 					b = soft.getPUK();
-					value1 = (short) ((b[0] < 0) ? (b[0] & 0xFF) : b[0]);
-					value2 = (short) ((b[1] < 0) ? (b[1] & 0xFF) : b[1]);
-					System.out.println(String.format("%05d", (short)(value1 * 256 + value2)));
+					value1 = (int) (b[0] & 0xFF);
+					value2 = (int) (b[1] & 0xFF);
+					System.out.println(String.format("%05d", (int) (value1 << 8 | value2)));
 				}
 				else {
 					System.err.println("Usage : getCode <PIN|PUK> ");
