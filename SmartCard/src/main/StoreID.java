@@ -23,11 +23,11 @@ public class StoreID extends Applet {
 
 	/* Constructeur */
 	private StoreID() {
-		login = null; 
-		// This delimiter represent a ' ' (space).
+		login = new byte[]{}; 
+		// This delimiter represents a ' ' (space).
 		delimiter = new byte[]{0x20};
-		pwd = null;
-		tmpPwd = null;
+		pwd =  new byte[]{};
+		tmpPwd =  new byte[]{};
 
 		// Will contain the length of the received data.
 		dataLen = JCSystem.makeTransientShortArray((short) 1, JCSystem.CLEAR_ON_DESELECT);
@@ -93,21 +93,24 @@ public class StoreID extends Applet {
 			}
 			break;
 
-			
-		/**
-		 * This block is called when the password has been successfully 
-		 * modified/saved in Facebook.
-		 */
+
+			/**
+			 * This block is called when the password has been successfully 
+			 * modified/saved on the user side.
+			 */
 		case INS_VALIDATE_PWD:
 			try{
-				if (tmpPwd != null) {
+				if (tmpPwd.length > 0) {
 					pwd = new byte[tmpPwd.length];
 					Util.arrayCopy(tmpPwd, (short)0, pwd, (short) 0, (short) tmpPwd.length);
-					tmpPwd = null;
+					tmpPwd = new byte[]{};
+					buffer[0] = 1;
+					apdu.setOutgoingAndSend((short) 0, (short) 1);
 				}
-
-				buffer[0] = 1;
-				apdu.setOutgoingAndSend((short) 0, (short) 1);
+				else {
+					buffer[0] = 0;
+					apdu.setOutgoingAndSend((short) 0, (short) 1);
+				}
 			} catch(APDUException e) {
 				ISOException.throwIt((short) 0x0001);
 			} catch(NullPointerException e) {
@@ -142,21 +145,16 @@ public class StoreID extends Applet {
 			}
 			break;
 
-		/**
-		 * Whenever the user wants to change his password, this block is called.
-		 */
+			/**
+			 * Whenever the user wants to retrieve his password, this block is called.
+			 */
 		case INS_GET_PWD:
 			try{
-				if (pwd != null) {
-					Util.arrayCopy(pwd, (short) 0, buffer, (short) 0, (short) pwd.length);
+				Util.arrayCopy(pwd, (short) 0, buffer, (short) 0, (short) pwd.length);
 
-					apdu.setOutgoing();
-					apdu.setOutgoingLength((short)(pwd.length));
-					apdu.sendBytesLong(buffer, (short) 0, (short)(pwd.length));
-				}
-				else {
-					ISOException.throwIt((short) 0x0005);
-				}
+				apdu.setOutgoing();
+				apdu.setOutgoingLength((short)(pwd.length));
+				apdu.sendBytesLong(buffer, (short) 0, (short)(pwd.length));
 			} catch(APDUException e) {
 				ISOException.throwIt((short) 0x0001);
 			} catch(NullPointerException e) {

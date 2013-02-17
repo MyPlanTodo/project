@@ -1,15 +1,19 @@
 /**
  * TODO : Commenter doAction
+ * TODO : Tester askCredentials
  */
 
-package Default;
+//package Default;
 
+import java.io.Console;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
+
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
@@ -118,7 +122,7 @@ class ProcessusSock extends Thread {
 	private final byte RETRIEVE_CRED = (byte) 0x47;
 	private final byte STORE_CREDENTIALS = (byte) 0x48;
 	private final byte RESET_PWD = (byte) 0x49;
-	
+
 	/**
 	 * This constructor links a reader and
 	 * a printer to the socket and start
@@ -131,20 +135,80 @@ class ProcessusSock extends Thread {
 		this.socket = socket;
 		try {
 			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());	
+			out = new DataOutputStream(socket.getOutputStream());
+
+			/**
+			 * Is it the first launch ?
+			 * Does the string "login+delimiter+pwd" == "delimiter" ?
+			 */
+			if(retrieveCredentials().length == 1) {
+				askCredentials();
+			}
+
 			this.start();
 		} catch (IOException e) {
 			free();
+		} catch (Exception e) {
+			//	System.err.println(e.getMessage());
+			System.err.println("Error while launching.");
 		}
 	}
 
-	//	private static String bytesToHexString(byte[] bytes) {
-	//		StringBuffer sb = new StringBuffer();
-	//		for (byte b : bytes) {
-	//			sb.append(String.format("0x%02x ", b));
-	//		}
-	//		return new String(sb);
-	//	}
+	/**
+	 * This method is called when SoftCard is ued for the first time: 
+	 * the user has to enter his Facebook credentials.
+	 */
+	private void askCredentials() {
+
+		Console console = System.console();
+		if (console == null) {
+			System.err.println("Couldn't get Console instance.");
+			System.exit(1);
+		}
+
+		String login = console.readLine("Login (Facebook): ");
+		char[] tmpPwd = console.readPassword("Password (Facebook): ");
+
+		String choice = "";
+		do {
+			choice = console.readLine("Do you want me to generate a stronger password ? (Y/n) ");
+		} while(!choice.equals("Y") && !choice.equals("y") && !choice.equals("n") && !choice.equals("N"));
+
+		if (choice.equals("Y") || choice.equals("y")) {
+			try {
+				if(storeLogin(login.getBytes()) && !resetPassword().equals(null) && validatePassword()) {
+					System.out.println("Configuration complete.");
+				}
+				else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				System.err.println("An error occured while generating your password or storing your data.");
+				System.exit(1);
+			}
+		}
+		else {
+			try {
+				if (storeCredentials((login + " " + new String(tmpPwd)).getBytes()) && validatePassword()) {
+					System.out.println("Configuration complete.");
+				}
+				else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				System.err.println("An error occured while storing your data.");
+				System.exit(1);
+			}
+		}
+	}
+
+	private static String bytesToHexString(byte[] bytes) {
+		StringBuffer sb = new StringBuffer();
+		for (byte b : bytes) {
+			sb.append(String.format("0x%02x ", b));
+		}
+		return new String(sb);
+	}
 
 	/**
 	 * This method will be executed by the
@@ -179,6 +243,7 @@ class ProcessusSock extends Thread {
 		}
 	}
 
+
 	private boolean doAction(byte[] mess) throws IOException {
 		boolean res = true;
 		byte id = mess[0];
@@ -205,7 +270,7 @@ class ProcessusSock extends Thread {
 			} catch (Exception e) {
 				e.printStackTrace();
 				sendMessage(NetworkException.ERROR_RANDOM_NUMBER);		
-				}
+			}
 		}
 		// retrieve the ciphered data and decrypt it.
 		else if (id == this.DECRYPT) {
@@ -264,7 +329,7 @@ class ProcessusSock extends Thread {
 		return res;
 	}
 
-	
+
 
 	/**
 	 * This method calls the eponymous method of {@link SoftCard} to
@@ -277,15 +342,28 @@ class ProcessusSock extends Thread {
 		return SoftCard.getInstance().resetPassword();
 	}
 
+
 	/**
 	 * This method calls the eponymous method of {@link SoftCard} to
-	 * retrieve user's Facebook credentials.
-	 * @return the user's credentials as a bytes' array.
+	 * tell the card to replace the actual password by the temporary one 
+	 * @return <code>true</code> if no error occured.
 	 * @throws Exception - with the reason message, if an error 
 	 * occured on the smartcard's side.
 	 */
-	private byte[] retrieveCredentials() throws Exception {
-		return SoftCard.getInstance().retrieveCredentials();
+	private boolean validatePassword() throws Exception {
+		return SoftCard.getInstance().validatePassword();
+	}
+
+	/**
+	 * This method calls the eponymous method of {@link SoftCard} to
+	 * store the user's login.
+	 * @param login - the login to be stored.
+	 * @return <code>true</code> if the operation succeeded.
+	 * @throws Exception - with the reason message, if an error 
+	 * occured on the smartcard's side.
+	 */
+	private boolean storeLogin(byte[] login) throws Exception {
+		return SoftCard.getInstance().storeLogin(login);
 	}
 
 	/**
@@ -298,6 +376,17 @@ class ProcessusSock extends Thread {
 	 */
 	private boolean storeCredentials(byte[] data) throws Exception {
 		return SoftCard.getInstance().storeCredentials(data);
+	}
+
+	/**
+	 * This method calls the eponymous method of {@link SoftCard} to
+	 * retrieve user's Facebook credentials.
+	 * @return the user's credentials as a bytes' array.
+	 * @throws Exception - with the reason message, if an error 
+	 * occured on the smartcard's side.
+	 */
+	private byte[] retrieveCredentials() throws Exception {
+		return SoftCard.getInstance().retrieveCredentials();
 	}
 
 	/**
@@ -419,8 +508,8 @@ class ProcessusSock extends Thread {
 		out.write(b, 0, b.length);
 		out.flush();
 	}
-	
-	
+
+
 	/**
 	 * This method closes the printer and reader
 	 * and closes the socket.
@@ -432,5 +521,6 @@ class ProcessusSock extends Thread {
 		socket.close();
 	}
 }
+
 
 

@@ -1,6 +1,6 @@
 // TODO : créer classe d'exception personelle
 
-package Default;
+//package Default;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -74,13 +74,13 @@ public class SoftCard {
 	private boolean unlocked = true; //false;
 
 
-	//	private static String bytesToHexString(byte[] bytes) {
-	//		StringBuffer sb = new StringBuffer();
-	//		for (byte b : bytes) {
-	//			sb.append(String.format("0x%02x ", b));
-	//		}
-	//		return new String(sb);
-	//	}
+		private static String bytesToHexString(byte[] bytes) {
+			StringBuffer sb = new StringBuffer();
+			for (byte b : bytes) {
+				sb.append(String.format("0x%02x ", b));
+			}
+			return new String(sb);
+		}
 
 	private SoftCard() throws CardException {
 		factory = TerminalFactory.getDefault();
@@ -218,7 +218,7 @@ public class SoftCard {
 	}
 
 	/*
-	 * TODO : Appeler une méthode la carte !
+	 * TODO : Appeler une méthode de la carte !
 	 */
 	public boolean isUnlocked(){
 		return this.unlocked;
@@ -251,7 +251,16 @@ public class SoftCard {
 	}
 
 
-	
+	/**
+	 * This method is called whenever SoftCard need to store a login and a password. It uses
+	 * the methods storeLogin and storePassword.
+	 * @param data - the data to store - built as follow: "login password"
+	 * @return <code>true</code> if the data was successfully stored. 
+	 * @throws Exception - if the applet on the card could not be selected or if the data
+	 * could not be stored. 
+	 * @see storeLogin
+	 * @see storePassword
+	 */
 	public boolean storeCredentials(byte[] data) throws Exception {
 		String strData = new String(data);
 		int i = 0;
@@ -270,9 +279,9 @@ public class SoftCard {
 		if (found) {
 			byte[] login = new byte[i];
 			byte[] mdp = new byte[data.length - i - 1];
-			System.arraycopy(login, 0, data, 0, i);
-			System.arraycopy(mdp, 0, data, i, data.length - i - 1);
-
+			System.arraycopy(data, 0, login, 0, i);
+			System.arraycopy(data, i + 1, mdp, 0, data.length - i - 1);
+			
 			return storeLogin(login) && storePassword(mdp);
 		}
 		else {
@@ -280,8 +289,14 @@ public class SoftCard {
 		}
 	}
 
-	
-	private boolean storeLogin(byte[] login) throws Exception {
+	/**
+	 * This method is called whenever SoftCard need to store a login.
+	 * @param login - the login to store
+	 * @return <code>true</code> if the login was successfully stored. 
+	 * @throws Exception - if the applet on the card could not be selected or if the data
+	 * could not be stored. 
+	 */
+	public boolean storeLogin(byte[] login) throws Exception {
 		// Selecting the applet
 		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
 		if (r.getSW() != 0x9000) {
@@ -295,12 +310,15 @@ public class SoftCard {
 		return (r.getData()[0] == 1) ? true : false;
 	}
 
-/**
- * 
- * @param pwd
- * @return
- * @throws Exception
- */
+	/**
+	 * This method is called whenever SoftCard need to store a password. If used with
+	 * FaceCrypt, the password will only be stored temporary, unless FaceCrypt validates
+	 * that the password was changed in Facebook.
+	 * @param pwd - the password to store
+	 * @return <code>true</code> if the password was successfully stored. 
+	 * @throws Exception - if the applet on the card could not be selected or if the data
+	 * could not be stored. 
+	 */
 	private boolean storePassword(byte[] pwd) throws Exception {
 		// Selecting the applet
 		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte) 0xA4, 0x04, 0x00, STORE_ID_AID));
@@ -322,7 +340,7 @@ public class SoftCard {
 	 * @throws Exception - if the applet on the card could not be selected or if the data
 	 * could not be stored. 
 	 */
-	private boolean validatePassword() throws Exception {
+	public boolean validatePassword() throws Exception {
 		// Selecting the applet
 		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
 		if (r.getSW() != 0x9000) {
@@ -334,11 +352,16 @@ public class SoftCard {
 		if (r.getSW() != 0x9000) {
 			throw new Exception("Could not store data.");
 		}
-		return true;
+		return (r.getData()[0] == 1) ? true : false;
 	}
 	
 
-	
+	/**
+	 * This method is called whenever FaceCrypt needs the user's credentials.
+	 * @return the login and the password as one bytes' array. 
+	 * @throws Exception - if the applet on the card could not be selected or if the data
+	 * could not be retrieved. 
+	 */
 	public byte[] retrieveCredentials() throws Exception {
 		// Selecting the applet
 		ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
@@ -349,7 +372,7 @@ public class SoftCard {
 		// Retrieve data
 		r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_CRED, 0x00, 0x00));
 		if (r.getSW() != 0x9000) {
-			throw new Exception("Could not retrieve data.");
+			throw new Exception("Could not retrieve data." + r.getSW());
 		}
 		return r.getData();
 	}
