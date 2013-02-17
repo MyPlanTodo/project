@@ -1,0 +1,57 @@
+\RequirePackage{graphicx}
+
+\makeatletter
+\def\clap#1{\hbox to 0pt{\hss #1\hss}}%
+\def\ligne#1{%
+	\hbox to \hsize{%
+		\vbox{\centering #1}
+}	}%
+\def\haut#1#2#3{%
+	\hbox to \hsize{%
+		\rlap{\vtop{\raggedright #1}}%
+		\hss
+		\clap{\vtop{\centering #2}}%
+		\hss
+		\llap{\vtop{\raggedleft #3}}
+}	}%
+\def\bas#1#2{%
+	\hbox to \hsize{%
+		\hss
+		\clap{\vbox{\centering #2}}%
+		\hss
+		\llap{\vbox{\centering #1}}
+}	}%
+\def\maketitle{%
+	\thispagestyle{empty}\vbox to \vsize{%
+		\haut{}{\@blurb}{}
+		\vfill
+        \vspace{7cm}
+    	\begin{flushleft}
+    	\usefont{OT1}{unm}{m}{n}
+			\huge {\@title}
+        \end{flushleft}
+        \par
+		  \hrule height 2pt
+		\par
+		\begin{flushright}
+		\usefont{OT1}{phv}{m}{n}
+			\Large \@author
+			\par
+		\end{flushright}
+		\vspace{1cm}
+		\vfill
+		\vspace{4cm}
+		\vfill
+		\bas{}{\includegraphics[width=10em]{lib/logoUR.png}\vspace{1cm}\\\@location, le \@date}
+	}%
+	\cleardoublepage
+}
+\def\date#1{\def\@date{#1}}
+\def\author#1{\def\@author{#1}}
+\def\title#1{\def\@title{#1}}
+\def\location#1{\def\@location{#1}}
+\def\blurb#1{\def\@blurb{#1}}
+\def\img#1{\def\@img{#1}}
+\def\ur#1{\def\@ur{#1}}
+\date{\today}
+\makeatother

@@ -1,0 +1,61 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, amssymb, xcolor, listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{tikz}
+\usepackage[top=2.6cm,bottom=2.6cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage[french]{babel}
+
+\author{Florian \textsc{Guilbert}}
+\title{Compte-rendu de réunion, 5}
+\date{22 janvier 2013}
+
+\begin{document}
+
+\maketitle
+
+\subsubsection*{Participants : }
+\begin{itemize}
+    \item Ayoub \textsc{Otmani} (client);
+    \item Zakaria \textsc{Addi};
+    \item Baptiste \textsc{Dolbeau};
+    \item Yicheng \textsc{Gao};
+    \item Florian \textsc{Guilbert};
+    \item Giovanni \textsc{Huet};
+    \item Emmanuel \textsc{Mocquet};
+    \item Maxence  \textsc{Péchoux}.
+    \item Romain \textsc{Pignard}.
+\end{itemize}
+
+\subsubsection*{Absents : }
+Pas d'absents.
+
+\subsection*{Ordre du jour : présentation de la STB, planning, problème de la 
+    distribution des clefs publiques.}
+
+
+\paragraph{1. Remarque sur la STB}
+
+\begin{itemize}
+\item Génération des clefs de sessions par la carte à puces, pas FaceCrypt.
+\item Besoin d'une configuration qui spécifie si on déchiffre à la volée ou si 
+l'utilisateur doit demander le déchiffrement explicitement, par défaut,
+un bouton sera présent pour que l'utilisateur demande le déchiffrement.
+\item Construction de nos propres listes d'amis (pas celles de Facebook)
+\item Dans les "exigences interface" -> ajouter "bouton" pour déchiffrer
+\item Rajouter que la taille des mots de passe doit être importante
+\item Hypothèse : les données transitant entre l'extension et FaceCrypt sont en 
+claires, dans ce cas, besoin de chiffrer mdp, via crypt.js
+\end{itemize}
+
+\paragraph{2. Distribution des clefs}
+\begin{itemize}
+\item Stockage des clefs publiques : pseudo-pgp; clef stockée sur la page perso 
+des utilisateurs.
+\item Récupération : clef donnée dès qu'on ajoute "l'ami" à notre liste
+\item Implanter le modèle x509 si nous avons le temps.
+\end{itemize}
+
+\subsection*{Prochaine réunion}
+    Lundi 28 16h 
+\end{document}

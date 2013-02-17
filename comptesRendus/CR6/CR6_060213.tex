@@ -1,0 +1,61 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, amssymb, xcolor, listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{tikz}
+\usepackage[top=2.6cm,bottom=2.6cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage[french]{babel}
+
+\author{Florian \textsc{Guilbert}}
+\title{Compte-rendu de réunion, 6}
+\date{06 février 2013}
+
+\begin{document}
+
+\maketitle
+
+\subsubsection*{Participants : }
+\begin{itemize}
+    \item Magali \textsc{Bardet} (cliente);
+    \item Zakaria \textsc{Addi};
+    \item Baptiste \textsc{Dolbeau};
+    \item Yicheng \textsc{Gao};
+    \item Florian \textsc{Guilbert};
+    \item Giovanni \textsc{Huet};
+    \item Emmanuel \textsc{Mocquet};
+    \item Maxence  \textsc{Péchoux}.
+    \item Romain \textsc{Pignard}.
+\end{itemize}
+
+\subsubsection*{Absents : }
+Pas d'absents.
+
+\subsection*{Ordre du jour : discussion à propos de la spécification
+technique des besoins}
+
+\paragraph{1. Remarque sur le STB}
+
+\begin{itemize}
+\item Fusion de deux sous-projets $\rightarrow$ composé de deux sous-projets
+\item Il faut définir "sécurisé" dans la terminologie (chiffrement, intégrité)
+Le client exige que "sécurisé" comprenne l'intégrité.
+\item Donc : utilisation d'un code MAC pour le tunnel entre la carte et le PC.
+Possibilité de tronquer le code MAC si nécessaire (mais justifier)
+\item Définir "un générateur de nombre aléatoire"
+\item La priorité va à la vérification de l'intégrité qu'à la vérification de 
+l'aléatoire.
+\item "La carte doit être capable de générer un nombre aléatoire" $\rightarrow$ 
+"ON" doit être capable d'utiliser le générateur.
+\item PRN $\rightarrow$ à remplacer par RN ("fourni par la carte")
+\item nouveau use case : administration de la carte en permettant à l'utilisateur
+de fournir/changer ses identifiants
+\item Déchiffrement : flot d'exception : uniformiser les messages d'erreurs
+\item chiffrement : avec clef secrète à la place de "privée"
+\item vérification de données par softcard pas par smartcard
+\item Livraison le 1er mars.
+\end{itemize}
+
+\subsection*{Prochaine réunion}
+    Vendredi 8 février à 11h.    
+    
+\end{document}
