@@ -11,10 +11,11 @@ public class PIN extends Applet {
     public static final byte CLA_MONAPPLET = (byte) 0xB0;
 
     public static final byte INS_VERIF_PIN = 0x00;
-    public static final byte INS_REMAINING_TRIES = 0x01;
-    public static final byte INS_UNLOCK_WITH_PUK = 0x02;
-    private static final byte INS_GET_PIN = 0x03;
-    private static final byte INS_GET_PUK = 0x04;
+    public static final byte INS_PIN_REMAINING_TRIES = 0x01;
+    public static final byte INS_PUK_REMAINING_TRIES = 0x02;
+    public static final byte INS_UNLOCK_WITH_PUK = 0x03;
+    private static final byte INS_GET_PIN = 0x04;
+    private static final byte INS_GET_PUK = 0x05;
 
     private static OwnerPIN pin; 
     private static OwnerPIN puk;
@@ -70,12 +71,17 @@ public class PIN extends Applet {
         }
 
         switch (buffer[ISO7816.OFFSET_INS]) {
-            case INS_REMAINING_TRIES:
+            case INS_PIN_REMAINING_TRIES:
                 //renvoit le nombres d'essais de code PIN restant
                 buffer[0] = pin.getTriesRemaining();
                 apdu.setOutgoingAndSend((short) 0, (short) 1);
                 break;
-
+                
+            case INS_PUK_REMAINING_TRIES:
+                //renvoit le nombres d'essais de code PIN restant
+                buffer[0] = pin.getTriesRemaining();
+                apdu.setOutgoingAndSend((short) 0, (short) 1);
+                break;
             case INS_VERIF_PIN:
                 //vérifie le PIN envoyé par le client
                 //en cas d'erreur, le nombre d'essais restants est décrémenté automatiquement
