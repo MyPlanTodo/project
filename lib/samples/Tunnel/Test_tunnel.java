@@ -1,4 +1,4 @@
-
+/* Author : Romain Pignard */
 
 import java.io.IOException;
 import java.security.AlgorithmParameters;
@@ -70,21 +70,7 @@ public class Test_tunnel {
 		byte[] encrypted = c.doFinal(padded_data);
 		return ArrayTools.concat(iv,encrypted);		
 	}
-	private static byte[] decrypt_with_IV(Cipher c, byte[] toDecrypt, SecretKey k) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException
-	{
-		
-		byte[] iv = new byte[16];
-		byte[] woIV = new byte[toDecrypt.length - 16];
-		System.arraycopy(toDecrypt, 0, iv, 0, 16);
-		System.arraycopy(toDecrypt, 16, woIV, 0,toDecrypt.length - 16);
-		c.init(Cipher.DECRYPT_MODE, k, new IvParameterSpec(iv));		
-		byte[] decrypted = c.doFinal(woIV);			
-		
-		
-		return decrypted;
-	}
-	
-	public static void main(String[] args) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+	public static void main(String[] args) throws Exception {
 	        ResponseAPDU r;
 	      // byte[] crypted =  testCode();
 	        
@@ -112,7 +98,7 @@ public class Test_tunnel {
 			}
 
 			/* Menu principal */
-			boolean fin = false;
+			
 			SecretKey cle = null;
 			//while (!fin) 
 			{
@@ -177,7 +163,7 @@ public class Test_tunnel {
 						
 						
 						// réglage de la clé de session
-						cle = CryptoTools.extractKey(data2, AES_BLOCK_LENGTH, AES_BLOCK_LENGTH, (short) 42);
+						//cle = CryptoTools.extractKey(data2, AES_BLOCK_LENGTH, AES_BLOCK_LENGTH, (short) 42);
 						if (cle == null)
 						{System.out.println("faaaail");}	
 						cipher = Cipher.getInstance("AES/CBC/NoPadding");
@@ -262,28 +248,33 @@ public class Test_tunnel {
 				    	
 				    	byte[] a_tester;
 				    	byte[] recu;
-				    	Tunnel t = new Tunnel(shared_key, (byte) 42, channel);
+				    	
 				    	compteur = 0;
-				    	while(compteur < 500){	
-				    		compteur++;
-				    		//a_tester = ArrayTools.RandomArray((short) 64);
-				    		a_tester = new byte[]{0,1,2,3,4,5,6,7,8,9,10};
-				    		
-				    	//	System.out.println("Message clair à envoyer");
-				    		//ArrayTools.printByteArray(a_tester, (short) 16);
-				    		
-				    		
-				    		recu = t.sendRaw(a_tester); 		
+				    	a_tester = ArrayTools.RandomArray((short) 64);
+				    	a_tester = new byte[]{0,0,0,0,0,0,0,15,12,11,10};
+				    	Tunnel t = new Tunnel(shared_key, (byte) 42, channel);	
+				    	//while(compteur < 500)
+				    	{
 				    		
 				    		
 				    		
-				    		//System.out.println("message reçu");
-				    		//ArrayTools.printByteArray(recu, (short) 16);
-				    		//System.out.println();
-				    		/*recu = t.sendRaw(a_tester); 
-				    		System.out.println("message reçu");
-				    		ArrayTools.printByteArray(recu, (short) 16);*/
-					    	
+				    		
+				    		a_tester = new byte[]{0,0,0,0,0,0,0,15,13,11,10};
+				    		byte[] PIN = new byte[]{15,12};				    	
+				    		t.erase();
+				    		t.request((short)1, (short)0, (short) 1,(short) 1,PIN); 		
+				    		t.execute();
+				    		recu = t.getData();	
+				    		short received = 0;
+				    		System.out.println("message reçu");			
+				    		while(recu.length != 0)
+				    		{    		
+				 				received += recu.length;
+				    			ArrayTools.printByteArray(recu, (short) 16);					    		
+					    		recu = t.getData();	
+				    		}
+				    		System.out.println(received);
+				    		t.erase();
 				    	}
 			       } 
 
