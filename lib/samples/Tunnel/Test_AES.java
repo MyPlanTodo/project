@@ -14,7 +14,7 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
-public class Test_tunnel {
+public class Test_AES {
 	/* Constantes */
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 

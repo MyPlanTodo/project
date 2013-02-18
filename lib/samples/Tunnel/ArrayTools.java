@@ -1,10 +1,40 @@
 /* Author : Romain Pignard */
 
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Random;
 
 
 public class ArrayTools {	
+	
+	
+	
+	public static void write_file(byte[] input, String path) throws IOException
+	{
+		FileOutputStream fos = new FileOutputStream(path);
+	    
+	    fos.write(input);
+	    fos.close();     
+		
+		
+	}
+	
+	public static void printHex(byte[] input)
+	{
+		for(int i = 0; i< input.length-1;i=i+1 )
+		{
+			System.out.print(String.format("%02X", input[i] & 0xFF));
+			//System.out.print(String.format("%X", input[i+1] & 0xFF));
+			
+		}	
+		System.out.print(String.format("%02X", input[input.length-1] & 0xFF));
+		
+	}
+	
+	
+	
 	
 	
 	public static void printByteArray(byte[] array)
@@ -28,10 +58,15 @@ public class ArrayTools {
 			{
 				System.out.print(splitted[i][j]+" ");
 			}
-			System.out.println();
-		}
+			
+		}System.out.println();
 		
 		
+	}
+	public static void fuzz_Array(byte[] input)
+	{
+		Random rng = new Random();
+		input[rng.nextInt(input.length)]++; 	
 	}
 	
 	
@@ -44,10 +79,7 @@ public class ArrayTools {
 		{
 			verif = verif & (array1[i] == array2[off2 + i]);
 		}		
-		return verif;
-		
-		
-		
+		return verif;		
 	}
 	
 	
@@ -180,6 +212,16 @@ public class ArrayTools {
 		
 		return output;	
 	}
-	
-	
+	public static byte[] add_size(byte[] data, short size_length)
+	{
+		byte[] output = new byte[data.length + size_length];
+		output[0] =  (byte) (data.length % 256);
+		output[1] =  (byte) (data.length / 256);
+		
+		
+		System.arraycopy(data, 0, output, size_length, data.length);		
+		return output;
+				
+	}
+		
 }

@@ -1,5 +1,6 @@
 /* Author : Romain Pignard */
 
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -24,7 +25,7 @@ public class CryptoTools {
 	static final short MAC_LENGTH = 16;
 	
 	
-	public static SecretKey extractKey(byte[] received_data, short blockSize, short keyLength, byte[] Rcl)
+	public static SecretKey extractKey(byte[] received_data, short blockSize, short keyLength, byte[] Rcl) throws IOException
 	{
 		// suppression du padding
 		byte[] unpadded = ArrayTools.unpad(received_data,blockSize);
@@ -38,18 +39,17 @@ public class CryptoTools {
 		
 		if(verif)
 		{
-			System.out.println("réussite");
+			//System.out.println("réussite");
 			// copie de la valeur de la nouvelle cle 
 			byte[] cle = new byte[keyLength];
 			
 			
 			System.arraycopy(unpadded, 0, cle, 0, keyLength);
 			
-			for(int i= 0; i < cle.length;i++)
-			{	
-			//System.out.print((short) (cle[i] & 0xFF) + " ");
-			}
-			//System.out.println();
+			ArrayTools.printHex(cle);
+			System.out.println();
+			
+			
 			return new SecretKeySpec(cle, "AES");
 			 	 
 		}	
@@ -60,7 +60,7 @@ public class CryptoTools {
 	
 	
 	
-	public static SecretKey EstablishSessionKey(CardChannel channel, Cipher c_tunnel_encrypt, short secret, SecretKey shared_key) throws CardException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException
+	public static SecretKey EstablishSessionKey(CardChannel channel, Cipher c_tunnel_encrypt, SecretKey shared_key) throws CardException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException
 	{
 		// generation of the nonce
 		short Rcl_lg = 16;
@@ -75,7 +75,7 @@ public class CryptoTools {
 		
 		// response code from the card
 		if (r.getSW() != 0x9000) {
-			System.out.println("Status word different from 0x9000 "  + r.getSW());
+			System.out.println("Here : Status word different from 0x9000 "  + r.getSW());
 		} 						
 		
 		
@@ -107,11 +107,7 @@ public class CryptoTools {
 		byte[] secret_padded = ArrayTools.pad(Rc_received,AES_BLOCK_LENGTH);
 		byte[] iv_sent = ArrayTools.RandomArray(IV_LENGTH);
 		
-		for(int i= 0; i < secret_padded.length;i++){
-			
-			 
-				 
-		}
+		
 		
 		// Init of the ciper object with the parameters
 		c_tunnel_encrypt.init(Cipher.ENCRYPT_MODE, tunnel_key, new IvParameterSpec(iv_sent));
@@ -132,9 +128,9 @@ public class CryptoTools {
 		return tunnel_key;
 	}
 	
-	public static void CreateTunnel(Cipher encrypt, Cipher decrypt, CardChannel channel,short secret,SecretKey shared_key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, CardException
+	public static void CreateTunnel(Cipher encrypt, Cipher decrypt, CardChannel channel,SecretKey shared_key) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, CardException, IOException
 	{
-		SecretKey k = EstablishSessionKey(channel,encrypt, secret,shared_key);		
+		SecretKey k = EstablishSessionKey(channel,encrypt,shared_key);		
 		byte[] iv_softcard = ArrayTools.RandomArray((short) IV_LENGTH);	
 		byte[] iv_smartcard = new byte[IV_LENGTH];
 		encrypt.init(Cipher.ENCRYPT_MODE, k, new IvParameterSpec(iv_softcard));
@@ -146,10 +142,7 @@ public class CryptoTools {
 		} else {
 			System.arraycopy(r.getData(), 0, iv_smartcard, 0, IV_LENGTH);
 			decrypt.init(Cipher.DECRYPT_MODE, k, new IvParameterSpec(iv_smartcard));
-		}
-		
-		
-		
+		}		
 	}
 	
 	
