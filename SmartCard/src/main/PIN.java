@@ -31,9 +31,9 @@ public class PIN extends Applet {
 
     /* Constructeur */
     private PIN() {
-        pin = new OwnerPIN((byte) 10, (byte) 2 );
+        pin = new OwnerPIN((byte) 3, (byte) 2 );
         pin.update(new byte[]{15,12}, (short) 0, (byte) 2);
-        puk = new OwnerPIN((byte) 10, (byte) 4);
+        puk = new OwnerPIN((byte) 3, (byte) 4);
         puk.update(new byte[]{15,12,45,124}, (short) 0, (byte) 4);
         pin_retrieved = false;
         puk_retrieved = false;
@@ -52,10 +52,10 @@ public class PIN extends Applet {
             return (short) 0x1235;
         }
         //si la carte est bloquée par le code PIN
-        if(!pin.isValidated())
+        else if (!pin.isValidated())
         {
             return (short) 0x1234;
-        }	
+        }
         return (short) 0x9000;
 
     }
@@ -72,16 +72,17 @@ public class PIN extends Applet {
 
         switch (buffer[ISO7816.OFFSET_INS]) {
             case INS_PIN_REMAINING_TRIES:
-                //renvoit le nombres d'essais de code PIN restant
+                //renvoie le nombres d'essais de code PIN restant
                 buffer[0] = pin.getTriesRemaining();
                 apdu.setOutgoingAndSend((short) 0, (short) 1);
                 break;
                 
             case INS_PUK_REMAINING_TRIES:
-                //renvoit le nombres d'essais de code PIN restant
-                buffer[0] = pin.getTriesRemaining();
+                //renvoie le nombres d'essais de code PIN restant
+                buffer[0] = puk.getTriesRemaining();
                 apdu.setOutgoingAndSend((short) 0, (short) 1);
                 break;
+                
             case INS_VERIF_PIN:
                 //vérifie le PIN envoyé par le client
                 //en cas d'erreur, le nombre d'essais restants est décrémenté automatiquement

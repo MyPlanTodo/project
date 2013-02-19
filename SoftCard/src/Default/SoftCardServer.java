@@ -139,9 +139,9 @@ class ProcessusSock extends Thread {
 
 			/**
 			 * Is it the first launch ?
-			 * Does the string "login+delimiter+pwd" == "delimiter" ?
+			 * Does the string "login+delimiter+pwd+delimiter+resetPasswd" == "delimiter"*2 ?
 			 */
-			if(retrieveCredentials().length == 1) {
+			if(retrieveCredentials().length == 2) {
 				askCredentials();
 			}
 
@@ -149,13 +149,14 @@ class ProcessusSock extends Thread {
 		} catch (IOException e) {
 			free();
 		} catch (Exception e) {
-			//	System.err.println(e.getMessage());
+			System.err.println(e.getMessage());
 			System.err.println("Error while launching.");
+			System.exit(1);
 		}
 	}
 
 	/**
-	 * This method is called when SoftCard is ued for the first time: 
+	 * This method is called when SoftCard is used for the first time: 
 	 * the user has to enter his Facebook credentials.
 	 */
 	private void askCredentials() {
@@ -165,7 +166,7 @@ class ProcessusSock extends Thread {
 			System.err.println("Couldn't get Console instance.");
 			System.exit(1);
 		}
-
+				
 		String login = console.readLine("Login (Facebook): ");
 		char[] tmpPwd = console.readPassword("Password (Facebook): ");
 
@@ -174,32 +175,32 @@ class ProcessusSock extends Thread {
 			choice = console.readLine("Do you want me to generate a stronger password ? (Y/n) ");
 		} while(!choice.equals("Y") && !choice.equals("y") && !choice.equals("n") && !choice.equals("N"));
 
+		/*
+		 * Save actual login and password.
+		 */
+		try {
+			if (!storeCredentials((login + " " + new String(tmpPwd)).getBytes()) || !validatePassword()) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			System.err.println("An error occured while storing your data.");
+			System.exit(1);
+		}
+		
 		if (choice.equals("Y") || choice.equals("y")) {
 			try {
-				if(storeLogin(login.getBytes()) && !resetPassword().equals(null) && validatePassword()) {
-					System.out.println("Configuration complete.");
-				}
-				else {
+				if (resetPassword().equals(null)) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
-				System.err.println("An error occured while generating your password or storing your data.");
+				System.err.println("An error occured while generating your password.");
 				System.exit(1);
 			}
 		}
-		else {
-			try {
-				if (storeCredentials((login + " " + new String(tmpPwd)).getBytes()) && validatePassword()) {
-					System.out.println("Configuration complete.");
-				}
-				else {
-					throw new Exception();
-				}
-			} catch (Exception e) {
-				System.err.println("An error occured while storing your data.");
-				System.exit(1);
-			}
-		}
+		
+		System.out.println("Configuration complete.");
+		
 	}
 
 	private static String bytesToHexString(byte[] bytes) {
@@ -324,6 +325,7 @@ class ProcessusSock extends Thread {
 		// client wants to disconnect.
 		else if (id == this.QUIT){
 			res = false;
+			System.out.println("Client disconnected.");
 		}
 
 		return res;
@@ -408,7 +410,7 @@ class ProcessusSock extends Thread {
 	 * occured on the smartcard's side.
 	 */
 	private boolean unlock(byte[] pin) throws Exception {
-		return SoftCard.getInstance().unlock(pin);
+		return (SoftCard.getInstance().unlock(pin) == (byte)1) ? true : false;
 	}
 
 	/**

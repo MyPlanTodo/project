@@ -35,7 +35,7 @@ public class StoreID extends Applet {
 		dataLen[0] = 0;
 
 		unlocked = JCSystem.makeTransientBooleanArray((short) 1, JCSystem.CLEAR_ON_RESET);
-		unlocked[0] = false;
+		unlocked[0] = true;
 	}
 
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
@@ -48,7 +48,7 @@ public class StoreID extends Applet {
 
 		if (this.selectingApplet()) return;
 
-		if (unlocked[0]) {
+		if (PIN.getState() == (short)0x9000) {
 			if (buffer[ISO7816.OFFSET_CLA] != CLA_STORE) {
 				ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 			}
@@ -128,17 +128,19 @@ public class StoreID extends Applet {
 				break;
 
 				/**
-				 * Copy login+delimiter+password into the buffer and send it
+				 * Copy login+delimiter+password+delimiter+newPassword into the buffer and send it
 				 */
 			case INS_GET:
 				try{
 					Util.arrayCopy(login, (short) 0, buffer, (short) 0, (short) login.length);
 					Util.arrayCopy(delimiter, (short) 0, buffer, (short) login.length, (short) delimiter.length);
-					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) pwd.length);
-
+					Util.arrayCopy(tmpPwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) tmpPwd.length);
+					Util.arrayCopy(delimiter, (short) 0, buffer, (short) (login.length + delimiter.length + tmpPwd.length), (short) delimiter.length);
+					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length*2 + tmpPwd.length), (short) pwd.length);
+					
 					apdu.setOutgoing();
-					apdu.setOutgoingLength((short)(login.length + pwd.length + delimiter.length));
-					apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + pwd.length + delimiter.length));
+					apdu.setOutgoingLength((short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
+					apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
 				} catch(APDUException e) {
 					ISOException.throwIt((short) 0x0001);
 				} catch(NullPointerException e) {

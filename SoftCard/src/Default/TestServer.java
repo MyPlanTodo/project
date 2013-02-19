@@ -10,7 +10,7 @@ public class TestServer {
 
 	public static void main(String[] args) {
 		
-		new SoftCardServer("0.0.0.0", 42425, 1);
+		new SoftCardServer("192.168.34.10", 42425, 1);
 		
 	}
 	
