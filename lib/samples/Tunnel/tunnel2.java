@@ -374,61 +374,9 @@ public class tunnel2 extends Applet {
 		switch (buffer[ISO7816.OFFSET_INS]) {				
 		case INS_SET_TUNNEL: 
 			try{
-			
-			set_tunnel(buffer);	
-			/**	
-			 * Second part of the mutual authentication exchange
-			 * Generates a session key and a card nonce 
- 			 * Extract the received client nonce 
- 			 * Builds this packet :			 	 
-			 * padded = [session_key|nonce_card|nonce_client]
-			 * Sends back this encrypted packet with the shared key
-			 * If the client finds its nonce, it proves the card knows the shared key
-			 */
-			/*	
-			// raw session key (byte[]) random generation 
-			gen_random.genRandom(padded,  (short) (KeyBuilder.LENGTH_AES_128/8));	
-			// padded = [session_key|.....]
-			Util.arrayCopy(padded, (short) 0,raw_session_key ,(short)0,(short) (KeyBuilder.LENGTH_AES_128/8));
-			
-			
-			// IV generation 
-			gen_random.genRandom(IV, IV_LENGTH);
-			// crypto object intialization with the shared key and the previously generated IV
-			cipher_exchange.init(shared_key, Cipher.MODE_ENCRYPT,IV,(short) 0, IV_LENGTH);	
-			
-			
-			
-			
-			// nonce_client extraction
-			// padded = [session_key|nonce_client...]
-			Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded ,(short) (KeyBuilder.LENGTH_AES_128/8),AES_BLOCK_LENGTH);
-			
-			
-			
-			// nonce_card generation
-			gen_random.genRandom(padded2, AES_BLOCK_LENGTH);
-			
-			// padded = [session_key|nonce_client|nonce_card]
-			Util.arrayCopy(padded2, (short)0,padded ,(short) (KeyBuilder.LENGTH_AES_128/8 + AES_BLOCK_LENGTH),AES_BLOCK_LENGTH);
-			
-			
-			
-			tab[3] = (short) (padding.pad(padded2,padded , AES_BLOCK_LENGTH, (short) (( KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH + AES_BLOCK_LENGTH), (byte) 0));
-			
-			// copy of the generated IV at the beginning of buffer
-			Util.arrayCopy(IV, (short) 0,buffer ,(short) 0,IV_LENGTH);
-			
-			// encryption of the whole packet with the 
-			cipher_exchange.doFinal(padded2, (short)0,
-					(short) tab[3],buffer,(short) IV_LENGTH);
-			*/
-			
-			
-			
-			
-			// session key affectation						
-			//session_key.setKey(raw_session_key,(short) 0);	
+			// Second part of the mutual authentication exchange
+				
+			set_tunnel(buffer);				
 			apdu.setOutgoingAndSend((short)0,(short) (tab[3]+ IV_LENGTH ));	
 			}
 			catch(CryptoException ce)
