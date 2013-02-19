@@ -1,10 +1,8 @@
+/* Author : Romain Pignard */
+
 /* 
- * Génération de nombres un peu aléatoires par le simulateur.
- * Utilisation du générateur sur
- * L'APDU générique pour générer 0xN octets est
- * 0xb0 0x00 0xN 0x00 0x00 0x00;  
- * On peut récuperer au maximum 127 octets (1016 bits)
- *  INS vaut 0x00 et P1 vaut 0xN
+ * Applet generating random numbers 
+ * 
  * 
  * 
  */
@@ -32,20 +30,30 @@ public class gen_random extends Applet {
 	/* Attributs */
 	
 	private static RandomData rng;
-	private short[] lg;
-	private static byte[] buf;
-	
-	
-	
-	
+	private static short[] lg;
+	public static void execute(byte[] data)
+	{
+		switch (data[ISO7816.OFFSET_INS]) {
+		
+		case INS_NOUVEL_ALEA:
+			// the required number is in big endian
+			lg[0] = (short) (data[ISO7816.OFFSET_P1] + data[ISO7816.OFFSET_P2]*256) ;
+			// 
+			datastore.eraseData();
+			rng.generateData(data, (short) 0,(short) lg[0]);			
+			datastore.putData(data, lg[0]);
+			
+			break;
+		}
+		
+	}
 
 	private gen_random() {
-		//générateur non sur
-		// à remplacer par ALG_SECURE_RANDOM sur la carte
+		// Secure random number generator
 		rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
-		lg = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);
-		buf = JCSystem.makeTransientByteArray((short) 96, JCSystem.CLEAR_ON_RESET);
-		// longueur de la séquence d'octets désirée
+		
+		// number of random bytes needed
+		lg = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);	
 		lg[0] = 0;
 		
 	}
@@ -59,8 +67,14 @@ public class gen_random extends Applet {
 	
 	public static  void genRandom(byte[] buff , short nb)
 	{
+		// buff : output buffer
+		// nb : required number of bytes
+		
+		
 		try{
-		rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);	
+		rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
+		
+		// we put the required number of random bytes into buff
 		rng.generateData(buff,(short) 0,(short) nb);
 		}
 		catch(CryptoException ce)
@@ -80,7 +94,7 @@ public class gen_random extends Applet {
 	}
 	
 	public void process(APDU apdu) throws ISOException {
-		//récupération du buffer
+		
 		byte[] buffer = apdu.getBuffer();
 		
 		
@@ -91,18 +105,15 @@ public class gen_random extends Applet {
 			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
 		}
 		
-		/*if (ver_PIN.getState() != (short) 0x9000)
-		{ISOException.throwIt(ver_PIN.getState());
 		
-		return;}*/
 		switch (buffer[ISO7816.OFFSET_INS]) {
 		
 		case INS_NOUVEL_ALEA:
-			//récupération du nombre d'octets demandés
+			
 			lg[0] = buffer[ISO7816.OFFSET_P1];
-			//génération de lg nombres et mise
+			
 			rng.generateData(buffer, (short) 0,(short) lg[0]);
-			//envoi de 
+			
 			apdu.setOutgoingAndSend((short) 0, (short) lg[0]);
 			break;
 		
