@@ -48,13 +48,14 @@ public class tunnel2 extends Applet {
 	private static byte[] IV;
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;	
 	public static final short AES_BLOCK_LENGTH = 16;
+	public static final short LENGTH_BLOCK_SIZE = 16; 
 	
 	
 	
 	public static final byte INS_DECRYPT = 0x01;
 	public static final byte INS_SET_TUNNEL = 0x02;
 	public static final byte INS_ECHO_PLUS_ONE = 0x03;
-	public static final byte INS_VERIF_TUNNEL = 0x04;
+	public static final byte INS_CHECK_TUNNEL = 0x04;
 	public static final byte INS_GENERATE_IV = 0x05; 
 	
 	
@@ -108,7 +109,7 @@ public class tunnel2 extends Applet {
 		
 		
 		
-		// Local variables in RAM		// 
+		// Local variables in RAM		
 		padded = JCSystem.makeTransientByteArray((short) 256, JCSystem.CLEAR_ON_RESET);
 		padded2 = JCSystem.makeTransientByteArray((short) 256, JCSystem.CLEAR_ON_RESET);		
 		tab = JCSystem.makeTransientShortArray((short) 8, JCSystem.CLEAR_ON_RESET);
@@ -116,8 +117,14 @@ public class tunnel2 extends Applet {
 		raw_session_key = JCSystem.makeTransientByteArray((short) (KeyBuilder.LENGTH_AES_128/8), JCSystem.CLEAR_ON_RESET);
 	}
 	
-	private static void decrypt(byte[] buffer)
+	private static void check_card_secret(byte[] buffer)
 	{
+		/**
+		 * Decrypts the 3rd part of the authentification process
+		 * Puts the decrypted data into buffer to check if 
+		 */
+		
+		
 		// crypto object initialization
 		
 		cipher_decrypt.init(session_key, Cipher.MODE_DECRYPT,buffer,ISO7816.OFFSET_CDATA, IV_LENGTH);							
@@ -131,17 +138,32 @@ public class tunnel2 extends Applet {
 		
 		//brutal unpadding			
 		Util.arrayCopy(padded, (short) 0,buffer ,(short)0,(short) (tab[2] - padded[(short)(tab[2] - 1)]));		
-		tab[2] = (short)( tab[2] - padded[(short)(tab[2] - 1)]);	
+		tab[2] = (short)( tab[2] - padded[(short)(tab[2] - 1)]);
+		
+		for(tab[0] = 0 ; tab[0] < tab[2]; tab[0] ++ )
+		{
+			if (buffer[tab[0]] != padded2[tab[0]])
+			{
+				ISOException.throwIt((short) 0x50);
+			}	
+		}
+		
+		
 	}
 	
 	
 	private static void compute_MAC(byte[] buffer)
 	{
-		// copy of the data into padded2 for MAC computation
-		Util.arrayCopy(buffer, (short) 0,padded2 ,(short)16,(short) (tab[2] + IV_LENGTH));	
+		/**
+		 * @input buffer data of the form [data|MAC(data.length.0..0|data)]
+		 * Computes a CBC-MAC "improved" with the size at the beginning to handle variable size packets		 * 
+		 */
+		
+		// copy of the data into padded2 for MAC computation with space left for the size
+		Util.arrayCopy(buffer, (short) 0,padded2 ,(short)LENGTH_BLOCK_SIZE,(short) (tab[2] + IV_LENGTH));	
 		
 		// emptying the first block of the message for MAC computation
-		Util.arrayFillNonAtomic(padded2, (short) 0,(short) 16,(byte) 0);
+		Util.arrayFillNonAtomic(padded2, (short) 0,(short) LENGTH_BLOCK_SIZE,(byte) 0);
 		
 		// length insertion at the beginning
 		padded2[0] =  (byte) (((short)(tab[2] + IV_LENGTH)) % 256);
@@ -151,48 +173,54 @@ public class tunnel2 extends Applet {
 		
 		
 		// actual MAC computation
-		MAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + 16), padded, (short) 0);	
+		MAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + LENGTH_BLOCK_SIZE), padded, (short) 0);	
 		
 		
 		// MAC insertion
-		Util.arrayCopy(padded, (short) (tab[2] - MAC_LENGTH  + IV_LENGTH + 16),buffer ,(short)(tab[2] + IV_LENGTH),(short) MAC_LENGTH);
+		Util.arrayCopy(padded, (short) (tab[2] - MAC_LENGTH  + IV_LENGTH + LENGTH_BLOCK_SIZE),buffer ,(short)(tab[2] + IV_LENGTH),(short) MAC_LENGTH);
 			
 		
 	}
 	
 	
-	private static void check_MAC(byte[] buffer)
+	private static void check_MAC(byte[] buffer)	
 	{
-		// message length (w/o IV or MAC)
+		/**
+		 * Checks the MAC in the supplied buffer		 
+		 * @input buffer data of the form [data|MAC(data.length.0..0|data)]
+		 * Computes a CBC-MAC "improved" with the size at the beginning to handle variable size packets
+		 * and checks it against the MAC at the enb of the buffer
+		 */
+		
+		// message length (w/o IV nor MAC)
 		tab[2] = (short ) (buffer[ISO7816.OFFSET_LC] - IV_LENGTH - MAC_LENGTH);
 		
 		// whole message length
 		tab[1] = buffer[ISO7816.OFFSET_LC];
 				
 		
-		// copy of the original message into padded2 for MAC computation		
-		Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded2 ,(short)16,(short) (tab[2] + IV_LENGTH));
+		// copy of the original message into padded2 for MAC computation with space left for the size		
+		Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded2 ,(short)LENGTH_BLOCK_SIZE,(short) (tab[2] + IV_LENGTH));
 	
 		// emptying the first block of the message for MAC computation
-		Util.arrayFillNonAtomic(padded2, (short)0, (short)16,(byte) 0);
+		Util.arrayFillNonAtomic(padded2, (short)0, (short)LENGTH_BLOCK_SIZE,(byte) 0);
 	
 				
-		// length insertion at the beginning		
+		// length insertion at the beginning (in the first block) 		
 		padded2[0] =  (byte) ((short)(tab[2] + IV_LENGTH) % 256);
-		padded2[1] =  (byte) ((short)(tab[2] + IV_LENGTH) / 256);
-				
+		padded2[1] =  (byte) ((short)(tab[2] + IV_LENGTH) / 256);				
 		
 		
 		
 		// actual MAC computation
-		MAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + 16), padded, (short) 0);
+		MAC.doFinal(padded2,(short) 0 , (short)(tab[2]+ IV_LENGTH + LENGTH_BLOCK_SIZE), padded, (short) 0);
 		
 		
 		
 		// MAC comparison
 		for(tab[0] = 0;tab[0] < MAC_LENGTH;tab[0]++)
 		{
-			if(buffer[(short)(ISO7816.OFFSET_CDATA + tab[1] - MAC_LENGTH + tab[0])] != padded[(short)(tab[0] + tab[2]- MAC_LENGTH + IV_LENGTH + 16 )])
+			if(buffer[(short)(ISO7816.OFFSET_CDATA + tab[1] - MAC_LENGTH + tab[0])] != padded[(short)(tab[0] + tab[2]- MAC_LENGTH + IV_LENGTH + LENGTH_BLOCK_SIZE )])
 			{
 				ISOException.throwIt((short) 0x66);
 			}	
@@ -203,6 +231,12 @@ public class tunnel2 extends Applet {
 	
 	private static void decrypt_tunnel(byte[] buffer)
 	{
+		/**
+		 * Performs the decryption of the data in the buffer using the tunnel parameters
+		 * Stores the length of the decrypted data in tab[2]
+		 * @param buffer the buffer to be decrypted
+		 * Puts the result back in buffer
+		 */
 		
 		// decryption object initialization
 		cipher_decrypt.init(session_key, Cipher.MODE_DECRYPT, buffer, (short) ISO7816.OFFSET_CDATA, IV_LENGTH);	
@@ -225,6 +259,13 @@ public class tunnel2 extends Applet {
 	
 	private static void encrypt_tunnel(byte[] buffer, short length)
 	{
+		/**
+		 * @input buffer the data to be encrypted
+		 * @input length the length of the buffer
+		 * Encrypts the data of buffer of size length with the tunnel parameters
+		 * Puts it  back in the buffer with the IV at the beginning
+		 * Updates tab[2] with the total size (IV + encrypted data)
+		 */
 		// IV generation
 		gen_random.genRandom(IV, IV_LENGTH);
 		
@@ -251,6 +292,65 @@ public class tunnel2 extends Applet {
 	}
 	
 	
+	public static void set_tunnel(byte[] buffer)
+	{	
+		
+		/**	
+		 * Second part of the mutual authentication exchange
+		 * Generates a session key and a card nonce 
+			 * Extract the received client nonce 
+			 * Builds this packet :			 	 
+		 * padded = [session_key|nonce_card|nonce_client]
+		 * Sends back this encrypted packet with the shared key
+		 * If the client finds its nonce, it proves the card knows the shared key
+		 */		
+		
+		// raw session key (byte[]) random generation 
+		gen_random.genRandom(padded,  (short) (KeyBuilder.LENGTH_AES_128/8));	
+		// padded = [session_key|.....]
+		Util.arrayCopy(padded, (short) 0,raw_session_key ,(short)0,(short) (KeyBuilder.LENGTH_AES_128/8));
+		
+		
+		// IV generation 
+		gen_random.genRandom(IV, IV_LENGTH);
+		// crypto object intialization with the shared key and the previously generated IV
+		cipher_exchange.init(shared_key, Cipher.MODE_ENCRYPT,IV,(short) 0, IV_LENGTH);	
+		
+		
+		
+		
+		// nonce_client extraction
+		// padded = [session_key|nonce_client...]
+		Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded ,(short) (KeyBuilder.LENGTH_AES_128/8),AES_BLOCK_LENGTH);
+		
+		
+		
+		// nonce_card generation
+		gen_random.genRandom(padded2, AES_BLOCK_LENGTH);
+		
+		// padded = [session_key|nonce_client|nonce_card]
+		Util.arrayCopy(padded2, (short)0,padded ,(short) (KeyBuilder.LENGTH_AES_128/8 + AES_BLOCK_LENGTH),AES_BLOCK_LENGTH);
+		
+		
+		
+		tab[3] = (short) (padding.pad(padded2,padded , AES_BLOCK_LENGTH, (short) (( KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH + AES_BLOCK_LENGTH), (byte) 0));
+		
+		// copy of the generated IV at the beginning of buffer
+		Util.arrayCopy(IV, (short) 0,buffer ,(short) 0,IV_LENGTH);
+		
+		// encryption of the whole packet with the 
+		cipher_exchange.doFinal(padded2, (short)0,
+				(short) tab[3],buffer,(short) IV_LENGTH);
+		
+		
+		
+		
+		
+		// session key affectation						
+		session_key.setKey(raw_session_key,(short) 0);	
+		
+	}
+		
 		
 	public static void install(byte bArray[], short bOffset, byte bLength)
 			throws ISOException {
@@ -274,69 +374,62 @@ public class tunnel2 extends Applet {
 		switch (buffer[ISO7816.OFFSET_INS]) {				
 		case INS_SET_TUNNEL: 
 			try{
-				
 			
-			//génération de [IV_échange: clé_tunnel]
-			gen_random.genRandom(padded,  (short) (KeyBuilder.LENGTH_AES_128/8));
-			
-			
+			set_tunnel(buffer);	
+			/**	
+			 * Second part of the mutual authentication exchange
+			 * Generates a session key and a card nonce 
+ 			 * Extract the received client nonce 
+ 			 * Builds this packet :			 	 
+			 * padded = [session_key|nonce_card|nonce_client]
+			 * Sends back this encrypted packet with the shared key
+			 * If the client finds its nonce, it proves the card knows the shared key
+			 */
+			/*	
+			// raw session key (byte[]) random generation 
+			gen_random.genRandom(padded,  (short) (KeyBuilder.LENGTH_AES_128/8));	
+			// padded = [session_key|.....]
 			Util.arrayCopy(padded, (short) 0,raw_session_key ,(short)0,(short) (KeyBuilder.LENGTH_AES_128/8));
 			
-			/*for( tab[0] = 0;tab[0]<0 + KeyBuilder.LENGTH_AES_128/8;tab[0]++)
-			{
-				cle[tab[0]] = padded[(short)(tab[0] )]; 
-				
-			}	*/
 			
+			// IV generation 
 			gen_random.genRandom(IV, IV_LENGTH);
-			// initialisation du générateur avec les paramètres secrets
+			// crypto object intialization with the shared key and the previously generated IV
 			cipher_exchange.init(shared_key, Cipher.MODE_ENCRYPT,IV,(short) 0, IV_LENGTH);	
 			
 			
-			// envoi du "secret" pour vérifier le bon chiffrement.
 			
-			// récupération de Rcl 
+			
+			// nonce_client extraction
+			// padded = [session_key|nonce_client...]
 			Util.arrayCopy(buffer, (short) ISO7816.OFFSET_CDATA,padded ,(short) (KeyBuilder.LENGTH_AES_128/8),AES_BLOCK_LENGTH);
 			
 			
-			/*for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
-			{
-				padded[(short)(tab[0] +  (KeyBuilder.LENGTH_AES_128/8))] = buffer[(short)(tab[0] + ISO7816.OFFSET_CDATA)]; 
-				
-			}*/
 			
+			// nonce_card generation
 			gen_random.genRandom(padded2, AES_BLOCK_LENGTH);
 			
+			// padded = [session_key|nonce_client|nonce_card]
 			Util.arrayCopy(padded2, (short)0,padded ,(short) (KeyBuilder.LENGTH_AES_128/8 + AES_BLOCK_LENGTH),AES_BLOCK_LENGTH);
-			
-			
-			/*for( tab[0] = 0;tab[0]< AES_BLOCK_LENGTH;tab[0]++)
-			{
-				padded[(short)(tab[0] +  (KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH)] = padded2[(short)(tab[0])]; 				
-			}*/
-			
-			
 			
 			
 			
 			tab[3] = (short) (padding.pad(padded2,padded , AES_BLOCK_LENGTH, (short) (( KeyBuilder.LENGTH_AES_128/8) + AES_BLOCK_LENGTH + AES_BLOCK_LENGTH), (byte) 0));
 			
+			// copy of the generated IV at the beginning of buffer
 			Util.arrayCopy(IV, (short) 0,buffer ,(short) 0,IV_LENGTH);
 			
-			/*for( tab[0] = 0;tab[0]<IV_LENGTH;tab[0]++)
-			{
-				buffer[tab[0]] = auth_iv[tab[0]]; 
-				
-			}*/
+			// encryption of the whole packet with the 
 			cipher_exchange.doFinal(padded2, (short)0,
 					(short) tab[3],buffer,(short) IV_LENGTH);
+			*/
 			
-			apdu.setOutgoingAndSend((short)0,(short) (tab[3]+ IV_LENGTH ));			
 			
-			// réglage de la clé de session			
-					
-			session_key.setKey(raw_session_key,(short) 0);	
 			
+			
+			// session key affectation						
+			//session_key.setKey(raw_session_key,(short) 0);	
+			apdu.setOutgoingAndSend((short)0,(short) (tab[3]+ IV_LENGTH ));	
 			}
 			catch(CryptoException ce)
 			{
@@ -357,20 +450,9 @@ public class tunnel2 extends Applet {
 							
 			break;
 			
-		case INS_VERIF_TUNNEL:
-			try{
-			
-				decrypt(buffer);
-				for(tab[0] = 0 ; tab[0] < tab[2]; tab[0] ++ )
-				{
-					if (buffer[tab[0]] != padded2[tab[0]])
-					{
-						ISOException.throwIt((short) 0x50);
-					}	
-				}
-				
-				
-			
+		case INS_CHECK_TUNNEL:
+			try{			
+				check_card_secret(buffer);			
 			}			
 			catch(CryptoException ce)
 			{
@@ -390,40 +472,7 @@ public class tunnel2 extends Applet {
 			{ISOException.throwIt((short) 0x12);}
 			
 			break;				
-		
-		
-		
-	
-		
-		case INS_ECHO_RAW:
-			try{	
-				tab[4] = buffer[ISO7816.OFFSET_LC];				
-				check_MAC(buffer);	
-				decrypt_tunnel(buffer);	
-				datastore.putData(buffer, (short) tab[2]);	
-			}
-			
-			catch(CryptoException ce)
-			{
-				if(ce.getReason() == CryptoException.ILLEGAL_USE)
-				{ISOException.throwIt((short) 0x10);}
-				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
-				{ISOException.throwIt((short) 0x11);}
-				else if (ce.getReason() == CryptoException.INVALID_INIT)
-				{ISOException.throwIt((short) 0x12);}
-				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
-				{ISOException.throwIt((short) 0x13);}
-				else if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
-				{ISOException.throwIt((short) 0x14);}
 				
-			}
-			catch(APDUException ae)
-			{
-				ISOException.throwIt((short) 0x62);
-			}			
-			break;
-			
-		
 		case PUT_DATA:
 			tab[4] = buffer[ISO7816.OFFSET_LC];				
 			check_MAC(buffer);	
@@ -450,50 +499,7 @@ public class tunnel2 extends Applet {
 		case ERASE_DATA:
 			datastore.eraseData();
 			break;
-		case INS_SELECT_APPLET: 
-			
-		try{		
-			decrypt_tunnel(buffer);	
-			switch(buffer[0]){
-			case VERIF_PIN:
-				if(ver_PIN.test_PIN(buffer, (short)1,(short) 2))
-				{
-					ISOException.throwIt((short) 0x9002);		
-					
-				}
-				else
-				{
-					ISOException.throwIt((short) 0x9001);
-				}	
-			
-			}			
-			break;
-			
-			
-			//encrypt_tunnel(buffer,tab[2]);
-			//apdu.setOutgoingAndSend((short)0,(short) tab[2]);
-			}
-			
-			catch(CryptoException ce)
-			{
-				if(ce.getReason() == CryptoException.ILLEGAL_USE)
-				{ISOException.throwIt((short) 0x10);}
-				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
-				{ISOException.throwIt((short) 0x11);}
-				else if (ce.getReason() == CryptoException.INVALID_INIT)
-				{ISOException.throwIt((short) 0x12);}
-				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
-				{ISOException.throwIt((short) 0x13);}
-				else if (ce.getReason() == CryptoException.UNINITIALIZED_KEY)
-				{ISOException.throwIt((short) 0x14);}
-				
-			}
-			catch(APDUException ae)
-			{ISOException.throwIt((short) 0x62);}
-			
-			break;
-			
-			
+		
 			
 		
 		default:
