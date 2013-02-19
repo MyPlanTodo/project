@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique de besoins}
 \def\docDate{\today}
-\def\version{1.0}
+\def\version{1.4}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
 \def\checked{Florian \textsc{Guilbert}, Emmanuel \textsc{Mocquet}}
 \def\approved{}
@@ -66,6 +66,14 @@
     0.3 & 30/01/2013 & Modifications mineures\\
 	\hline
     1.0 & 31/01/2013 & Relecture \\
+	\hline
+    1.1 & 06/02/2013 & Corrections après rdv client \\
+	\hline
+    1.2 & 06/02/2013 & Corrections \\
+	\hline
+    1.3 & 07/02/2013 & Corrections (modifications C10) \\
+	\hline
+    1.4 & 11/02/2013 & Modifications (priorité F-FI-30) \\
 	\hline
 	&&\\
 	\hline
@@ -96,7 +104,7 @@ clef privée, ...
 Le dialogue avec cette carte à puce se fera par l’intermédiaire d’un 
 client Java. 
 
-Ce projet est une fusion de deux sous-projets :
+Ce projet est une composition de deux sous-projets :
 \begin{itemize}
     \item Étude et mise en \oe{}uvre de solutions d’authentifications et de signatures 
         par cartes à puce, proposé par Magali \textsc{Bardet} ;
@@ -106,8 +114,8 @@ Ce projet est une fusion de deux sous-projets :
 
 \paragraph{}
 Dans ce document, nous présentons le sous-projet SC (pour SmartCards) utilisé 
-par l'entité FaceCrypt du sous-projet SSN, cette utilisation est adaptable à 
-d'autres situations.
+par l'entité FaceCrypt du sous-projet SSN (Secure Social Network), cette
+utilisation est adaptable à d'autres situations.
 
 \section{Documents applicables et de référence}
 \begin{itemize}
@@ -124,22 +132,29 @@ d'autres situations.
     \item[DAL :] Document d'Architecture Logicielle;
     \item[PdD :] Plan de développement;
     \item[STB :] Spécification Technique de Besoins;
-    \item[SC :] SmartCard, relatif au sous-projet sur les cartes à puce;
-    \item[SSN :] \emph{Secure Social Network};
+    \item[SC :] \emph{SmartCard}, relatif au sous-projet sur les cartes à puce;
+    \item[SSN :] \emph{Secure Social Network}, relatif au sous-projet sur 
+        Facebook;
     \item[FaceCrypt :] Application Java gérant les traitements lourds 
     (chiffrement/déchiffrement) de l'extension et étant en relation avec
 	la carte à puce;
     \item[IHM :] Interface Homme-Machine, (interface graphique); 
-    \item[Utilisateur :] entité (humain ou programme) intéragissant avec ce 
+    \item[Utilisateur :] entité (humain ou programme) interagissant avec ce 
         sous-projet;
     \item[Système :] ce sous-projet;
-    \item[SoftCard :] Application effectuant le relais entre la carte
+    \item[Sécurisé :] ce terme sous-entend un chiffrement des données
+        et une vérification de leur intégrité;
+    \item[SoftCard :] application effectuant le relais entre la carte
         et FaceCrypt;
     \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] indistingable en temps polynomial, distribution
-        de probabilité uniforme;
+    \item[Aléatoire :] les résultats suivent une distribution de
+        probabilité uniforme;
+    \item[Pseudo-aléatoire :] les résultats sont indistingables en temps polynomial 
+        d'une distribution de probabilité uniforme;
     \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
         pseudo-aléatoires;
+    \item[RNG :] (Random Number Generator) générateur de nombres
+        aléatoires;
     \item[PIN :] (Personal Identification Number) code servant à authentifier
         l'utilisateur;
     \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
@@ -184,14 +199,14 @@ des tunnels sécurisés après s’être mutuellement authentifiés.
 
 
 \subsection{Génération de nombres aléatoire}
-La SmartCard doit être capable de générer des nombres aléatoires de façon 
-sécurisée afin qu'on ne puisse prédire la génération.\\
+SoftCard doit être capable d'utiliser le générateur de nombres aléatoire de
+SmartCard.\\
 
 \fiche
 	{Génération de nombres aléatoire}
 	{SmartCard, SoftCard}
     {SmartCard génère un nombre aléatoire de la taille demandée}
-	{SmartCard est programmée}
+	{}
     {Demande de SoftCard}
     {SmartCard renvoie un nombre aléatoire à SoftCard}
 	{\begin{itemize}
@@ -203,8 +218,8 @@ sécurisée afin qu'on ne puisse prédire la génération.\\
 	}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard génère un nombre grâce au PRNG intégré et le renvoie à SoftCard
-            autorisés à déchiffrer le message.
+        \item[2.] SmartCard génère un nombre grâce au RNG intégré et le renvoie
+            à SoftCard.
 	\end{itemize}
     }
 	{}
@@ -223,7 +238,7 @@ Pour utiliser une SmartCard, l'utilisateur devra entrer son code PIN afin de
 	{Utilisateur, SmartCard, SoftCard}
 	{Le système authentifie l'utilisateur grâce au code PIN contenu sur SmartCard.}
 	{L'utilisateur a une carte valide et connaît le code PIN, SoftCard et SmartCard sont authentifiés.}
-    {SoftCard a besoin d'utiliser SmartCard}
+    {SoftCard a besoin d'utiliser SmartCard.}
     {L'authentification a réussi ou a échoué.}
     {\begin{itemize}
         \item[]
@@ -319,7 +334,7 @@ récupérer les données de l'utilisateur.\\
     }
 	{\begin{itemize}
         \item[]
-		\item[2.] SoftCard demande à SmartCard le login/mdp du SN.
+		\item[2.] SoftCard demande à SmartCard le login/mdp du Social Network.
 		\item[3.] SmartCard envoie le login/mdp à SoftCard
         \item[4.] SoftCard envoie à FaceCrypt le login/mdp du Social Network.
 	\end{itemize}
@@ -339,7 +354,7 @@ récupérer les données de l'utilisateur.\\
 La carte procède au chiffrement et au déchiffrement de la clef de chiffrement 
 symétrique pour chaque message avec les clés asymétriques adéquates.
 
-Pour le chiffrement, SmartCard utilise la clef publique du destinataire. 
+Pour le chiffrement, SoftCard utilise la clef publique du destinataire. 
 Pour le déchiffrement, SmartCard utilise la clef privée stockée en mémoire sur
 la carte.
 
@@ -348,8 +363,8 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
 \fiche
 {Déchiffrement de données}
 	{SmartCard, SoftCard, FaceCrypt}
-    {SmartCard déchiffre des données avec la clé privée de chiffrement stockée 
-    sur la carte, envoyées par FaceCrypt}
+    {SmartCard déchiffre des données, envoyées par FaceCrypt avec la clé privée
+    de chiffrement stockée sur la carte.}
     {SmartCard est débloquée avec le bon code PIN, Authentification entre 
     SoftCard et FaceCrypt.  SoftCard et SmartCard sont authentifiés}
     {Demande de FaceCrypt}
@@ -365,37 +380,36 @@ Cet exemple concerne FaceCrypt mais est aisément adaptable à tout autre systè
         \item[2.] SoftCard transmet les données chiffrées à SmartCard
 	\item[3.] SmartCard déchiffre les données avec la clé privée de 
         chiffrement stockée et renvoie le résultat du déchiffrement à SoftCard
-	\item[4.] SoftCard transmet le résultat à FaceCrypt
-		liste et actualise ses listes.
+	\item[4.] SoftCard transmet le résultat à FaceCrypt.
 	\end{itemize}
 	}
 	{}
 \flots
     {}
-    {}
+    {Une erreur de déchiffrement provoque l'envoi d'un message d'erreur, ne
+    permettant pas de connaître sa cause}
 \\*
 
-La demande de chiffrement de données à SmartCard peut venir de SoftCard ou 
-tout autre application tierce dans le cas d'une utilisation plus générale.\\
+La demande de chiffrement de données vient de l'utilisateur ou de toute autre 
+application tierce, dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Chiffrement de données}
-	{SmartCard, SoftCard}
-    {SmartCard chiffre les donnés avec sa clé privée}
-    {SmartCard est débloquée avec le bon code PIN.   SoftCard et SmartCard 
-    sont authentifiés, partage une clé secrète et sont en accord sur un 
-    algorithme symétrique}
-    {Demande de SoftCard}
-    {SmartCard renvoie les données chiffrées}
+	{Utilisateur, SoftCard}
+    {SoftCard chiffre les donnés avec la clef publique du destinataire}
+    {}
+    {Demande de l'utilisateur}
+    {SoftCard renvoie les données chiffrées}
     {\begin{itemize}
         \item[]
-        \item[1.] SoftCard demande des données à SmartCard
-        \item[4.] SoftCard récupère les données chiffrées 
+        \item[1.] L'utilisateur transmet des données à chiffrer à SoftCard,
+            ainsi que la clef publique du destinataire;
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard chiffre les données à envoyer avec la clef secrète.
-		\item[3.] SmartCard envoie les données demandées.
+        \item[2.] SoftCard reçoit les données en clair et les chiffre 
+        avec la clef publique du destinataire;
+		\item[3.] SoftCard renvoie les données chiffrées à l'utilisateur.
 	\end{itemize}
 	}
 	{}
@@ -418,7 +432,7 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
     {\begin{itemize}
         \item[]
         \item[1.] SoftCard envoie les données qu'il faut signer à SmartCard.
-        \item[3.] SoftCard récupère les données.
+        \item[3.] SoftCard récupère la signature.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
@@ -433,22 +447,18 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Vérification de données}
-	{SoftCard, SmartCard}
-    {SmartCard utilise la clef publique pour vérifier des données fournies par 
-    SoftCard (données signées et données en clair)}
-    { SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
-    déverrouillé la carte}
+	{SoftCard}
+    {SoftCard utilise la clef publique pour vérifier des données signées}
+    {}
     {Demande de l'utilisateur}
     {Les données sont vérifiées, ou non}
     {\begin{itemize}
         \item[]
-        \item[1.] SoftCard envoie les données en clair et leur signé à SmartCard
-        \item[3.] SoftCard récupère le résultat.
+        \item[2.] SoftCard vérifie les données et renvoie "vrai" si la signature
+            et son équivalent en clair correspondent; faux sinon.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] SmartCard vérifie les données et envoie "vrai" à Softcard si la signature et
-	son équivalent en clair correspondent; faux sinon.
 	\end{itemize}
 	}
 	{}
@@ -457,7 +467,71 @@ tout autre application tierce dans le cas d'une utilisation plus générale.\\
     {}
 \\*
 
-\pagebreak
+
+\subsection{Administration des cartes}
+
+\fiche
+{Initialisation d'une carte}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
+    {L'utilisateur paramètre la carte avec ses identifiants}
+    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Les applets ont été installées sur la carte. Les clefs ont été 
+        initialisées, l'identifiant et le mot de passe ont été stockés}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
+        non de générer un nouveau mot de passe. 
+        \item[4.] FaceCrypt enregistre le nouveau mot de passe et envoie la
+        confirmation de modification à SoftCard.
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
+        et de signature sur la carte, génère un nouveau mot de passe si besoin,
+        stocke temporairement les identifiants Facebook (anciens et nouveaux)
+        et crée un code PIN, qu'il transmet à l'utilisateur.
+        \item[3.] SoftCard envoie le nouveau mot de passe à FaceCrypt.
+        \item[5.] SoftCard transmet la confirmation à SmartCard qui stocke
+            définitivement le mot de passe et efface l'ancien.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {Si le compte n'existe pas, une erreur est générée.}
+\\*
+
+\fiche
+{Modification du mot de passe}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
+    {L'utilisateur souhaite changer son mot de passe Facebook}
+    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
+    déverrouillé la carte}
+    {Demande de l'utilisateur}
+    {Le mot de passe a été modifié et enregistré sur Facebook et sur la carte.}
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur choisit l'option permettant de générer un 
+            nouveau mot de passe.
+        \item[3.] FaceCrypt enregistre la modification et envoie une confirmation
+            du changement de mot de passe à SoftCard.
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] SoftCard transmet le mot de passe à SmartCard qui le stocke 
+            temporairement. Il notifie ensuite FaceCrypt de la modification.
+        \item[4.] SoftCard transmet la confirmation à SmartCard qui stocke 
+            définitivement le mot de passe et efface l'ancien.
+	\end{itemize}
+	}
+	{}
+\flots
+    {}
+    {Si le compte n'existe pas, une erreur est générée.}
+\\*
+
 
 \section{Exigences opérationnelles}
 
@@ -516,7 +590,7 @@ PIN & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FIcount}{10}
 F-FI-\arabic{FIcount} & SoftCard communique de manière sécurisée avec SmartCard
-& \cellcolor{red!20}Important \\
+& \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
 
@@ -540,7 +614,7 @@ F-FI-\arabic{FIcount} & SoftCard communique de manière sécurisée avec SmartCa
 
 \hline
 \addtocounter{FQcount}{10}
-F-FQ-\arabic{FQcount} & La système sera livré pour le 04 mars 2013 & \cellcolor{green!50}Indispensable \\
+F-FQ-\arabic{FQcount} & Le système sera livré pour le 01 mars 2013 & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FQcount}{10}
 F-FQ-\arabic{FQcount} & Une documentation de développement est fournie

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.2-0.9995.2 (TeX Live 2009/Debian) (format=xelatex 2013.1.15)  31 JAN 2013 16:30
+This is XeTeX, Version 3.1415926-2.2-0.9995.2 (TeX Live 2009/Debian) (format=xelatex 2013.1.15)  15 FEB 2013 16:51
 entering extended mode
  %&-line parsing enabled.
 **PdQ.tex
@@ -871,7 +871,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7]
+[7] AED: lastpage setting LastPage
 File: res/logo_univ.png Graphic file (type QTm)
  <use  "res/logo_univ.png" >
 
@@ -880,29 +880,14 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[8]
-Overfull \hbox (12.566pt too wide) in paragraph at lines 255--258
-[]\EU1/lmr/m/n/10.95 Application Java gérant les traitements lourds (chiffreme
-nt/déchiffrement) de l’extension
- []
-
-AED: lastpage setting LastPage
-File: res/logo_univ.png Graphic file (type QTm)
- <use  "res/logo_univ.png" >
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 39.55656pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[9] (./PdQ.aux) ) 
+[8] (./PdQ.aux) ) 
 Here is how much of TeX's memory you used:
- 20677 strings out of 494665
- 378947 string characters out of 1166477
- 496733 words of memory out of 3000000
- 23496 multiletter control sequences out of 15000+50000
+ 20682 strings out of 494665
+ 379022 string characters out of 1166477
+ 501454 words of memory out of 3000000
+ 23501 multiletter control sequences out of 15000+50000
  9945 words of font info for 52 fonts, out of 3000000 for 9000
  669 hyphenation exceptions out of 8191
- 56i,15n,56p,461b,461s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,15n,56p,461b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on PdQ.pdf (9 pages).
+Output written on PdQ.pdf (8 pages).

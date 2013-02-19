@@ -18,9 +18,16 @@
 \BOOKMARK [3][-]{subsubsection.3.2.2}{Liste des acteurs de la promotions}{subsection.3.2}
 \BOOKMARK [2][-]{subsection.3.3}{Communications}{section.3}
 \BOOKMARK [3][-]{subsubsection.3.3.1}{Documentation}{subsection.3.3}
-\BOOKMARK [3][-]{subsubsection.3.3.2}{Signalement des anomalies}{subsection.3.3}
-\BOOKMARK [3][-]{subsubsection.3.3.3}{Demandes de changement}{subsection.3.3}
-\BOOKMARK [2][-]{subsection.3.4}{Procédures de validation des documents}{section.3}
-\BOOKMARK [1][-]{section.4}{Plan de gestion}{}
-\BOOKMARK [1][-]{section.5}{L'assurance qualité}{}
-\BOOKMARK [1][-]{section.6}{Exigences fonctionnelles}{}
+\BOOKMARK [1][-]{section.4}{L'assurance qualité}{}
+\BOOKMARK [2][-]{subsection.4.1}{Le rendu du livrable}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Mise en place de l'exigence}{subsection.4.1}
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Vérification du fonctionnement}{subsection.4.1}
+\BOOKMARK [2][-]{subsection.4.2}{Les opérations cryptographiques de SmartCard}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Mise en place de l'exigence}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Vérification du fonctionnement}{subsection.4.2}
+\BOOKMARK [2][-]{subsection.4.3}{Les opérations cryptographiques de FaceCrypt}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Mise en place de l'exigence}{subsection.4.3}
+\BOOKMARK [3][-]{subsubsection.4.3.2}{Vérification du fonctionnement}{subsection.4.3}
+\BOOKMARK [2][-]{subsection.4.4}{Les accès à la carte à puce}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.4.1}{Mise en place de l'exigence}{subsection.4.4}
+\BOOKMARK [3][-]{subsubsection.4.4.2}{Vérification du fonctionnement}{subsection.4.4}

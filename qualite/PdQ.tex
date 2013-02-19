@@ -91,7 +91,6 @@ qualité défini et atteindre les résultats demandés.
 De part sa nature, il est amené à être modifié selon les ajouts que l'on
 apportera au projet.
 
-\newpage
 \section{Données}
 \subsection{Contexte}
 	Dans le cadre de notre master 2 Sécurité des Systèmes Informatiques,
@@ -122,9 +121,14 @@ Facebook, au moyen d'une carte à puce.
 
 \subsubsection{Livrables}
 \begin{itemize}
-	\item Void.
-	\item Void.
-	\item Void.
+	\item Trois applications permettants respectivement de : générer des
+nombres pseudo-aléatoires, de chiffrer/déchiffrer des données et d'un add-on
+communiquant avec le navigateur firefox.
+	\item Stockage de données sur la carte, injection de code sur le site
+du réseau social grâce à l'extension et stockage permanent d'informations sur
+la troisième application.
+	\item Les trois applications fonctionnent et peuvent dialoguer entre
+elles à l'aide de "tunnels" sécurisés
 	\item Projet Fini.
 \end{itemize}
 
@@ -165,7 +169,6 @@ lot de cartes.
 en tant que fournisseurs et Mme Bardet ainsi que M Otmani en tant que clients.
 
 
-\newpage
 
 \section{Organisation}
 \subsection{Structure}
@@ -243,11 +246,100 @@ par la personne tierce.
 sinon, celui ci est a nouveau révisé en fonction des remarques du client.
 
 
-\newpage
 \section{L'assurance qualité}
 
+	À partir de nos documents "Spécifications Techniques des Besoins", nous
+avons pu mettre en évidence des exigences de qualité. Celles ci sont les
+suivantes :
+\begin{itemize}
+	\item Le rendu du livrable
+	\item Les opérations cryptographiques de SmartCard
+	\item Les opérations cryptographiques de FaceCrypt
+	\item Les accès à la carte à puce
+\end{itemize}
+
+	Cette partie du plan de qualité explique comment chaque exigence est
+controlée et est appréciée. Nous mettrons en place une échelle de mesure afin
+de quantifier la qualité de chacune de ces exigences.
+
+\newpage
+\subsection{Le rendu du livrable}
+	Celui ci consiste en une application facile d'utilisation répondant
+aux exigences des clients.
+\subsubsection{Mise en place de l'exigence}
+	Pour mesurer la qualité du livrable, nous établissons une échelle
+par rapport aux exigences des clients et si ceux ci sont remplis par notre
+application.
+\subsubsection{Vérification du fonctionnement}
+	Les critères de vérifications sont :
+\paragraph{OK : } Notre livrable final remplir toutes les exigences tant
+fonctionnelles qu'opérationnelles.
+\paragraph{Partiel : } Notre livrable final ne remplit pas toutes les
+exigences mais implémente toutes les exigences indispensables.
+\paragraph{NOT OK : } Notre livrable n'implémente pas une ou plusieurs
+exigences indispensables.
+
+\subsection{Les opérations cryptographiques de SmartCard}
+	La carte à puce \emph{SmartCard} est une des composantes de notre
+projet. Celle ci va permettre de stocker le biclef (clef publique, clef
+privée) de l'utilisateur, ainsi qu'effectuer des opérations de cryptographie.
+Dans notre projet, nous utiliserons la carte uniquement pour déchiffrer,
+signer et générer des données aléatoires.
+\subsubsection{Mise en place de l'exigence}
+	Pour éprouver la qualité des opérations cryptographiques de la carte
+à puce (SmartCard), nous avons effectué une série de tests qui consistent à
+déchiffrer, signer et produire des données arbitraires. Cette qualité sera
+évalué en fonction du temps nécessaire pour accomplir l'opération.
+
+\subsubsection{Vérification du fonctionnement}
+	Les critères de vérifications sont :
+\paragraph{OK : } Le déchiffrement et la signature se font en moins de 150ms
+ et la production de données arbitraires en moins de Xms.
+\paragraph{Partiel : } Toutes ces opérations se font entre le seuil minimal
+et la seconde.
+\paragraph{NOT OK : } Toutes ces opérations se font au dessus de la secondes.
+
+
+\subsection{Les opérations cryptographiques de FaceCrypt}
+	Notre application java "FaceCrypt" est une autre composante de notre
+projet. Elle est utilisé pour effectuer des opérations de chiffrement, de
+déchiffrement et de vérification.
+\subsubsection{Mise en place de l'exigence}
+	Pour éprouver la qualité des opérations cryptographiques de notre
+application java (FaceCrypt), nous avons effectué une série de tests qui
+consistent à chiffrer, déchiffrer et vérifier des données arbitraires. Pour
+ces tests, nous prendrons un message défini, de X octets. Cette qualité sera
+évalué en fonction du temps nécessaire pour accomplir l'opération.
+
+\subsubsection{Vérification du fonctionnement}
+	Les critères de vérifications sont :
+\paragraph{OK : } Le chiffrement se fait en moins de Xms, le dechiffrement
+en moins de Xms et la vérification en moins de Xms.
+\paragraph{Partiel : } Toutes ces opérations se font entre le seuil minimal
+et la seconde.
+\paragraph{NOT OK : } Toutes ces opérations se font au dessus de la secondes.
 
 
 
+\subsection{Les accès à la carte à puce}
+	Lors de notre projet, un grand nombre de requêtes vont transiter
+entre les entités SoftCard et SmartCard. Il est donc nécessaire que ces
+accès soient rapides.
+\subsubsection{Mise en place de l'exigence}
+	Pour mesurer la qualité de cette exigence, nous avons effectué une
+série de tests. Ces derniers consistent à effectuer des demandes à la carte
+(établissement d'un tunnel sécurisé, nombre aléatoire). Une fois encore,
+notre critère de qualité sera le temps requis pour l'opération.
+\subsubsection{Vérification du fonctionnement}
+	Les critères de vérifications sont :
+\paragraph{OK : } L'établissement du tunnel se fait en moins de 106ms et le
+nombre aléatoire demandé transitant par le tunnel sécurisé est reçu en
+moins de 160ms.
+\paragraph{Partiel : } L'établissement du tunnel se fait entre le seuil
+optimal et 110ms et le nombre aléatoire demandé transitant par le tunnel
+sécurisé est reçu entre le seuil optimal moins de 180ms.
+\paragraph{NOT OK : } L'établissement du tunnel se fait en plus de 110ms et
+le nombre aléatoire demandé transitant par le tunnel sécurisé est reçu en
+plus de 180ms.
 
 \end{document}

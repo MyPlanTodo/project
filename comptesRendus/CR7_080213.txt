@@ -1,0 +1,25 @@
+
+Réunion 08/02/13
+
+Participants : 
+    - Magali Bardet.
+    - Zakaria Addi, Baptiste Dolbeau, Yicheng Gao, Florian Guilbert, 
+    Giovanni Huet, Emmanuel Mocquet, Maxence Péchoux, Romain Pignard.
+
+----
+Ordre du jour : Livraison de la seconde itération SC.
+
+1) Remarque sur le STB
+
+F-FI-30 : mettre la priorité de cette exigence en indispensable.
+
+2) Remarque sur le tunnel entre lecteur et carte
+
+Configurer l'établissement du tunnel avec un aléa pour authentifier les deux
+parties.
+
+Le code mac doit prendre tout le paquet (IV compris).
+
+Le code PIN doit être redemandé au bout d'un certain nombre d'opérations
+
+Prochaine réunion : Vendredi 15 
