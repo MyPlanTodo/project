@@ -1,0 +1,50 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, amssymb, xcolor, listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{tikz}
+\usepackage[top=2.6cm,bottom=2.6cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage[french]{babel}
+
+\author{Florian \textsc{Guilbert}}
+\title{Compte-rendu de réunion, 10}
+\date{18 février 2012}
+
+\begin{document}
+
+\maketitle
+
+\subsubsection*{Participants : }
+\begin{itemize}
+    \item Magali \textsc{Bardet} (cliente);
+    \item Zakaria \textsc{Addi};
+    \item Baptiste \textsc{Dolbeau};
+    \item Yicheng \textsc{Gao};
+    \item Florian \textsc{Guilbert};
+    \item Giovanni \textsc{Huet};
+    \item Emmanuel \textsc{Mocquet};
+    \item Maxence  \textsc{Péchoux}.
+    \item Romain \textsc{Pignard}.
+\end{itemize}
+
+\subsubsection*{Absents : }
+Pas d'absents
+
+\subsection*{Ordre du jour : Revue avec le client}
+
+Le client souhaite ajouter une nouvelle fonctionnalité dans le projet : 
+\paragraph{}
+Possibilité de lancer une connexion ssh sur une machine distante avec un
+système OTP (One Time Passwd, cf https://tools.ietf.org/html/rfc2289),
+en faisant générer les OTP par la carte à puce (la carte affiche le
+résultat, et l'utilisateur est chargé de copier le code dans son
+terminal ou autre).
+
+\paragraph{Installation du système SmartCard} Le client a tenté d'installer
+le système, mais ça a été un peu laborieux, nous allons donc faire un
+script d'installations pour faciliter le déploiement.
+
+\subsection*{Prochaine réunion}
+01/02/13 : Livraison projet.
+
+\end{document}

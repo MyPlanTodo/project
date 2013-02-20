@@ -1,0 +1,127 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, amssymb, xcolor, listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage{tikz}
+\usepackage[top=2.6cm,bottom=2.6cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage[french]{babel}
+
+\author{Florian \textsc{Guilbert}}
+\title{Compte-rendu de réunion, 9}
+\date{13 février 2013}
+
+\begin{document}
+
+\maketitle
+
+\subsubsection*{Participants : }
+\begin{itemize}
+    \item Ayoub \textsc{Bardet} (client);
+    \item Zakaria \textsc{Addi};
+    \item Baptiste \textsc{Dolbeau};
+    \item Yicheng \textsc{Gao};
+    \item Florian \textsc{Guilbert};
+    \item Giovanni \textsc{Huet};
+    \item Emmanuel \textsc{Mocquet};
+    \item Maxence  \textsc{Péchoux}.
+    \item Romain \textsc{Pignard}.
+\end{itemize}
+
+\subsection*{Mise au point sur l'avancement du projet}
+
+\paragraph{Zakaria Addi :} (Travaille à 100\% sur l'extension)\\
+\begin{itemize}
+    \item Accompli : développement de classe implantant le protocole
+        de communication entre FaceCrypt et l'extension (Tunnel), intégrer la
+        partie communication dans l'extension.
+    \item Prochains objectifs : (binôme avec Maxence) intégration de la 
+    base de données, login et première connexion.
+\end{itemize}
+
+\paragraph{Baptiste Dolbeau :} (Travaille à 100\% sur FaceCrypt)
+\begin{itemize}
+\item Accompli : mettre en place la communication avec l'extension via des 
+    objets JSon. 
+\item Prochains objectifs : Finir les protocoles entre FaceCrypt et SofCard
+\end{itemize}
+
+\paragraph{Yicheng Gao :} (Travaille à 100\% sur le projet SmartCard)
+\begin{itemize}
+\item Accompli : Test sur l'applet GenRadom pour les bits
+\item Prochains objectifs :  One time Password sur SmartCard.
+\end{itemize}
+
+\paragraph{Giovanni Huet : } (Travaille à 50-50 entre SmartCard et SoftCard) 
+\begin{itemize}
+    \item Accompli : rédaction du cahier de recette (à vérifier et 
+        compléter), script d'installation.
+    \item Prochains objectifs : ajouter OTP et initialisation dans le CdR,
+    commencer le rapport.
+\end{itemize}
+
+\paragraph{Emmanuel Mocquet : } (Travaille à 60\% sur SoftCard et 40\% sur SmartCard)
+\begin{itemize}
+    \item Accompli : avancer les objectifs mais ils ne sont pas terminés.
+\item Prochains objectifs : mise à jour du manuel, intégration de SoftCard,
+        administration, test sur le déverrouillage par code PIN (timing).
+\end{itemize}
+
+\paragraph{Maxence Péchoux : } (Travaille à 95\% sur l'extension et 5\% sur FaceCrypt)
+\begin{itemize}
+\item Accompli : intégration de l'interception et de la modification d'un post,
+    déchiffrement par FaceCrypt, intégration de toute la partie communication
+    avec FaceCrypt.
+    \item Prochains objectifs : (binôme avec Zakaria) intégration de la 
+    base de données, login et (première connexion).
+\end{itemize}
+
+\paragraph{Romain Pignard : } (Travaille à 90\% sur SmartCard et 10\% sur SoftCard)
+\begin{itemize}
+    \item Accompli : test de performance et amélioration (quasiment maximum),
+    intégration des applets 3/5.
+\item Prochains objectifs : Intégration du reste des applets avec SoftCard, 
+   branchement de l'applet code PIN, poursuite de la documentation (crypto pour
+           le tunnel).
+\end{itemize}
+
+\subsubsection*{Documents}
+\begin{itemize}
+    \item STB ajouter OTP et l'initialisation pour SSN;
+    \item DAL ajouter OTP, l'initialisation pour SC et initialisation pour SSN;
+    \item CdR à relire et à compléter pour SC et à créer pour SSN (par ?);
+    \item Analyse des risques : ajouter le risque "pas de documentation, 
+    PA : aide extérieur (forum, irc);
+    \item Plan qualité : à compléter.
+\end{itemize}
+
+\subsubsection*{Note sur le rapport}
+\begin{verbatim}
+rapport :
+
+remerciements
+Intro
+schéma présentation
+partie carte
+partie facecrypt
+intégration
+conclusion
+biblio
+annexe
+\end{verbatim}
+\subsubsection*{Note sur la soutenance}
+\begin{verbatim}
+soutenance :
+
+intro
+gestion projet
+sc
+    -> démo
+ssn
+demo
+conclusion
+\end{verbatim}
+
+\subsection*{Prochaine réunion}
+27/02/13
+
+\end{document}
