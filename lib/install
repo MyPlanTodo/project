@@ -1,0 +1,34 @@
+#!/bin/bash
+
+
+( cd globalplatform-6.0.0 && ./configure --prefix=/usr && make && make install ) 
+if [ $? -ne 0 ]
+then
+	echo "An error occured: globalplatform-6.0.0"
+fi
+
+( cd gpshell-1.4.4 && ./configure --prefix=/usr && make && make install ) 
+if [ $? -ne 0 ]
+then
+        echo "An error occured: gpshell-1.4.4"
+fi
+
+( cd gppcscconnectionplugin-1.1.0 && ./configure --prefix=/usr && make && make install ) 
+if [ $? -ne 0 ]
+then
+        echo "An error occured: gppcscconnectionplugin-1.1.0"
+fi
+
+( cd pcsc-lite-1.8.8 && ./configure --prefix=/usr && make && make install ) 
+if [ $? -ne 0 ]
+then
+        echo "An error occured: pcsc-lite-1.8.8"
+fi
+
+( cd syncapi_lnx-1.5.0 && ./install -prefix /usr ) 
+if [ $? -ne 0 ]
+then
+        echo "An error occured: syncapi_lnx-1.5.0"
+fi
+
+echo "Installation completed!!"
