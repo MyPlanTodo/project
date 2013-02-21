@@ -1,3 +1,0 @@
-Les APDU (application Protocol Data Unit) sont les messages échangés entre la carte et le logiciel client.
-Celles de Javacard répondent à la norme ISO 7816-4.
-
