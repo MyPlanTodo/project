@@ -1,0 +1,665 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<title>RuimTools: JavaCard best programming guidelines</title><meta name="verify-v1" content="ogQZuOBB9Ve8B8mx1lBmD2+6KYPBtW1ViXjsjdOuAM4=">
+	<meta http-equiv="Content-Type" ontent="text/html; charset=windows-1251">
+	<meta name="keywords" content="USIMTOOL MILENAGE COMP128-1 COMP128-2 COMP128-3 COMP128-4 A3A8 CAVE APDU SNIFFER SPY LOGGER CDMA R-UIM RUIM Tools Software Development SmartCard Reader GSM UMTS 3GPP2 Security Systems Smart Card Operating System and MEID EUIMID cap2java javacard decompiler" lang="en">
+	<link rel="stylesheet" href="JavaCard%20best%20programming%20guidelines_files/li.css" type="text/css">
+
+
+	<link rel="stylesheet" href="JavaCard%20best%20programming%20guidelines_files/jquery.css" type="text/css" media="screen">
+
+	<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/jquery-1.js"></script>
+	<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/custom.js"></script>
+	<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/jquery_002.js"></script>
+	<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/jquery.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="JavaCard%20best%20programming%20guidelines_files/ga.js" type="text/javascript"></script><script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9020476-1");
+pageTracker._trackPageview();
+} catch(err) {}</script></head>
+
+
+<body>
+	<div align="center">
+		<div class="header">
+			<img src="JavaCard%20best%20programming%20guidelines_files/blank.gif" height="13">
+			<a href="http://ruimtools.com/"><img src="JavaCard%20best%20programming%20guidelines_files/sim_5.jpg" alt="R-UIM Tools Home Page" border="0"></a>
+		</div>
+		<table height="23" bgcolor="#aaaaaa" border="0" cellpadding="2" cellspacing="1" width="80%">
+			<tbody><tr>
+
+				<td class="menu_item"><a href="http://ruimtools.com/">Home</a></td>
+<!--				<td class="menu_item"><a href="/news.php">News</a></td>-->
+				<td class="menu_item"><a href="http://ruimtools.com/products.php">Products</a></td>
+				<td class="menu_item"><a href="http://ruimtools.com/partners.php">Partners</a></td>
+				<td class="menu_item"><a href="http://ruimtools.com/faq.php">FAQ</a></td>
+				<td class="menu_item"><a href="http://ruimtools.com/library.php">Library</a></td>
+				<td class="menu_item"><a href="http://ruimtools.com/links.php">Links</a></td>
+				<td class="menu_item"><a href="http://ruimtools.com/company.php">Company</a></td>
+
+			</tr>
+		</tbody></table>
+
+
+		<div class="spacer"><!--  --></div>
+		<table border="0" cellpadding="0" cellspacing="0" width="80%">
+			<tbody><tr>
+				<td class="left_column">
+
+<div class="left_text">
+<br>
+
+
+
+	<b>Our Articles</b><br>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=prl_cascade">Cascaded PRLs</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=roaming">Roaming in CDMA</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=auth">CAVE: How To</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=euimid">EUIMID: How To</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=esnl">ESN Manufacturer Table</a></div>
+<br>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=javacard">JavaCard sources</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=jc_best">JavaCard Best Practise</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=java_pcsc">Java SE and Smart Card</a></div>
+<br>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=glossary">Wireless Glossary</a></div>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=ussd">What Is USSD</a></div>
+<br>
+	<div class="footer"><a href="http://ruimtools.com/doc.php?doc=lte_sp">LTE Security Principles</a></div>
+
+	<img src="JavaCard%20best%20programming%20guidelines_files/hrl.jpg">
+	<br><br>
+
+
+
+	<div class="lhead"><a href="http://ruimtools.com/products.php#spytimes">APDU Logger</a></div>
+	Visualyze and Analyze all APDUs between handset and RUIM, (U)SIM
+
+	<div class="lhead"><a href="http://ruimtools.com/products.php#RUIM_tool">R-UIM Tool</a></div>
+	All you need to work with SIM, USIM, R-UIM card: build card tree, read, write, export
+
+	<div class="lhead"><a href="http://ruimtools.com/products.php#ota">xOTA: Over-The-Air</a></div>
+	GSM 03.48 compliant solutions for Over-The-Air campaign
+
+	<div class="lhead"><a href="http://ruimtools.com/products.php#3G_auth">Milenage Calculator</a></div>
+	Simple and powerfull GSM + UMTS Authentication Calculator: COMP128-1, 2, 3, Milenage, Xor
+
+	<div class="lhead"><a href="http://ruimtools.com/products.php#crypt">Cipher Box</a></div>
+	DES, 3DES, AES, MD5, and other encryptions and hashes
+
+	<div class="lhead"><a href="http://ruimtools.com/atr.php">ATR Parsing tool</a></div>
+	Parse an ISO 7816-3 ATR online
+
+	<img src="JavaCard%20best%20programming%20guidelines_files/hrl.jpg">
+        <br>
+
+
+<p align="center">
+<script type="text/javascript"><!--
+google_ad_client = "pub-6683424197254716";
+/* 160x600, ñîçäàíî 22.08.08 */
+google_ad_slot = "3233390756";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/show_ads.js">
+</script>
+
+	<img src="JavaCard%20best%20programming%20guidelines_files/hrl.jpg">
+
+</p>
+
+
+
+
+    </div>
+
+<!--					<hr size="1" width="97%" />
+					<a class="left_menu" href="faq.php">FAQ</a>
+-->
+				</td>
+				<td width="3"><img src="JavaCard%20best%20programming%20guidelines_files/blank.gif" height="1" border="0" width="3"></td>
+				<td valign="top">
+
+				<div class="content">
+
+<p>
+	<br>
+
+	<table height="50" align="center" border="0"><tbody><tr><td>
+	<form action="http://www.google.com/cse" id="cse-search-box" target="_blank">  <div>    <input name="cx" value="partner-pub-6683424197254716:yxq23aa83r3" type="hidden">    <input name="ie" value="ISO-8859-1" type="hidden">    <input style="background: url(&quot;http://www.google.com/cse/intl/en/images/google_custom_search_watermark.gif&quot;) no-repeat scroll left center rgb(255, 255, 255);" name="q" size="31" type="text">    <input name="sa" value="Search" type="submit">  </div><input value="ruimtools.com/doc.php?doc=jc_best" name="siteurl" type="hidden"><input value="www.google.fr/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=4&amp;ved=0CFsQFjAD&amp;url=http%3A%2F%2Fruimtools.com%2Fdoc.php%3Fdoc%3Djc_best&amp;ei=TE8BUfXONeKt0QWB3oDQDA&amp;usg=AFQjCNEXx2YEDD31cgsWYQX0D_tXBevAvQ&amp;bvm=bv.41248874,d.d2k&amp;cad=rja" name="ref" type="hidden"><input name="ss" type="hidden"></form><script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/brand"></script>
+	</td></tr>
+	</tbody></table>
+
+</p>
+
+				</div>
+
+					<div class="spacer"><!--  --></div>
+					<div class="content">
+
+
+
+<ul>
+
+<p align="center"> <br><b>Java Card: Programming Guidelines and Best Practise</b>
+</p>
+
+<p align="center"><b>Introduction</b>
+</p>
+The purpose of this document is to provide proven technical guidelines to Java Card developers, focusing on
+applet design and optimization. We hope these guidelines will help face the specificity of Java Card
+development, i.e.:<br>
+
+&#8226; Card resources are extremely constrained. EEPROM size typically is 32-64Kb, and is used to hold postissuance
+applets as well as application data. RAM size is usually around 4Kb, and must accommodate
+for application stack, transient data and various runtime buffers. You just can't afford any waste<br>
+
+&#8226; CPU power is very limited. Also, Java Card applets are much slower than native code, so you don't want
+to perform unnecessary operations<br>
+
+&#8226; Even though your applet runs fine on your platform, you still want to save as much resources as
+possible, so that it will also run on more limited platforms (less stack, smaller transaction buffer, etc).
+WORA, remember? Write Once, Run Anywhere<br>
+
+
+<p align="center"><b>Applet Design</b>
+</p>
+
+Java Card is not Java.
+Fancy object-oriented designs lead to fat and slow applets, because of:<br>
+&#8226; class / interface overhead in the CAP file<br>
+&#8226; virtual method overhead at run time<br>
+
+The design guidelines presented below are based on our own experience. As always, there is certainly room for
+improvement, but following them will surely prevent a large number of common (and not so common) mistakes.
+
+<p>High-level design</p>
+It&#8217;s usually at design time that tragic mistakes are made : if this happens, nothing short of a complete re-design
+will save you&#8230; To avoid this, please read this section very carefully and make sure you apply these guidelines.
+Start with a reasonably object-oriented design. This will help you understand how the applet works, especially if
+it has complex features (PKCS, EMV, etc). Breaking down the problem into smaller objects is still the best way
+to figure things out. Still, you must avoid the following pitfalls:<br><br>
+&#8226; class proliferation: everything is not an object, so please keep the 
+number of classes / abstract classes / interfaces under control<br>
+&#8226; utility classes / interfaces: instead of defining classes containing only static methods, move those
+methods to classes which are actually instantiated. The same goes for any interface holding only constants :
+move the constants to actual classes<br>
+&#8226; deep class hierarchies: the deeper the class tree, the costlier the invocation of inherited methods gets.
+Inheritance also means that you will have nested constructor calls and this puts the stack at risk. In short, the
+necessity of inheritance must be crystal-clear: if not, it has to go<br>
+&#8226; design patterns: patterns look great in specs, but their implementation means lots of abstract classes,
+interfaces and deep class trees<br>
+&#8226; systematic get()/set() methods: again, this looks great in UML charts, but it&#8217;s mostly dead weight for Java
+Card applications. Increasing member visibility will allow you to remove them, hence reducing code size and
+improving execution speed<br>
+&#8226; package proliferation: there&#8217;s really no need to break an application into packages unless one of the
+packages is going to be used by another applet. It may look nicer, but cross-package method invocation has a
+cost: avoid it if it&#8217;s not mandatory<br>
+&#8226; C-style error handling: do not use C-style error handling in your methods, i.e. check the return code to see
+if an error has occurred. This produces inefficient - not to mention ugly - code, because you keep running errorrelated
+code even if no error has occurred. Your design must use Java exceptions instead : errors only need to
+be handled once they have occurred!<br><br>
+
+Once the design is complete, your application should include one or two packages, one to ten classes and not
+more than three level of classes. Anything larger needs to be thoroughly investigated and justified.
+Once the applet is implemented and tested, you can be confident that functional requirements have been
+correctly understood and implemented. At this stage, you may start breaking the OO design and optimizing to
+decrease code size and/or improve performance.
+
+<p><b>Data storage</b></p>
+Your design must take these constraints into account:<br><br>
+&#8226; writing in RAM is fast<br>
+&#8226; writing in EEPROM is awfully slow<br>
+&#8226; allocating objects is even worse<br>
+&#8226; garbage collection is not part of Java Card 2.1.1<br><br>
+
+
+<p><b>Memory allocation</b></p>
+The key rule is to create all instance data at installation time, i.e. in the applet constructor called by
+javacard.framework.Applet.install(): object construction using new, transient array allocation, all
+explicit initializations. This way, there&#8217;s no risk to face a memory shortage during the life of the applet :
+everything is already reserved at installation time. Furthermore, applet commands won&#8217;t be slowed down by
+memory allocation.
+
+
+<p>Memory writes</p>
+Objects are stored in EEPROM. This means that every time you&#8217;re doing &#8220;myObject.myByte = (byte)5&#8221;,
+you are writing in EEPROM. This must be avoided as much as possible. Obviously, you need to store persistent
+data, but there are many cases when you only need to store temporary data (intermediate result, data which is
+sent back to the terminal, etc). This is where the APDU buffer comes in handy ! After all, it&#8217;s a &#8220;normal&#8221; byte
+array, so use it as much as you can.
+
+
+<p><b>Security</b></p>
+If the applet is submitted to a security evaluation (Common Criteria, etc.), some specific steps may be taken:
+&#8226; isolate all security functions (key/PIN handling, etc.) in separate class. This way, only these classes
+need to be documented and evaluated<br>
+&#8226; use the Java Card API as much as you can (PIN, keys, etc). If the platform offers the security services
+you need, it&#8217;s useless and unsafe for the applet to implement them<br>
+
+
+<p>Fixed-size PIN</p>
+Use fixed-size PINs, i.e. store the PIN length in the PIN itself and pad the remaining bytes. This helps prevent
+timing attacks and also simplifies PIN handling.
+
+
+<p>Anti-DFA RSA signatures</p>
+Verify all RSA signatures before sending the result to the terminal. This will slow down the signature operation,
+but it will prevent DFA attacks.
+
+<p><b>Miscellaneous</b></p>
+Keep an eye on platform bugs: they may have an impact on your design.<br>
+If the applet must be interoperable, do NOT use any proprietary APIs.
+
+
+
+<p align="center"><b>Applet Optimization</b></p>
+This section lists a number of real-life (i.e. tested and proven) optimizations. Before applying them, please keep
+in mind the golden rules of optimization:<br>
+&#8226; focus on the most frequently run code: this is where you will make a difference<br>
+&#8226; you usually have to choose between size and speed<br>
+&#8226; run your benchmarks after each optimization pass<br>
+&#8226; run your validation tests after each optimization pass<br>
+
+
+<p>Reducing code size</p>
+Avoid complex object-oriented designs<br>
+If you read the previous section, this should be obvious. In short:<br>
+&#8226; Keep the number of classes/interfaces to a minimum. Combine &#8220;similar&#8221; classes and discriminate them
+at instantiation time using constructor parameters<br>
+&#8226; Keep the number of methods to a minimum. In particular, get rid all get()/set() methods : increase the
+visibility of data members (e.g. from private to package visible) to reduce the number of get()/set()
+methods. Since you save method calls, this will also improve performance<br><br>
+Tradeoff: encapsulation is weakened. If you control all classes in your package, this shouldn&#8217;t be an issue.
+
+
+<p>Remove dead code</p>
+Hunt down unused variables and code. Sounds obvious, but you&#8217;d be surprised...<br>
+Also, try to keep the initialization / personalization as short as possible. It&#8217;s only going to be run once, so it&#8217;s
+pretty much dead weight. Maybe the more complex operations can be performed by the personalization system?
+
+<p>Factor duplicated code</p>
+Hunt down all redundant code and factor it. If this means breaking down classes and replacing them with
+private/static methods, do it.<br>
+Tradeoff: possible slowdown if the code is called very often.
+
+
+<p>Limit number of parameters</p>
+Try to use no more than 3 parameters for virtual methods and 4 for static methods. This way, the compiler will
+use a number or bytecode shortcuts, which help reduce code size: aload_x (1 byte) instead of aload x (2 bytes),
+etc.<br>
+Tradeoff: noticeable slowdown if this means saving/reading data from object instances.
+
+
+<p><b>Reducing EEPROM consumption</b></p>
+<p>Recycle all objects.</p>
+The Java Card standard doesn't require garbage collection. So unless you insist on wasting memory, you have
+to keep track your old objects and reuse them. Remember: the Java Card Virtual Machine runs "forever", so if
+an object becomes unreachable, its memory is gone "forever" (or at least until you delete the applet). Even if
+your platform provides proprietary garbage collection, you'd better reuse your objects. Allocating new objects is
+slow, and so is garbage collection. You get the point...
+
+
+
+<p>Allocate arrays carefully</p>
+The OS allocates memory in 32-bytes chunks, called clusters. A cluster cannot be shared between two objects,
+so any object will always eat at least one cluster, no matter how small it is. Furthermore, the Virtual Machine
+appends a header to all objects:<br>
+&#8226; 6 bytes for &#8220;normal&#8221; objects<br>
+&#8226; 8 bytes for primitive type arrays<br>
+&#8226; 12 bytes for object arrays<br>
+This means that instead of creating several small arrays of the same type, you should combine them into a
+single array, accessing the latter using fixed offsets.<br>
+Tradeoff: slight increase of code complexity.<br><br>
+Example:<br>
+
+<div class="source">
+<pre>// Multiple arrays
+class TestApplet extends Applet {
+  private byte[] array1;
+  private byte[] array2;
+  private byte[] array3;
+  private byte[] array4;
+  private byte[] array5;
+  private byte[] array6;
+  ...
+  public void process(APDU apdu) {
+    array1 = new byte[(byte)8]; //1 cluster
+    array2 = new byte[(byte)12]; //1 cluster
+    array3 = new byte[(byte)23]; //1 cluster
+    array4 = new byte[(byte)24]; //2 clusters
+    array5 = new byte[(byte)25]; //2 clusters
+    array6 = new byte[(byte)32]; //2 clusters
+  }
+  ...
+}
+</pre>
+</div>
+<br>
+To store a total of 124 bytes, this code requires 9 32-byte clusters: 
+this means that it actually reserves 288 bytes of EEPROM!<br><br>
+
+
+<div class="source">
+<pre>// Single array
+class TestApplet extends Applet {
+  private byte[] array7;
+  ...
+  public void process(APDU apdu) {
+    ...
+    array7 = new byte[(byte)124];
+    //5 clusters
+    ...
+  }
+}
+</pre>
+</div>
+
+
+<br>
+To store the same 124 bytes, this code requires
+only five 32-byte clusters: this means that it
+actually reserves &#8220;only&#8221; 160 bytes of EEPROM.
+
+
+<p>Declare staticmembers</p>	
+Whenever possible, declare primitive fields as static. This will save memory.<br><br>
+Example:
+
+<div class="source">
+<pre>  byte myByte = (byte)1;
+  // 2 bytes of EEPROM
+  static byte myByte = (byte)1;
+  // 1 byte of EEPROM
+</pre>
+</div>
+
+<p><b>Reducing RAM consumption</b></p>
+<p>Reuse local variables</p>
+Instead of allocating a new local variable any time you need one, try to reuse one that has been previously
+declared.<br>
+Tradeoff: abusing this technique produces unreadable code.
+
+
+<p>Allocate transient arrays carefully</p>
+Instead of creating several small transient arrays of the same type, combine them into a single array and access
+it using fixed offsets.<br>
+Tradeoff: slight increase of code complexity.
+
+
+<p>Limit number of parameters</p>
+Try to use no more than 3 parameters for virtual methods and 4 for static methods. This way, the compiler will
+use short bytecode instructions, which help reduce code size: aload_x (1 byte) instead of aload x (2 bytes), etc.<br>
+Tradeoff: noticeable slowdown if this means saving/reading data from object instances.
+
+
+<p>Avoid deeply-nestedmethod calls</p>
+Dangerous nested calls usually happen with deep class trees (base class method calls) and with recursion. The
+latter yields fancy and compact code, but it also tends to smash the stack very quickly&#8230; Triple-check the end
+condition(s) and make sure the tests actually trigger the worst case.<br>
+Tradeoff: possible code size increase.
+
+
+
+<p>Beware of local variables in switch/case structures</p>
+Instead of allocating a new local variable in each case, declare only one before switch.<br><br>
+Example:
+
+<div class="source">
+<pre>  switch (myValue) {
+    case VALUE1:
+      short s1;
+      ...
+      break;
+    case VALUE2:
+      short s2;
+      ...
+      break;
+    case VALUE3:
+      short s3;
+      ...
+      break;
+  }
+<pre></pre></pre></div>
+<br>
+And improved:
+<div class="source">
+<pre>  short s;
+  switch (myValue) {
+    case VALUE1:
+      ...
+      break;
+    case VALUE2:
+      ...
+      break;
+    case VALUE3:
+      ...
+      break;
+  }
+</pre>
+</div>
+
+<p><b>Improving execution speed</b></p>
+
+<p>Switch on compiler optimization</p><p>
+If your compiler provides optimization flags, use them (-O for javac).<br>
+Tradeoff: probable code size increase.
+
+
+</p><p>Avoid complex object-oriented designs</p>
+See <b>Applet design</b> and <b>Applet Optimization</b> for details.<br>
+Tradeoff: encapsulation is weakened. If you control all classes in your package, this shouldn&#8217;t be an issue.
+
+
+
+<p>Favor static, private, &amp; finalmethods</p>
+All public/protected Java methods are implicitly virtual methods (unlike in C++, where they had to be declared
+virtual). This means that dynamic binding always takes place, i.e. the Virtual Machine must always determine
+the actual type of an object before invoking a public/protected method. This lookup is costly, especially if the
+method being invoked is inherited from a base class. This is the main reason why deep class trees are not
+welcome.<br>
+To handle this problem:<br>
+1. favor static methods, because they&#8217;re not subjected to dynamic binding, which makes them faster to
+invoke<br>
+2. if a method can&#8217;t be static, try to make it private. Private methods cannot be overridden in derived
+classes, so it&#8217;s easier for the Virtual Machine to locate them<br>
+3. if a method can&#8217;t be private, make it final as soon as possible. This will help the Virtual Machine
+
+<p>Use native APIs</p>
+Whenever the platform provides native code to perform an operation, use it! Native methods, are way faster than
+any clever Java code you could come up with.<br>
+In particular:<br>
+&#8226; use Util.arrayFillNonAtomic(),Util.arrayCopy(),Util.arrayCopyNonAtomic() to initialize or modify arrays<br>
+&#8226; Util.arrayFillNonAtomic() is particularly useful to pad buffers during cryptographic operations<br>
+&#8226; use Util.getShort(), Util.setShort() to handle byte[]/short conversions
+
+<p>Avoid unnecessary initializations</p>
+The Java Card Virtual Machine guarantees that newly-allocated data members and local variables are set to
+0/false/null.
+
+<p>Don&#8217;t use exceptions for flow control</p>
+Using exceptions for flow control is never a great idea, and Java Card is no exception. Exception handling is
+terribly slow and shouldn&#8217;t be used for anything else than exception handling. In other words, if you were
+thinking about using throw to simulate goto, just think harder and find a better solution.
+
+
+<p>Use RAMbuffers</p>
+Writing in EEPROM is about 1,000 times slower than writing in RAM, so the less you do it, the better. You can
+work with the APDU buffer or with transient arrays to store session data and temporary results.
+This works particularly well for intermediate cryptographic operations and it&#8217;s much safer as well.
+
+<p>Clean up your loops</p>
+Accessing an instance member is costlier than accessing a local variable. If you have to perform repeated
+accesses, store the instance member in a local variable on first access and then use the local variable only. The
+same goes for array accesses (array[i], array.length) and method calls.
+This will yield a large performance increase.<br><br>
+
+Example:
+<div class="source">
+<pre>  // bad
+  for(short i=0; i&lt; myArray.length; i++){...}
+  // good
+  short s = myArray.length;
+  for(s i=0; i&lt; s; i++){&#8230;}
+
+  // bad
+  for(byte i=0; i&lt; myObj.size(); i++){...}
+  // good
+  byte b = myObj.size();
+  for(byte i=0; i&lt; b; i++){...}
+</pre>
+</div>
+
+
+
+<p>Use the evaluation order of logical expressions</p>
+Logical expressions (tests, etc) are evaluated from left to right. If a condition fails, the rest of the test is not
+evaluated. If one of the conditions is almost always false, check it first : you&#8217;ll avoid executing unnecessary code.
+
+
+<p>Use return values as often as possible</p>
+The return value of many APIs is meaningful: using it will save unnecessary operations.<br><br>
+
+Example:
+<div class="source">
+<pre>  // bad
+  short offset = util.setShort(bArray, (short)0, sValue);
+  offset = offset + 2;
+  Util.arrayCopy(src, srcOff, dest, destOff, length);
+  offset = offset + length;
+
+  // good
+  offset = Util.setShort(bArray,(short)0, sValue);
+  offset = Util.arrayCopy(src, srcOff, dest, destOff, length);
+</pre>
+</div>
+
+<p>Use transactions with care</p>
+Since many native APIs already transaction write operations, make sure that any explicit use of transactions in
+the applet is mandatory. In particular, do not use Util.arrayCopy() if you don&#8217;t need transactions : use
+Util.arrayCopyNonAtomic() instead.
+
+<p>Check class &amp; instruction at the same time</p>
+This works particularly well when OP Secure Messaging is used, because all secure commands will use two
+different class values.<br><br>
+
+Example:
+<div class="source">
+<pre>  short cla_ins = Util.Setshort(buffer, IOS7816.OFFSET_CLA);
+  switch(cla_ins){
+    case READ_BIN_CLA_80 :
+    case READ_BIN_CLA_84 :
+      ...
+      break;
+    case VERIF_PIN :
+      ...
+      break;
+    ...
+    default: if ( ((cla_ins &amp; 0xFF00) == 0x8000) ||
+      ((cla_ins &amp; 0xFF00) == 0x00) ||
+      ((cla_ins &amp; 0xFF00) == 0x8400)
+      // exception INS_NOT_SUPPORTED;
+    else
+      // exception CLA_NOT_SUPPORTED;
+</pre>
+</div>
+
+<p>Check P1 &amp; P2 at the same time</p>
+Whenever possible, check P1 and P2 at the same time. Your code will be both faster and more compact.
+Example:
+<div class="source">
+<pre>  switch (Util.getShort(buffer, ISO7816.OFFSET_P1)) {
+    case (short)0x41B6:
+      MseSetDigitalSignatureTemplate(...);
+      break;
+    case (short)0xC1B8:
+      MseSetConfidentialityTemplate(...);
+      break;
+    case (short)0xC1B4:
+      MseSetCryptographicChecksumTemplate(...);
+      break;
+    default:
+      ISOException.throwIt(ISO7816.SW_INCORRECT_P1P2);
+      break;
+  }
+</pre></div>
+
+
+
+
+<p><b>Useful resources</b></p>
+Java information:<br>
+&#8226; <a href="http://java.sun.com/docs/books/tutorial">Java tutorial</a> @ Sun Microsystems<br>
+&#8226; "Thinking In Java" (2nd edition): download it for free from <a href="http://www.mindview.net/Books">http://www.mindview.net/Books</a><br>
+<br>
+Java Card information:<br>
+&#8226; Java Card@ Sun Microsystems: <a href="http://java.sun.com/javacard">http://java.sun.com/javacard</a><br>
+&#8226; Java Card@ jGuru: <a href="http://www.jguru.com/faqs/javacard">http://www.jguru.com/faqs/javacard</a><br>
+&#8226; "Java Card Technology For Smart Cards" (Addison-Wesley, 2000)<br>
+<br>
+Cryptography:<br>
+&#8226; "Handbook of Applied Cryptography": download it for free from <a href="http://www.cacr.math.uwaterloo.ca/hac">http://www.cacr.math.uwaterloo.ca/hac</a><br>
+&#8226; "Applied Cryptography" (2nd edition), by Bruce Schneier<br>
+<br>
+Open Platform:<br>
+&#8226; <a href="http://www.globalplatform.org/">http://www.globalplatform.org</a><br>
+
+</ul>
+
+
+<p align="center">	<img src="JavaCard%20best%20programming%20guidelines_files/hrl.jpg"> </p>
+
+
+<p align="center">
+
+
+<script type="text/javascript"><!--
+google_ad_client = "pub-6683424197254716";
+/* 468x60, created 29.08.09 */
+google_ad_slot = "0594446703";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript" src="JavaCard%20best%20programming%20guidelines_files/show_ads.js">
+</script>
+
+
+
+</p>
+
+<br>
+	</div>
+					<div class="spacer"><!--  --></div>
+					<div class="content" align="center">
+						<div class="spacer"><!--  --></div>
+						<div class="spacer"><!--  --></div>
+						<div class="footer">
+	<a href="http://ruimtools.com/">Home</a> &nbsp; &nbsp; &nbsp;
+<!--	<a href=/news.php>News</a> &nbsp; &nbsp; &nbsp;-->
+	<a href="http://ruimtools.com/products.php">Products</a> &nbsp; &nbsp; &nbsp;
+	<a href="http://ruimtools.com/partners.php">Partners</a> &nbsp; &nbsp; &nbsp;
+	<a href="http://ruimtools.com/faq.php">FAQ</a> &nbsp; &nbsp; &nbsp;
+	<a href="http://ruimtools.com/library.php">Library</a> &nbsp; &nbsp; &nbsp;
+	<a href="http://ruimtools.com/links.php">Links</a> &nbsp; &nbsp; &nbsp;
+	<a href="http://ruimtools.com/company.php">Company</a> 				</div>
+						<div class="spacer"><!--  --></div>
+						<div class="spacer"><!--  --></div>
+	</div>
+			
+				</td>
+			</tr>
+		</tbody></table>
+		<div class="spacer"><!--  --></div>
+		<div class="footer">Copyright ©2006-2012, <a href="http://ruimtools.com/">RuimTools</a></div>
+			
+	</div>
+
+
+<div id="fancy_overlay"></div><div id="fancy_wrap"><div class="fancy_loading" id="fancy_loading"><div></div></div><div id="fancy_outer"><div id="fancy_inner"><div id="fancy_close"></div><div id="fancy_bg"><div class="fancy_bg fancy_bg_n"></div><div class="fancy_bg fancy_bg_ne"></div><div class="fancy_bg fancy_bg_e"></div><div class="fancy_bg fancy_bg_se"></div><div class="fancy_bg fancy_bg_s"></div><div class="fancy_bg fancy_bg_sw"></div><div class="fancy_bg fancy_bg_w"></div><div class="fancy_bg fancy_bg_nw"></div></div><a href="javascript:;" id="fancy_left"><span class="fancy_ico" id="fancy_left_ico"></span></a><a href="javascript:;" id="fancy_right"><span class="fancy_ico" id="fancy_right_ico"></span></a><div id="fancy_content"></div><div id="fancy_title"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="fancy_title" id="fancy_title_left"></td><td class="fancy_title" id="fancy_title_main"><div></div></td><td class="fancy_title" id="fancy_title_right"></td></tr></tbody></table></div></div></div></div></body></html>
