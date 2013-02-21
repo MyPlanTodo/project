@@ -19,6 +19,8 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.smartcardio.CardException;
 
+import org.apache.commons.codec.binary.Hex;
+
 
 /**
  * This class will create a multi-thread Server.
@@ -42,9 +44,9 @@ public class SoftCardServer {
 	 * etc). 
 	 * Finally it creates an SSL Socket listening
 	 * on the port specified.
-	 * @param adr Is the address of the server.
-	 * @param port Is the port on which the server will listen.
-	 * @param maxConn Specify the number of connection allowed.
+	 * @param the address of the server.
+	 * @param the port on which the server will listen.
+	 * @param the number of connection allowed.
 	 */
 	public SoftCardServer(String adr, int port, int maxConn) {
 		try {
@@ -128,7 +130,7 @@ class ProcessusSock extends Thread {
 	 * a printer to the socket and start
 	 * the thread.
 	 * 
-	 * @param socket The client's socket.
+	 * @param the client's socket.
 	 * @throws IOException
 	 */
 	public ProcessusSock(SSLSocket socket) throws IOException {
@@ -137,72 +139,17 @@ class ProcessusSock extends Thread {
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 
-			/**
-			 * Is it the first launch ?
-			 * Does the string "login+delimiter+pwd+delimiter+resetPasswd" == "delimiter"*2 ?
-			 */
-			if(retrieveCredentials().length == 2) {
-				askCredentials();
-			}
-
 			this.start();
 		} catch (IOException e) {
 			free();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
-			System.err.println("Error while launching.");
-			System.exit(1);
+			System.err.println("exception");
+			free();
 		}
 	}
 
-	/**
-	 * This method is called when SoftCard is used for the first time: 
-	 * the user has to enter his Facebook credentials.
-	 */
-	private void askCredentials() {
-
-		Console console = System.console();
-		if (console == null) {
-			System.err.println("Couldn't get Console instance.");
-			System.exit(1);
-		}
-				
-		String login = console.readLine("Login (Facebook): ");
-		char[] tmpPwd = console.readPassword("Password (Facebook): ");
-
-		String choice = "";
-		do {
-			choice = console.readLine("Do you want me to generate a stronger password ? (Y/n) ");
-		} while(!choice.equals("Y") && !choice.equals("y") && !choice.equals("n") && !choice.equals("N"));
-
-		/*
-		 * Save actual login and password.
-		 */
-		try {
-			if (!storeCredentials((login + " " + new String(tmpPwd)).getBytes()) || !validatePassword()) {
-				throw new Exception();
-			}
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-			System.err.println("An error occured while storing your data.");
-			System.exit(1);
-		}
-		
-		if (choice.equals("Y") || choice.equals("y")) {
-			try {
-				if (resetPassword().equals(null)) {
-					throw new Exception();
-				}
-			} catch (Exception e) {
-				System.err.println("An error occured while generating your password.");
-				System.exit(1);
-			}
-		}
-		
-		System.out.println("Configuration complete.");
-		
-	}
-
+	
 	private static String bytesToHexString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
 		for (byte b : bytes) {
@@ -244,7 +191,17 @@ class ProcessusSock extends Thread {
 		}
 	}
 
-
+	/**
+	 * This is the principal principal method the server : each time the client
+	 * sends a request (to obtain the public key, get the user's ID, etc.) this
+	 * method try to translate the first byte containing the action to do. 
+	 * It then trigger the method associated and send a message containing the 
+	 * result.
+	 * @param the message received from the client, containing an ID and 
+	 * the data, if necessary.
+	 * @return the result of the execution of the associated methods (as a {@link boolean}) 
+	 * @throws IOException with the associated messsage, if the client is not reachable.
+	 */
 	private boolean doAction(byte[] mess) throws IOException {
 		boolean res = true;
 		byte id = mess[0];
@@ -288,7 +245,7 @@ class ProcessusSock extends Thread {
 		else if (id == this.IS_UNLOCKED) {
 			try {
 				sendMessage((isUnlocked())? new byte[]{1} : new byte[]{0});
-			} catch (CardException e) {
+			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_CHECK_LOCKED);		
 			}
 		} else if (id == this.UNLOCK) {
@@ -301,10 +258,11 @@ class ProcessusSock extends Thread {
 			}
 		} else if (id == this.STORE_CREDENTIALS) {
 			byte[] data = new byte[mess.length - 1];
-
+			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
 				sendMessage(storeCredentials(data)? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
+				System.err.println(e.getMessage());
 				sendMessage(NetworkException.ERROR_STORE_ID);
 
 			}
@@ -325,6 +283,10 @@ class ProcessusSock extends Thread {
 		// client wants to disconnect.
 		else if (id == this.QUIT){
 			res = false;
+			try {
+				disconnectCard();
+			}
+			catch(Exception e) {}
 			System.out.println("Client disconnected.");
 		}
 
@@ -337,10 +299,10 @@ class ProcessusSock extends Thread {
 	 * This method calls the eponymous method of {@link SoftCard} to
 	 * reset the user's password
 	 * @return the new password, as a bytes' array.
-	 * @throws Exception - with the reason message, if an error 
+	 * @throws Exception with the reason message, if an error 
 	 * occured on the smartcard's side.
 	 */
-	private byte[] resetPassword() throws Exception {
+	private byte[] resetPassword() throws CardException, Exception {
 		return SoftCard.getInstance().resetPassword();
 	}
 
@@ -349,22 +311,22 @@ class ProcessusSock extends Thread {
 	 * This method calls the eponymous method of {@link SoftCard} to
 	 * tell the card to replace the actual password by the temporary one 
 	 * @return <code>true</code> if no error occured.
-	 * @throws Exception - with the reason message, if an error 
+	 * @throws Exception with the reason message, if an error 
 	 * occured on the smartcard's side.
 	 */
-	private boolean validatePassword() throws Exception {
+	private boolean validatePassword() throws CardException, Exception {
 		return SoftCard.getInstance().validatePassword();
 	}
 
 	/**
 	 * This method calls the eponymous method of {@link SoftCard} to
 	 * store the user's login.
-	 * @param login - the login to be stored.
+	 * @param the login to be stored.
 	 * @return <code>true</code> if the operation succeeded.
-	 * @throws Exception - with the reason message, if an error 
+	 * @throws Exception with the reason message, if an error 
 	 * occured on the smartcard's side.
 	 */
-	private boolean storeLogin(byte[] login) throws Exception {
+	private boolean storeLogin(byte[] login) throws CardException, Exception {
 		return SoftCard.getInstance().storeLogin(login);
 	}
 
@@ -373,10 +335,10 @@ class ProcessusSock extends Thread {
 	 * store the user's login and password. 
 	 * @param data 
 	 * @return <code>true</code> if the all went well.
-	 * @throws Exception - with the reason message, if an error
+	 * @throws Exception with the reason message, if an error
 	 * occured on the smartcard's side.
 	 */
-	private boolean storeCredentials(byte[] data) throws Exception {
+	private boolean storeCredentials(byte[] data) throws CardException, Exception {
 		return SoftCard.getInstance().storeCredentials(data);
 	}
 
@@ -384,10 +346,10 @@ class ProcessusSock extends Thread {
 	 * This method calls the eponymous method of {@link SoftCard} to
 	 * retrieve user's Facebook credentials.
 	 * @return the user's credentials as a bytes' array.
-	 * @throws Exception - with the reason message, if an error 
+	 * @throws Exception with the reason message, if an error 
 	 * occured on the smartcard's side.
 	 */
-	private byte[] retrieveCredentials() throws Exception {
+	private byte[] retrieveCredentials() throws CardException, Exception {
 		return SoftCard.getInstance().retrieveCredentials();
 	}
 
@@ -395,10 +357,10 @@ class ProcessusSock extends Thread {
 	 * This method calls the eponymous method of {@link SoftCard} to 
 	 * verify the unlocking of the smartcard.
 	 * @return <code>true</code> if the Card if the card is unlocked, false otherwise
-	 * @throws CardException - with the reason message, if an error
+	 * @throws CardException with the reason message, if an error
 	 * occured on the smartcard's side.
 	 */
-	private boolean isUnlocked() throws CardException {
+	private boolean isUnlocked() throws CardException, Exception {
 		return SoftCard.getInstance().isUnlocked();		
 	}
 
@@ -406,17 +368,17 @@ class ProcessusSock extends Thread {
 	 * This method calls the eponymous method of {@link SoftCard} to 
 	 * verify the PIN.
 	 * @return <code>true</code> if the Card if the PIN is correct, false otherwise
-	 * @throws Exception - with the reason message, if an error
+	 * @throws Exception with the reason message, if an error
 	 * occured on the smartcard's side.
 	 */
-	private boolean unlock(byte[] pin) throws Exception {
+	private boolean unlock(byte[] pin) throws CardException, Exception {
 		return (SoftCard.getInstance().unlock(pin) == (byte)1) ? true : false;
 	}
 
 	/**
 	 * This method calls disconnectCard from {@link SoftCard} to
 	 * obtain a random number.
-	 * @throws CardException - with the reason message, if an error
+	 * @throws CardException with the reason message, if an error
 	 * occured on the smartcard's side.
 	 * @see SoftCard
 	 */
@@ -428,10 +390,10 @@ class ProcessusSock extends Thread {
 	 * This method calls getRandomNumber from {@link SoftCard} to obtain
 	 * a random number.
 	 * @return an random number in a bytes' array
-	 * @throws Exception - with the reason message
+	 * @throws Exception with the reason message
 	 * @see SoftCard
 	 */
-	private byte[] getRandomNumber(byte nb) throws Exception {
+	private byte[] getRandomNumber(byte nb) throws CardException, Exception {
 		return SoftCard.getInstance().getRandomNumber(nb);
 	}
 
@@ -439,10 +401,10 @@ class ProcessusSock extends Thread {
 	 * This method calls decryptData from {@link SoftCard} to obtain
 	 * the decrypted data.
 	 * @return the decrypted data in a bytes' array
-	 * @throws Exception - with the reason message
+	 * @throws Exception with the reason message
 	 * @see SoftCard
 	 */
-	private byte[] decryptData(byte[] data) throws Exception {
+	private byte[] decryptData(byte[] data) throws CardException, Exception {
 		SoftCard c = SoftCard.getInstance();
 		return c.decryptData(data);
 	}
@@ -451,8 +413,8 @@ class ProcessusSock extends Thread {
 	 * This method calls getPublicKey from {@link SoftCard} to obtain
 	 * the public key stored in the smartcard.
 	 * @return the public key in a bytes' array
-	 * @throws Exception - with the reason message
-	 * @throws CardException - if an error occured on the smartcard's side
+	 * @throws Exception with the reason message
+	 * @throws CardException if an error occured on the smartcard's side
 	 * @see SoftCard
 	 */
 	private byte[] getPublicKey() throws CardException, Exception {
@@ -470,7 +432,7 @@ class ProcessusSock extends Thread {
 	 */
 	private byte[] receiveMessages() throws IOException {
 		int i = in.readInt();
-
+		
 		if (i > 2560 ) {
 			throw new IOException("Data too big");
 		}
@@ -487,7 +449,7 @@ class ProcessusSock extends Thread {
 	 * itself. 
 	 * Finally, it flushes the buffer.
 	 * @param The data to send
-	 * @throws IOException - if the data could not be sent.
+	 * @throws IOException if the data could not be sent.
 	 */
 	private void sendMessage(byte[] b) throws IOException {
 		out.writeInt(b.length);
@@ -502,7 +464,7 @@ class ProcessusSock extends Thread {
 	 * itself. 
 	 * Finally, it flushes the buffer.
 	 * @param The data to send, an exception.
-	 * @throws IOException - if the data could not be sent.
+	 * @throws IOException if the data could not be sent.
 	 */
 	private void sendMessage(NetworkException ne) throws IOException {
 		byte[] b = ne.getValue();

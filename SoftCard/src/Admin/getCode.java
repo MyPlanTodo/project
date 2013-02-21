@@ -20,7 +20,7 @@ public class getCode {
 			 * XX & 0xFF : cast to unsigned int
 			 */
 			if (args.length == 1) {
-				SoftCard soft = SoftCard.getAdminInstance();
+				SoftCard soft = SoftCard.getInstance();
 				if (args[0].equals("PIN")) {
 					b = soft.getPIN();
 					value1 = (int) (b[0] & 0xFF);

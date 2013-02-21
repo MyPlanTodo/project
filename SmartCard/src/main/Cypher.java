@@ -115,20 +115,26 @@ public class Cypher extends Applet {
 
 			break;
 
-		// Requête de déchiffrement
+			// Requête de déchiffrement
 		case INS_UNCIPHER:
 			try {
-				dataLen = apdu.setIncomingAndReceive();
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
+				if (PIN.getState() == (short)0x9000) {
+					dataLen = apdu.setIncomingAndReceive();
+					cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
-				cipher.init(privKey, Cipher.MODE_DECRYPT);
-				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
+					cipher.init(privKey, Cipher.MODE_DECRYPT);
+					cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
-				apdu.setOutgoing();
-				apdu.setOutgoingLength(cipherLen);
-				apdu.sendBytesLong(buffer, (short) 0, cipherLen);
-				
+					// Besoin d'utiliser ces fonctions pour des réponses "longues"
+					apdu.setOutgoing();
+					apdu.setOutgoingLength(cipherLen);
+					apdu.sendBytesLong(buffer, (short) 0, cipherLen);
+
+				}
+				else {
+					buffer[0] = -1;
+					apdu.setOutgoingAndSend((short) 0, (short) 1);
+				}
 
 			}
 			catch(APDUException e){
@@ -155,7 +161,7 @@ public class Cypher extends Applet {
 
 			break;
 
-		// Requête d'obtention de l'exposant public
+			// Requête d'obtention de l'exposant public
 		case INS_GET_EXPONENT:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
@@ -171,7 +177,7 @@ public class Cypher extends Applet {
 			}
 			break;
 
-		// Requête d'obtention du modulus
+			// Requête d'obtention du modulus
 		case INS_GET_MODULUS:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
