@@ -165,7 +165,7 @@ public class SoftCard {
 					throw new Exception(ce1.getMessage());
 				}
 			}
-			
+
 			if (res == 0) {
 				console.printf("Wrong PIN.\n");
 			}
@@ -204,7 +204,7 @@ public class SoftCard {
 
 			}
 			catch(Exception e) {}
-			
+
 			if (pin.length == 0) {
 				console.printf("Wrong PUK.\n");
 			}
@@ -770,8 +770,13 @@ public class SoftCard {
 	 */
 	private byte[] getCurrentPassword() throws Exception {
 		byte[] data = retrieveCredentials();
-		String tmpData = new String(data);
-		return tmpData.substring(tmpData.lastIndexOf("/")).getBytes();
+		if (data.length == 2) {
+			return new byte[]{};
+		}
+		else {
+			String tmpData = new String(data);
+			return tmpData.substring(tmpData.lastIndexOf(" ") + 1).getBytes();
+		}
 	}
 
 	/**
@@ -785,10 +790,17 @@ public class SoftCard {
 		if(storePassword(password.getBytes())) {
 			byte[] oldPwd = getCurrentPassword();
 			byte[] newPwd = password.getBytes();
-			byte[] data = new byte[oldPwd.length + newPwd.length];
+			byte[] delimiter = new byte[]{(byte)0x20};
+			byte[] data = new byte[oldPwd.length + newPwd.length + delimiter.length];
+
+			System.out.println(new String(oldPwd) + "|" + bytesToHexString(oldPwd));
+			System.out.println(password + "|" + bytesToHexString(password.getBytes()));
 
 			System.arraycopy(oldPwd, 0, data, 0, oldPwd.length);
-			System.arraycopy(newPwd, 0, data, oldPwd.length, newPwd.length);
+			System.arraycopy(delimiter, 0, data, oldPwd.length, delimiter.length);
+			System.arraycopy(newPwd, 0, data, oldPwd.length + delimiter.length, newPwd.length);
+
+			System.out.println(new String(data));
 			return data;
 		}
 		else { 
