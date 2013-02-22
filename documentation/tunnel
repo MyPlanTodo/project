@@ -29,11 +29,27 @@ Etablissement de la clé de session
 
 
 
+Fonctionnement du tunnel
+
+Le tunnel assure la confidentialité, l'intégrité et l'authentification des données. La confidentialité est assurée par une clé de session générée par la carte et l'authentification/intégrité est assurée par la clé prépartagée.
+
+Ce tunnel ajoute une couche dans la communication, il peut être vu comme un VPN 
+
+Le cheminement des données dans le tunnel est le suivant : 
+- construction de l'APDU virtuelle avec le même prototype que les APDUs réelles. Cela permet de réutiliser facilement les applets existants.
+- découpage de cette APDU en fragment pour les faire passer dans le tunnel.
+- appel de la fonction d'envoi dans le tunnel
+
+
+Fonction d'envoi du tunnel 
+
+
+
 
 
 Fonctionnement des appels
 
-Pour utiliser les applets sur la carte, il faut envoyer les données vers la carte à travers le tunnel.
+Pour utiliser les applets sur la carte, il faut tout d'abord envoyer les données vers la carte à travers le tunnel.
 
 - Envoi vers la carte - 
 La fonction <tunnel>.request() est une fonction identique à <channel>.transmit(new CommandAPDU(...)). Elle prend les mêmes paramètres et
@@ -42,7 +58,7 @@ La fonction utilise le tunnel précédemment créé pour assurer l'authentificat
 L'applet <tunnel> sur la carte récupère l'APDU, vérifie le MAC, extrait l'IV, déchiffre la payload et donne cette payload à l'applet datastore qui s'occupe du stockage. Si plusieurs APDU sont nécessaires, le processus est répété.
 
 - Exécution des instructions - 
-Une fois les données stockées dans le datastore, la fonction <tunnel>.execute() envoie une commande à la carte pour qu'elle agisse conformément aux données envoyées. L'applet datastore analyse le premier octet des données stockée pour lire le numéro de l'applet demandée et appelle la fonction <applet>.execute(data) où <applet> est l'applet définie par le premier octet (utilisation d'une liste de correspondance) et data correspond aux données locales stockées par le datastore. Ce fonctionnement permet aux applets d'utiliser le tunnel avec des adaptations mineures par rapport au mode sans tunnel.
+Une fois les données stockées dans le datastore, la fonction tunnel.execute envoie une commande à la carte pour qu'elle agisse conformément aux données envoyées. L'applet datastore analyse le premier octet des données stockée pour lire le numéro de l'applet demandée et appelle la fonction <applet>.execute(data) où <applet> est l'applet définie par le premier octet (utilisation d'une liste de correspondance) et data correspond aux données locales stockées par le datastore. Ce fonctionnement permet aux applets d'utiliser le tunnel avec des adaptations mineures.
 
 - Récupération des données - 
 Une fois que l'applet a exécuté son travail sur les données en entrée, il est possible de récupérer le résultat.
