@@ -3,12 +3,21 @@
 //package Default;
 
 import java.io.Console;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
@@ -23,10 +32,13 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * This class allow user to send requests to the smartcard :
  * cipher, uncipher, get the public key, sign data or verify it
- * @author Emmanuel Mocquet
- * @version 1.0
+ * @author Emmanuel Mocquet (for most of it)
+ * @author Romain Pignard (for tunnel adaptation)
+ * @version 1.1
  */
 public class SoftCard {
+	
+	private  final static SecretKey shared_key = new SecretKeySpec(new byte[]{10,1,1,5,9,6,5,4,5,9,6,6,6,9,2,6}, "AES");
 	public static final byte CLA_SMARTCARD = (byte) 0xB0;
 
 	// Constants identifying each applet on the smartcard
@@ -36,7 +48,13 @@ public class SoftCard {
 	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
 	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
 	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
-
+	
+	
+	public static byte AID_PIN = 0x00;
+	public static byte AID_RANDOM = 0x01;
+	public static byte AID_SIGN = 0x02;
+	public static byte AID_CYPHER = 0x03;
+	public static byte AID_STORE = 0x04;
 
 	// Constants associated with the generation of random number's applet
 	public static final byte INS_GEN = 0x00;
@@ -61,6 +79,7 @@ public class SoftCard {
 	private static final byte INS_UNLOCK_WITH_PUK = 0x03;
 	private static final byte INS_GET_PIN = 0x04;
 	private static final byte INS_GET_PUK = 0x05;
+	private static final byte INS_IS_LOCKED = 0x06;
 
 	private static final byte SIZE_PIN = 0x02;
 	private static final byte SIZE_PUK = 0x02;
@@ -76,6 +95,7 @@ public class SoftCard {
 	private static SoftCard instance = null;
 	private static Card card = null;
 	private static CardChannel channel = null;
+	private static Tunnel tunnel = null;
 	private boolean unlocked = true; //false;
 
 
@@ -87,13 +107,14 @@ public class SoftCard {
 		return new String(sb);
 	}
 
-	private SoftCard() throws CardException {
+	private SoftCard() throws CardException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, InterruptedException {
 		factory = TerminalFactory.getDefault();
 		terminals = factory.terminals().list();
+		tunnel = new Tunnel(shared_key);
 
 	}
 
-	public static SoftCard getInstance() throws CardException{
+	public static SoftCard getInstance() throws CardException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, InterruptedException{
 		if (instance == null) {
 			instance = new SoftCard();
 			CardTerminal terminal = terminals.get(0);
@@ -406,28 +427,39 @@ public class SoftCard {
 	 */
 	public byte unlock(byte[] pin) throws Exception {
 		try {
-			// Selecting the applet
+			
+			
+			/*// Selecting the applet
 			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
+			
+			
 			// Checking if the card is PIN-locked
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PIN_REMAINING_TRIES, 0x00, 0x00));
+			tunnel.erase();
+			tunnel.request(AID_PIN, INS_PIN_REMAINING_TRIES,(byte) 0x00,(byte) 0x00);
+			tunnel.execute();
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PIN_REMAINING_TRIES, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not check if the card was PIN-locked.");
-			}
+			}*/
 
-			if (r.getData()[0] == 0) {
+			if (tunnel.getData()[0] == 0) {
 				return -1;
 			}
 			else {
 				// Verify PIN
-				r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_VERIF_PIN, SIZE_PIN, 0x00, pin));
+				/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_VERIF_PIN, SIZE_PIN, 0x00, pin));
 				if (r.getSW() != 0x9000) {
 					throw new Exception("Could not verify the PIN.");
-				}
-
-				return r.getData()[0];
+				}*/
+				tunnel.erase();
+				tunnel.request(AID_PIN, INS_VERIF_PIN, SIZE_PIN, (byte) 0x00, pin);
+				tunnel.execute();
+				
+				
+				return tunnel.getData()[0];
 			}
 
 		}
@@ -457,31 +489,37 @@ public class SoftCard {
 	public byte[] unlockWithPuk(byte[] puk) throws Exception {
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
+		/*	ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 			// Checking if the card is PUK-locked
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PUK_REMAINING_TRIES, 0x00, 0x00));
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PUK_REMAINING_TRIES, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not check if the card was PUK-locked.");
-			}
-
-			if (r.getData()[0] == 0) {
+			}*/
+			tunnel.erase();
+			tunnel.request(AID_PIN,INS_PUK_REMAINING_TRIES, (byte)0x00, (byte)0x00 );
+			tunnel.execute();
+			if (tunnel.getData()[0] == 0) {
 				return null;
 			}
 			else {
 				// Verify PUK
-				r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_UNLOCK_WITH_PUK, SIZE_PUK, 0x00, puk));
+				/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_UNLOCK_WITH_PUK, SIZE_PUK, 0x00, puk));
 				if (r.getSW() == 0x0001) {
 					return new byte[]{};
-				}
-				else if (r.getSW() != 0x9000) {
+				}*/
+				
+				tunnel.erase();
+				tunnel.request(AID_PIN, INS_UNLOCK_WITH_PUK, (byte)SIZE_PUK,(byte) 0x00, puk);
+				tunnel.execute();
+				/*else if (r.getSW() != 0x9000) {
 					throw new Exception("Could not verify the PUK.");
-				}
-				else {
-					return r.getData();
-				}
+				}*/
+			/*	else {*/
+					return tunnel.getData();
+				/*}*/
 			}
 		}
 		catch(CardException ce) {
@@ -541,18 +579,23 @@ public class SoftCard {
 	 */
 	public boolean storeLogin(byte[] login) throws Exception {
 		try {
-			// Selecting the applet
+		/*	// Selecting the applet
 			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 			// Store login
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_LOGIN, 0x00, 0x00, login));
+		/*	r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_LOGIN, 0x00, 0x00, login));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not store data." + r.getSW());
-			}
-			byte[] data = r.getData();
+			}*/
+			/*byte[] data = r.getData();*/
 
+			tunnel.erase();
+			tunnel.request(AID_STORE, INS_STORE_LOGIN,(byte) 0x00, (byte)0x00, login);
+			tunnel.execute();
+			byte[] data = tunnel.getData();
+			
 			if (data.length == 1 && data[0] == -1) {
 				askPin();
 				return storeLogin(login);
@@ -584,17 +627,22 @@ public class SoftCard {
 	 */
 	private boolean storePassword(byte[] pwd) throws Exception {
 		try {
-			// Selecting the applet
+		/*	// Selecting the applet
 			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte) 0xA4, 0x04, 0x00, STORE_ID_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
-			// Store temporary password
+			}*/
+			
+			tunnel.erase();
+			tunnel.request(AID_STORE,  INS_STORE_PWD,(byte) 0x00, (byte) 0x00, pwd);
+			tunnel.execute();
+			
+			/*// Store temporary password
 			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_STORE_PWD, 0x00, 0x00, pwd));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not store data. " + r.getSW());
-			}
-			byte[] data = r.getData();
+			}*/
+			byte[] data = tunnel.getData();
 
 			if (data.length == 1 && data[0] == -1) {
 				askPin();
@@ -626,17 +674,22 @@ public class SoftCard {
 	public boolean validatePassword() throws Exception {
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+			/*ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 
+			tunnel.erase();
+			tunnel.request(AID_STORE,   INS_VALIDATE_PWD,(byte) 0x00,(byte) 0x00);
+			tunnel.execute();
+			
+			
 			// Send validation
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_VALIDATE_PWD, 0x00, 0x00));
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_VALIDATE_PWD, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not store data.");
-			}
-			return (r.getData()[0] == 1) ? true : false;
+			}*/
+			return (tunnel.getData()[0] == 1) ? true : false;
 		}
 		catch(CardException ce) {
 			try {
@@ -662,17 +715,22 @@ public class SoftCard {
 	public byte[] retrieveCredentials() throws Exception {
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
+			/*ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_ID_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 
+			tunnel.erase();
+			tunnel.request(AID_STORE,   INS_GET_CRED, (byte)0x00,(byte) 0x00);
+			tunnel.execute();
+			
+			
 			// Retrieve data
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_CRED, 0x00, 0x00));
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_CRED, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not retrieve data." + r.getSW());
-			}
-			byte[] data = r.getData();
+			}*/
+			byte[] data = tunnel.getData();
 
 			if (data[0] == (byte)-1) {
 				askPin();
@@ -704,17 +762,22 @@ public class SoftCard {
 	public byte[] getPIN() throws Exception{
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
+		/*	ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 
+			tunnel.erase();
+			tunnel.request(AID_PIN,  INS_GET_PIN, (byte)0x00,(byte) 0x00);
+			tunnel.execute();
+			
+			
 			// Retrieve PIN
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_PIN, 0x00, 0x00));
+		/*	r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_PIN, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not retrieve code PIN.");
-			}
-			return r.getData();
+			}*/
+			return tunnel.getData();
 		}
 		catch(CardException ce) {
 			try {
@@ -739,17 +802,21 @@ public class SoftCard {
 	public byte[] getPUK() throws Exception{
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
+		/*	ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
+			}*/
 
+			tunnel.erase();
+			tunnel.request(AID_PIN,   INS_GET_PUK, (byte)0x00, (byte)0x00);
+			tunnel.execute();
+			
 			// Retrieve PUK
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_PUK, 0x00, 0x00));
+		/*	r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_PUK, 0x00, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not retrieve PUK. " + r.getSW());
-			}
-			return r.getData();
+			}*/
+			return tunnel.getData();
 		}
 		catch(CardException ce) {
 			try {
@@ -817,14 +884,18 @@ public class SoftCard {
 	public boolean isUnlocked() throws Exception {
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
+			/*ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
-			}
-
+			}*/
+			tunnel.erase();
+			tunnel.request(AID_PIN,  INS_IS_LOCKED, (byte)0x00,(byte) 0x00);
+			tunnel.execute();
+			
+			/*
 			// Retrieve PIN
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PIN_REMAINING_TRIES, 0x00, 0x00));
-			if (r.getSW() != 0x9000) {
+			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_PIN_REMAINING_TRIES, 0x00, 0x00));*/
+			if (tunnel.getData().length == 0) {
 				return false;
 			}
 			else {
