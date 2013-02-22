@@ -250,20 +250,29 @@ public class SoftCard {
 				throw new Exception("Could not select the applet.");
 			}
 
+			tunnel.erase();
+			tunnel.request(AID_CYPHER, INS_GET_EXPONENT,(byte) 0x00, (byte)0x00);
+			tunnel.execute();
+			
 			// Récupération de l'exposant
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_EXPONENT, 0x00, 0x00, 1));
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_EXPONENT, 0x00, 0x00, 1));
 			if (r.getSW() != 0x9000) {
 				//throw new Exception("Could not retrieve the exponent.");
 				throw new Exception("Err code : " + r.getSW());
-			}
+			}*/
 
-			BigInteger exp = new BigInteger(1, r.getData());
+			BigInteger exp = new BigInteger(1, tunnel.getData());
 			// Récupération du modulus
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_MODULUS, 0x00, 0x00, 1));
+			
+		/*	r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GET_MODULUS, 0x00, 0x00, 1));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not retrieve the modulus.");
-			}
-			BigInteger mod = new BigInteger(1, r.getData());
+			}*/
+			
+			tunnel.erase();
+			tunnel.request(AID_CYPHER, INS_GET_MODULUS,(byte) 0x00, (byte)0x00);
+			tunnel.execute();
+			BigInteger mod = new BigInteger(1, tunnel.getData());
 			KeyFactory kf = KeyFactory.getInstance("RSA");
 			RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(mod, exp);
 			PublicKey publicKey = kf.generatePublic(pubKeySpec);
@@ -292,19 +301,23 @@ public class SoftCard {
 
 	public byte[] getRandomNumber(byte nb) throws Exception{
 		try {
-			// Selecting the applet
+			/*// Selecting the applet
 			ResponseAPDU r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, GEN_RANDOM_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet. : " + r.getSW());
-			}
+			}*/
 
+			tunnel.erase();
+			tunnel.request(AID_RANDOM, INS_GEN,(byte) nb,(byte) 0x00);
+			tunnel.execute();
+			
 			// Generating number 
-			r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GEN, nb, 0x00));
+			/*r = channel.transmit(new CommandAPDU((byte) CLA_SMARTCARD, INS_GEN, nb, 0x00));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not retrieve the random number.");
-			}
+			}*/
 
-			return r.getData();
+			return tunnel.getData();
 		}
 		catch(CardException ce) {
 			try {
@@ -321,7 +334,7 @@ public class SoftCard {
 	public byte[] decryptData(byte[] data) throws Exception {
 		try {
 			// Selecting the applet
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, CIPHER_AID));
+			/*ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, CIPHER_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
 			}
@@ -347,9 +360,13 @@ public class SoftCard {
 			}
 			else if (r.getSW() == 0x4249) {
 				throw new Exception("Security exception");
-			}
+			}*/
 
-			byte[] res = r.getData();
+			tunnel.erase();
+			tunnel.request(AID_CYPHER,INS_UNCIPHER, (byte)0x00,(byte) 0x00, data);
+			tunnel.execute();
+			
+			byte[] res = tunnel.getData();
 
 			if (res.length == 1 && res[0] == -1) {
 				askPin();	
@@ -373,7 +390,7 @@ public class SoftCard {
 
 	public byte[] encryptData(byte[] data) throws Exception {
 		try {
-			// Selecting the applet
+		/*	// Selecting the applet
 			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, (byte)0x04, 0x00, CIPHER_AID));
 			if (r.getSW() != 0x9000) {
 				throw new Exception("Could not select the applet.");
@@ -401,8 +418,12 @@ public class SoftCard {
 			}
 			else if (r.getSW() == 0x4249) {
 				throw new Exception("Security exception");
-			}
-			return r.getData();
+			}*/
+			
+			tunnel.erase();
+			tunnel.request(AID_CYPHER,INS_CIPHER, (byte)0x00,(byte) 0x00, data);
+			tunnel.execute();
+			return tunnel.getData();
 		}
 		catch(CardException ce) {
 			try {
