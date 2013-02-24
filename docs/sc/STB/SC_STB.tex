@@ -472,36 +472,76 @@ application tierce, dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Initialisation d'une carte}
-	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
-    {L'utilisateur paramètre la carte avec ses identifiants}
-    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
-    déverrouillé la carte}
+	{Administrateur, SmartCard, SoftCard, FaceCrypt}
+    {L'administrateur installe les applets sur la carte}
+    {La carte est dans le lecteur}
     {Demande de l'utilisateur}
     {Les applets ont été installées sur la carte. Les clefs ont été 
-        initialisées, l'identifiant et le mot de passe ont été stockés}
+        initialisées, la carte est prête à être utilisée} 
     {\begin{itemize}
         \item[]
-        \item[1.] L'utilisateur entre ses identifiants Facebook et choisit ou 
-        non de générer un nouveau mot de passe. 
-        \item[4.] FaceCrypt enregistre le nouveau mot de passe et envoie la
-        confirmation de modification à SoftCard.
+        \item[1.] L'administrateur lance le script install.sh
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] Un utilitaire installe les applets et les clefs de chiffrement
-        et de signature sur la carte, génère un nouveau mot de passe si besoin,
-        stocke temporairement les identifiants Facebook (anciens et nouveaux)
-        et crée un code PIN, qu'il transmet à l'utilisateur.
-        \item[3.] SoftCard envoie le nouveau mot de passe à FaceCrypt.
-        \item[5.] SoftCard transmet la confirmation à SmartCard qui stocke
-            définitivement le mot de passe et efface l'ancien.
+        \item[2.] Le script installe toutes les applets sur la carte,
+            initialise les clefs et affiche les code PIN et PUK. La carte
+            interdit toute récupération future de ces codes.
 	\end{itemize}
 	}
 	{}
 \flots
     {}
-    {Si le compte n'existe pas, une erreur est générée.}
+    {}
 \\*
+
+\fiche
+{Première connexion}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt, Extension}
+    {L'utilisateur initialise la carte avec ses identifiants lors de 
+        la première connexion}
+    {Les composants SmartCard, SoftCard, FaceCrypt et l'Extension sont 
+        tous authentifiés}
+    {L'utilisateur s'est rendu sur la page de login du réseau social}
+    {Les identifiants du réseau social de l'utilisateur sont stockés
+    sur la carte} 
+    {\begin{itemize}
+        \item[]
+        \item[1.] L'utilisateur se rend sur la page de login du réseau 
+        social;
+        \item[7.] L'utilisateur entre ses identifiants et choisit de laisser
+            la carte générer un nouveau mot de passe ou non;
+    \end{itemize}}
+	{\begin{itemize}
+        \item[]
+        \item[2.] L'extension se déclenche et envoie une requête à 
+        FaceCrypt pour obtenir les identifiants de l'utilisateur
+        \item[3.] FaceCrypt transfère cette demande à SoftCard
+        \item[4.] SoftCard demande à la carte les identifiants
+        \item[5.] La carte ne possédant pas les identifiants retourne 
+        des identifiants vides à SoftCard qui les relaie à FaceCrypt qui fait
+        de même pour l'extension;
+        \item[6.] L'extension recevant des identifiants vides ouvre une popup
+        qui invite l'utilisateur à entrer ses identifiants;
+        \item[8.] L'extension connecte l'utilisateur et envoie les identifiants
+        à la carte (par l'intermédiaire de SoftCard et FaceCrypt) et indique
+        s'il y a besoin de générer un nouveau mot de passe;
+        \item[9.] SmartCard stocke les identifiants et génère un nouveau mot de
+        mot de passe si besoin qui sera envoyé à l'extension;
+        \item[10.] L'extension change le mot de passe si besoin et confirme
+            le changement à la carte.
+        \item[11.] SoftCard reçoit cette confirmation et indique à SmartCard 
+            qu'il peut remplacer le mot de passe actuel par le mot de passe 
+            temporaire.
+	\end{itemize}
+	}
+	{}
+\flots
+    {Si les identifiants sont incorrects l'utilisateur est invité à les 
+    re-transmettres}
+    {}
+\\*
+
 
 \fiche
 {Modification du mot de passe}

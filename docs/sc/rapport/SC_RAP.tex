@@ -55,60 +55,80 @@
 \renewcommand\labelitemi{\textbullet} %style des puces
 \renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
 De nos jours, les réseaux sociaux ont pris une grande ampleur sur internet
-et possédent chaque jour de plus en plus d'adhérents. Le principe consiste à créer
-un profil sur celui ci, à y insérer des données voulant être partagées telles que des
-photos, des vidéos, des messages,... Sur ce réseau social nous y ajouterons des amis
-qui seront les personnes pouvant accéder à ces informations. 
-La problèmatique soulevée étant de limiter la diffusion des informations à certaines personnes
-dans nos amis, mais surtout limiter la diffusion d'information vis à vis du réseau social lui même.
-En effet, lorsque nous partageons une données, le réseau social posséde cette information qu'elle soit privée
-ou non. L'idée de ce projet est alors de parait à cette fuite d'information, afin de garantir la confidentialité
-des données des utilisateurs, le tout renforcer par une authentification forte. Nous nous concentrerons sur 
-le réseau social facebook puisqu'il est le premier sur le marché.
+et accueillent chaque jour de plus en plus d'adhérents. Le principe consiste à 
+y créer un profil, y insérer des données que l'utilisateur désire partagées, 
+telles que des photos, des vidéos, des messages, etc. Sur ce réseau, des "amis"
+seront ajoutés : ils pourront alors accéder à ces informations.
+
+La problématique soulevée était de limiter la diffusion des informations à 
+certaines personnes dans nos "amis", mais surtout limiter la diffusion 
+d'informations vis à vis du réseau social lui-même. En effet, lorsque nous 
+partageons une donnée, celui-ci détient cette information qu'elle soit définie
+comme privée ou non.
+
+L'idée de ce projet était alors de limiter cette fuite d'information, afin de 
+garantir la confidentialité des données des utilisateurs et ce, renforcé par une
+authentification forte. Nous nous concentrerons sur le réseau social Facebook 
+puisqu'il est le plus utilisé.
 
 
 \paragraph{}
-L'objectif du projet était donc de développer une extension pour le logiciel Mozilla 
-Firefox permettant à l’utilisateur de gérer le chiffrement/déchiffrement de ses données sur 
-le réseau social Facebook, les traitements lourd étant confiés à une application Java.
-Pour ce qui est de l’authentification forte, nous avons utilisé des cartes à puce
-de type Java Card J3A (marque NXP) avec 40K d'EEPROM via des lecteurs Omnikey 3121. 
-L'intérêt du projet était également d'analyser la sécurité de ces cartes à puce, à savoir la génération
-de nombres aléatoires, de clefs (sysmétriques et asymétriques), chiffrement, déchiffrement, signature.
-C'est cette même carte à puce qui contiendra les données sensibles de l’utilisateur (login/mot de passe), clef privée,...
-Le dialogue avec cette carte à puce se fera par l’intermédiaire d’un client Java qu'on appellera SoftCard. 
+La concrétisation du projet s'est traduite par le développement d'une extension 
+pour le logiciel Mozilla Firefox permettant à l’utilisateur de gérer le 
+chiffrement et le déchiffrement de ses données sur le réseau social Facebook, 
+les traitements lourd étant confiés à une application Java.
+
+Concernant l’authentification forte, nous avons utilisé des cartes à puce de 
+type Java Card J3A (marque NXP) avec 40 Kilo-octets (Ko) d'EEPROM, via des 
+lecteurs Omnikey 3121. 
+
+L'intérêt du projet était également d'analyser la sécurité de ces cartes à puce,
+à savoir la génération de nombres aléatoires, de clefs (sysmétriques et 
+asymétriques), chiffrement, déchiffrement et signature. C'est cette même carte
+à puce qui contiendra à posteriori les données sensibles de l’utilisateur 
+comme son identifiant, son mot de passe, sa clef privée... Le dialogue avec 
+la carte se fait par l’intermédiaire d’un client Java : "SoftCard". 
 
 
-On distinguera alors ce projet en une composition de deux sous-projets :
+Initialement prévu comme deux projets différents, un par groupe, il s'est avéré 
+que nous travaillerions conjointement pour se concentrer sur un unique projet 
+regroupant :
 \begin{itemize}
-    \item Étude et mise en \oe{}uvre de solutions d’authentifications et de signatures 
-        par cartes à puce, proposé par Magali \textsc{Bardet} ;
-\item Solutions cryptographiques pour les réseaux sociaux, proposé par Ayoub 
+    \item l'étude et la mise en \oe{}uvre de solutions d’authentifications et 
+        de signatures par cartes à puce, proposé par Magali \textsc{Bardet} ;
+\item les solutions cryptographiques pour les réseaux sociaux, proposé par Ayoub
     \textsc{Otmani} ;
 \end{itemize}
 
 \section{SmartCard}
-Aujourd'hui nous sommes tous menés à utiliser les cartes à puce (carte bleue, carte vitale,...). 
-Elle est utilisé notamment pour de l'authentification forte et contient des informations confidentielles.
-D'où l'importance de la sécurité concernant les cartes à puce.
-Dans cette partie de ce projet, on se propose d'étudier les solutions cryptographiques pouvant
-permettre l'authentification ou la signature, puis de mettre à profit ces caractéristiques
-à la confidentialité lié à Facebook.
+Aujourd'hui nous sommes tous menés à utiliser les cartes à puce comme les cartes
+bancaires, les cartes vitales. Elle sont notamment utilisées pour effectuer de 
+l'authentification forte et pour contenir des informations confidentielles.
+
+Dans cette partie du projet, nous détaillerons notre étude des solutions 
+cryptographiques pouvant permettre l'authentification ou la signature, puis de 
+mettre à profit ces caractéristiques pour la confidentialité liée à Facebook.
 
 
 \subsection{Génération de nombres aléatoires}
-La carte à puce nous permet de générer des nombres aléatoires qui nous a été utile dans la création d'IV (Initialization Vector),
-de mots de passe, de clefs,... Ce qui fait du générateur de nombres aléatoires un point crucial dans la sécurité de l'application.
-En effet il faut que celui ci ne soit pas prévisible. C'est pour cela que nous avons réalisé une étude statistique sur ce générateur.
-La librairie javacard met à notre disposition deux algorithmes de générateur. 
+La carte à puce permet de générer des nombres aléatoires, utile dans la création
+d'IV (Initialization Vector), de mots de passe, de clefs, etc. Ce générateur 
+peut donc être admis comme un point crucial dans la sécurité de l'application.
+C'est pour cette raison qu'il a fallu nous assurer que les résultats suivent une
+distribution uniforme. 
+
+La librairie Javacard d'Oracle met à notre disposition deux moteur de génération
+de nombres aléatoires :
 \begin{itemize} 
 	\item ALG\_PSEUDO\_RANDOM: algorithme pseudo aléatoire.
 	\item ALG\_SECURE\_RANDOM: algorithme cryptographiquement sûr.
 \end{itemize}
 
-C'est ainsi que pour notre projet nous avons utilisé l'algorithme sécurisé cryptographiquement. Cependant
-par acquis de conscience, nous avons voulu vérifier le niveau de l'aléatoire du générateur dit sûr à l'aide d'un
-outils permettant de réaliser une analyse stastistique dont le compte rendu apparait ci-dessous:
+Bien entendu, pour notre projet, nous avons utilisé l'algorithme décrit comme 
+"cryptographiquement sûr". Cependant, par acquis de conscience, nous avons voulu
+vérifier le niveau de l'aléatoire du générateur dit sûr à l'aide d'un
+outils permettant de réaliser une analyse stastistique dont le compte rendu
+apparaît ci-dessous:
 
 \begin{verbatim}
 *************************************************
@@ -118,43 +138,57 @@ outils permettant de réaliser une analyse stastistique dont le compte rendu app
 *************************************************
 \end{verbatim}
 
-
-A noté que le temps moyen pour la génération d'un nombre aléatoire est de 28.1ms.
+%Utile ? "A noter que le temps moyen pour la génération d'un nombre aléatoire est de 28.1ms."
 
 \subsection{Chiffrement/Déchiffrement}
-Dans l'étude des cartes à puce nous avons également utilisé des méthodes de chiffrement et de déchiffrement sysmétrique et asymétrique.
-Pour notre cas d'utilisation, nous avons choisi de prendre RSA (1024 bits) comme algorithme de chiffrement asymétrique et AES (128 bits)
-comme algorithme de chiffrement symétrique car ceux ci sont jugés comme sûr.
+Dans l'étude des cartes à puce, nous avons également utilisé des méthodes de 
+chiffrement et de déchiffrement sysmétriques et asymétriques. Pour notre cas 
+d'utilisation, nous avons choisi des clefs RSA de 1024 bits pour l'algorithme de
+chiffrement asymétrique RSA-PKCS1. Quant aux opérations cryptographiques 
+symétriques, des clefs AES de 128 bits ont été générées et utilisées. Ces clefs
+et algorithmes ont été choisies pour le sûreté.
+
+% AES 128 = sûr ?
 \begin{itemize}
 	\item Asymétrique: ALG\_RSA\_PKCS1
 	\item Sysmétrique: ALG\_AES\_BLOCK\_128\_CBC\_NOPAD 
 \end{itemize}
 
+Nous avons testé ces algorithmes en chiffrant et en déchiffrant, à l'aide de 
+clefs préalablement générées par la carte, divers messages. 
 
-Nous avons testé ces algorithmes en chiffrant et en déchiffrant, à l'aide de clefs préalablement générées par la carte
-elle même. Pour ce projet nous utilisons ces méthodes dans différents cas. Nous utilisons le crypto système asymétrique
-sur la carte seulement pour le cas du déchiffrement à l'aide de la clef privée. En effet pour ce qui est du chiffrement
-des données concernant facebook, c'est Facecrypt qui s'en chargera à l'aide de notre clef publique fournie au préalable.
-
-Quant au crypto système sysmétrique, nous l'utilisons lors de la communication avec SoftCard
-via un "tunnel" sécurisé par AES-128. Ce tunnel permet de chiffrer les données transmis par la carte à SoftCard et inversement afin
-d'éviter la fuite d'informations qui est confidentiel (login, mot de passe, code PIN,...). \\
+Ici, nous avons utilisé ces algorithmes dans différents cas. Concernant
+le chiffrement par clef publique, bien qu'implanté, nous n'en avons pas eu 
+besoin : c'est en effet Facecrypt, de la seconde partie du projet, qui s'en 
+chargera, la clef publique lui ayant été fournie. Quant au cryptosystème 
+sysmétrique, nous l'avons utilisé lors de la communication avec SoftCard
+via un "tunnel" sécurisé par AES-128. Ce dernier a pour objectif d'apporter 
+confidentialité, intégrité et authentification aux données échangées entre la 
+carte et SoftCard.
 
 \subsubsection{Signature/Vérification}
-Nous avons étudié un autre cas où le crypto système asymétrique peut être utilisé via la carte à puce, qui la signature et la
-vérification de données. Grâce à la signature nous pouvons authentifier des données, ce qui applique la non répudiation, car la signature se fait via la clef privée de l'utilisateur. Une méthode de vérification existe également, qui permet de vérifier l'authenticité des données
-après signature d'un utilisateur via la clef publique de ce dernier. Un booléen nous est alors retourné selon la réponse.
+Nous avons étudié un autre cas où le cryptosystème asymétrique peut être utilisé
+via la carte à puce: la signature et la vérification de données. Grâce à la 
+signature, nous pouvons obtenir authentification et non-répudiation, puisque la
+signature se fait via la clef privée de l'émetteur. Une méthode de vérification
+existe également permettant de vérifier l'authenticité des données via la clef 
+publique du destinataire. Un booléen nous est alors retourné selon la réponse.
 
 
 \subsection{Code PIN/PUK}
-Une carte à puce étant associée à un utilisateur, il est logique que ce dernier dispose d'un secret pour pouvoir utiliser
-la carte. Il existe pour cela un code PIN qui est affecté chaque carte et dont seul l'utilisateur principal de la carte en a connaissance.
-Le code PIN est défini sur 2 octets, ce qui représente 2¹⁶ = 65536 solutions. Ce qui est faible pour contrer une attaque de type "brute force". Cependant l'attaque est contrée via à un nombre d'essais limité avant le succès de l'authentification. Dans notre cas nous limitons
-le nombre d'essais à 3 (tout comme les cartes bleue). En cas de blocage de la carte du à un nombre de tentive trop élevé, seul le code PUK
-peut débloquer la carte qui est connu seulement de l'administrateur. Tout comme le code PIN, le nombre d'essais pour entrer le code PUK
-est de 3. Si ce nombre est dépassé la carte devient inutilisable, la réinstallation de l'applet est alors la seule option pour la rendre
-de nouveau opérationnelle.
+Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
+dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
+PIN, affecté chaque carte, et dont seul l'utilisateur a connaissance.
 
+Le code PIN est défini sur deux octets, ce qui représente $2^{16}$ = 65536 solutions,
+ce qui est relativement faible, notamment contre une attaque de type 
+"bruteforce". Cependant l'attaque est contrée via à un nombre d'essais limité.
+Dans notre cas nous limitons le nombre d'essais à trois. En cas de blocage de la
+carte, dû à un nombre de tentatives trop élevé, seul le code PUK pourra 
+débloquer la carte. Tout comme le code PIN, le nombre d'essais pour entrer le 
+code PUK est de trois. Si ce nombre est dépassé la carte devient inutilisable et
+la réinstallation des applets est alors la seule option pour la rendre
+de nouveau opérationnelle.
 
 
 
@@ -189,7 +223,7 @@ de nouveau opérationnelle.
     \item[RNG :] (Random Number Generator) générateur de nombres
         aléatoires;
     \item[PIN :] (Personal Identification Number) code servant à authentifier
-        l'utilisateur;
+        l'utilisateur auprès de la carte;
     \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
         trop de codes PIN erronés ont été entrés.
 \end{description}

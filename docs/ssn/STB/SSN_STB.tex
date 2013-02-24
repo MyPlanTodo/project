@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique des besoins}
 \def\docDate{\today}
-\def\version{1.0}
+\def\version{1.1}
 \def\author{Florian \textsc{Guilbert}}
 \def\checked{Baptiste \textsc{Dolbeau}}
 \def\approved{}
@@ -62,6 +62,9 @@
 	0.1 & 07/01/2013 & Création\\
 	\hline
     1.0 & 29/01/2013 & Relecture par Baptiste \textsc{Dolbeau}\\
+	\hline
+    1.1 & 22/02/2013 & Ajout d'un cas d'utilisation (initialisation) et 
+    changement de la priorité (chiffrement document/commentaire) \\
 	\hline
 	&&\\
 	\hline
@@ -129,20 +132,33 @@ Par conséquent, la terminologie utilisée correspondra à celle de \emph{Facebo
 F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un statut & Utilisateur & \cellcolor{green!50}Indispensable \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un document & Utilisateur & \cellcolor{green!50}Indispensable \\
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un document & Utilisateur & \cellcolor{blue!50}Secondaire \\
 \hline
 \addtocounter{FGcount}{10}
 F-Gl-\arabic{FGcount} & Gérer les liens d'amitiés & Utilisateur & \cellcolor{red!20}Important \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cellcolor{blue!50}Secondaire\\
+F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cellcolor{green!50}Indispensable\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & Déploiement du système sur un compte déjà existant & Utilisateur & \cellcolor{green!50}Indispensable \\
 \hline
 \end{tabularx}
 
-\subsection{Préconditions}
+\subsection{Initialisation}
+Le système doit pouvoir être adapté sur un compte déjà existant, pour se 
+conformer aux principes de la plupart des réseaux sociaux obligeant un 
+utilisateur à posséder un unique compte correspondant à son identité réel.
+
+\paragraph{}
+Le cas d'utilisation concernant l'initialisation du système correspond 
+au cas C10 de la STB \emph{SmartCard}.
+
+\paragraph{}
 Pour tous les cas d'utilisation décrits ci-dessous, nous supposons que 
 l'utilisateur est déjà authentifié sur le réseau social (Facebook). Il
-a donc déjà inséré sa carte dans le lecteur.
+a donc déjà inséré sa carte dans le lecteur. Par conséquent que le cas
+ci-dessus a déjà été fait et s'est bien déroulé.
 
 \subsection{Chiffrer/déchiffrer un statut}
 Un utilisateur peut, lorsqu'il le souhaite, écrire un message
