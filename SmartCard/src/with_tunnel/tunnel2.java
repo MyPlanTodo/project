@@ -1,6 +1,8 @@
-/* Author : Romain Pignard */
+/**
+ * @author Romain Pignard
+ */
 
-package store;
+package with_tunnel;
 
 import javacard.framework.APDU;
 import javacard.framework.APDUException;

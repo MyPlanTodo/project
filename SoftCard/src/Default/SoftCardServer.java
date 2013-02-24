@@ -124,6 +124,7 @@ class ProcessusSock extends Thread {
 	private final byte RETRIEVE_CRED = (byte) 0x47;
 	private final byte STORE_CREDENTIALS = (byte) 0x48;
 	private final byte RESET_PWD = (byte) 0x49;
+	private final byte VALIDATE_PWD = (byte) 0x50;
 
 	/**
 	 * This constructor links a reader and
@@ -149,7 +150,7 @@ class ProcessusSock extends Thread {
 		}
 	}
 
-	
+
 	private static String bytesToHexString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
 		for (byte b : bytes) {
@@ -186,7 +187,7 @@ class ProcessusSock extends Thread {
 			free();
 		} catch (IOException e) {
 			System.err.println("An error occured while closing connection.");
-		} catch (CardException e) {
+		} catch (Exception e) {
 			System.err.println("An error occured while disconnecting the card.");
 		}
 	}
@@ -280,6 +281,14 @@ class ProcessusSock extends Thread {
 				sendMessage(NetworkException.ERROR_RESET_PASSWORD);
 			}
 		}
+		else if (id == this.VALIDATE_PWD) {
+			try {
+				System.out.println(bytesToHexString(mess));
+				sendMessage(validatePassword()? new byte[]{1} : new byte[]{0});
+			} catch (Exception e) {
+				sendMessage(NetworkException.ERROR_VALIDATE_PASSWORD);
+			}
+		}
 		// client wants to disconnect.
 		else if (id == this.QUIT){
 			res = false;
@@ -303,6 +312,7 @@ class ProcessusSock extends Thread {
 	 * occured on the smartcard's side.
 	 */
 	private byte[] resetPassword() throws CardException, Exception {
+		System.out.println(1);
 		return SoftCard.getInstance().resetPassword();
 	}
 
@@ -382,7 +392,7 @@ class ProcessusSock extends Thread {
 	 * occured on the smartcard's side.
 	 * @see SoftCard
 	 */
-	private void disconnectCard() throws CardException {
+	private void disconnectCard() throws Exception {
 		SoftCard.getInstance().disconnect();
 	}
 
@@ -432,13 +442,14 @@ class ProcessusSock extends Thread {
 	 */
 	private byte[] receiveMessages() throws IOException {
 		int i = in.readInt();
-		
+
 		if (i > 2560 ) {
 			throw new IOException("Data too big");
 		}
 
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
+		System.out.println(b[0]);
 		return b;
 	}
 
