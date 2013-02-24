@@ -485,7 +485,8 @@ application tierce, dans le cas d'une utilisation plus générale.\\
 	{\begin{itemize}
         \item[]
         \item[2.] Le script installe toutes les applets sur la carte,
-            initialise les clefs.
+            initialise les clefs et affiche les code PIN et PUK. La carte
+            interdit toute récupération future de ces codes.
 	\end{itemize}
 	}
 	{}
@@ -508,7 +509,7 @@ application tierce, dans le cas d'une utilisation plus générale.\\
         \item[]
         \item[1.] L'utilisateur se rend sur la page de login du réseau 
         social;
-        \item[7.] L'utilisateur entre ses identifiants et choisi de laisser
+        \item[7.] L'utilisateur entre ses identifiants et choisit de laisser
             la carte générer un nouveau mot de passe ou non;
     \end{itemize}}
 	{\begin{itemize}
@@ -518,9 +519,9 @@ application tierce, dans le cas d'une utilisation plus générale.\\
         \item[3.] FaceCrypt transfère cette demande à SoftCard
         \item[4.] SoftCard demande à la carte les identifiants
         \item[5.] La carte ne possédant pas les identifiants retourne 
-        des identifiants vide à SoftCard qui les relaie à FaceCrypt qui fait
+        des identifiants vides à SoftCard qui les relaie à FaceCrypt qui fait
         de même pour l'extension;
-        \item[6.] L'extension recevant des identifiants vide ouvre une popup
+        \item[6.] L'extension recevant des identifiants vides ouvre une popup
         qui invite l'utilisateur à entrer ses identifiants;
         \item[8.] L'extension connecte l'utilisateur et envoie les identifiants
         à la carte (par l'intermédiaire de SoftCard et FaceCrypt) et indique
@@ -529,6 +530,9 @@ application tierce, dans le cas d'une utilisation plus générale.\\
         mot de passe si besoin qui sera envoyé à l'extension;
         \item[10.] L'extension change le mot de passe si besoin et confirme
             le changement à la carte.
+        \item[11.] SoftCard reçoit cette confirmation et indique à SmartCard 
+            qu'il peut remplacer le mot de passe actuel par le mot de passe 
+            temporaire.
 	\end{itemize}
 	}
 	{}
