@@ -88,22 +88,22 @@ qualité défini et atteindre les résultats demandés.
 
 \subsection{Utilisation}
 	Le plan de qualité est un outil de suivi et de gestion du projet.
-De part sa nature, il est amené à être modifié selon les ajouts que l'on
-apportera au projet.
+De part sa nature, il est amené à être modifié selon les ajouts ou 
+suppressions que l'on apportera au projet.
 
 \section{Données}
 \subsection{Contexte}
 	Dans le cadre de notre master 2 Sécurité des Systèmes Informatiques,
 nous avons à réaliser un projet de fin d'année. Ce projet \emph{Smart Social
-Network} est devenu l'agrégat des deux sous-projets initiaux \emph{Smart
-Card} et \emph{Secure Social Network}. L'effectif n'étant pas assez 
-suffisant, il a été convenu par les deux clients "Mme Bardet" et "M Otmani"
-de réunir ces deux projets en un seul.
+Network} est devenu l'agrégat des deux projets initiaux \emph{Smart Card} et
+\emph{Secure Social Network}. L'effectif n'étant pas assez suffisant, il a
+été convenu par les deux clients "Mme Bardet" et "M Otmani" de réunir ces
+deux projets en un seul.
 
 
-	Ces projets sont nés d'une part du besoin d'un cas d'utilisation 
-de cartes à puce et d'autre part du besoin de rester propriétaire des
-données postées sur un réseau social.
+	Ces projets sont nés d'une part du besoin d'un cas d'utilisation de
+cartes à puce et d'autre part du besoin de rester propriétaire des données
+postées sur un réseau social.
 
 
 \subsection{Rappels}
@@ -133,9 +133,9 @@ elles à l'aide de "tunnels" sécurisés
 \end{itemize}
 
 \subsubsection{Objectifs produit}
-	Ces deux objectifs s'articulent dans Smart Social Network dans le
-sens où, une fois la personne authentifiée, la carte à puce sera utilisée
-pour fournir des éléments utilisés pour le chiffrement et déchiffrement
+	Ces deux objectifs s'articulent dans \emph{Smart Social Network} dans
+le sens où, une fois la personne authentifiée, nous utiliserons la carte à
+puce pour fournir des éléments utilisés pour le chiffrement et déchiffrement
 des données utilisateurs de Facebook.
 
 \subsubsection{Limites}
@@ -144,12 +144,12 @@ sociaux, est implanté, dans notre cas, uniquement pour Facebook. De plus,
 il ne fontionnera que sur un navigateur : \emph{Firefox}.
 
 
-	Un utilisateur \emph{Smart Social Network} pourra poster des données
-telles que des images, des messages ou des commentaires, tout ceci de manière
-chiffrée. Ainsi, ces données ne seront pas lisibles par Facebook ou les
-autres personnes non spécifiées. Cependant, la liste de ses amis, les
-conversations instantanées ainsi que ses données personnelles pourront être
-lues par Facebook.
+	Un utilisateur de \emph{Smart Social Network} pourra poster des
+données telles que des images, des messages ou des commentaires, tout ceci de
+manière chiffrée. Ainsi, ces données ne seront lisibles ni par Facebook ni par
+les autres personnes non spécifiées. Cependant, la liste de ses amis, les
+conversations instantanées ainsi que ses données personnelles ne seront pas
+prises en compte par notre système et pourront donc être lues par Facebook.
 
 \subsection{Moyens}
 	Pour la réalisation de ce projet, nous avons mis en place plusieurs
@@ -173,11 +173,11 @@ en tant que fournisseurs et Mme Bardet ainsi que M Otmani en tant que clients.
 \section{Organisation}
 \subsection{Structure}
 	Afin de réaliser notre projet, nous avons décidé de garder la même
-structure présente avant la réunion des deux projets. Il y a donc une équipe
-spécialisé pour l'authentification par carte à puce (équipe \emph{Smart 
-card}) et une équipe pour le chiffrement des données sur le réseau social
-(équipe \emph{Secure Social Network}). Le chef de projet aura pour rôle
-la coordination de ces deux équipes.
+structure présente avant la réunion des deux projets. Il y aura donc une
+équipe spécialisée pour l'authentification par carte à puce (équipe 
+\emph{Smart card}) et une équipe pour le chiffrement des données sur le
+réseau social (équipe \emph{Secure Social Network}). Le chef de projet aura
+pour rôle la coordination de ces deux équipes.
 
 \subsection{Acteurs}
 \subsubsection{Organismes participants}
@@ -231,7 +231,7 @@ la coordination de ces deux équipes.
 	\item Plan de developpement
 	\item Manuel d'utilisation
 	\item Analyse des risques
-	\item Cahier de recette
+	\item Cahiers de recette
 	\item Plan de qualité
 	\item STB Smart Card
 	\item DAL Smart Card
@@ -240,10 +240,10 @@ la coordination de ces deux équipes.
 
 	Chaque document est soumis à une relecture par une personne tierce.
 Le document n'est pas présenté au client tant qu'il y a des remarques faites
-par la personne tierce. 
+par la personne tierce.
 
 	Une fois présenté au client, le document peut être accepté directement
-sinon, celui ci est a nouveau révisé en fonction des remarques du client.
+sinon, celui ci est à nouveau révisé en fonction des remarques du client.
 
 
 \section{L'assurance qualité}
@@ -272,11 +272,11 @@ par rapport aux exigences des clients et si ceux ci sont remplis par notre
 application.
 \subsubsection{Vérification du fonctionnement}
 	Les critères de vérifications sont :
-\paragraph{OK : } Notre livrable final remplir toutes les exigences tant
+\paragraph{OK : } Notre livrable final devra remplir toutes les exigences tant
 fonctionnelles qu'opérationnelles.
-\paragraph{Partiel : } Notre livrable final ne remplit pas toutes les
-exigences mais implémente toutes les exigences indispensables.
-\paragraph{NOT OK : } Notre livrable n'implémente pas une ou plusieurs
+\paragraph{Partiel : } Notre livrable final ne remplira pas toutes les
+exigences mais implémentera toutes les exigences indispensables.
+\paragraph{NOT OK : } Notre livrable n'implémentera pas une ou plusieurs
 exigences indispensables.
 
 \subsection{Les opérations cryptographiques de SmartCard}
@@ -293,16 +293,16 @@ déchiffrer, signer et produire des données arbitraires. Cette qualité sera
 
 \subsubsection{Vérification du fonctionnement}
 	Les critères de vérifications sont :
-\paragraph{OK : } Le déchiffrement et la signature se font en moins de 150ms
- et la production de données arbitraires en moins de Xms.
-\paragraph{Partiel : } Toutes ces opérations se font entre le seuil minimal
+\paragraph{OK : } Le déchiffrement et la signature devront se faire en moins
+de 150 ms et la production de données arbitraires en moins de 50 ms.
+\paragraph{Partiel : } Toutes ces opérations se feront entre le seuil minimal
 et la seconde.
-\paragraph{NOT OK : } Toutes ces opérations se font au dessus de la secondes.
+\paragraph{NOT OK : } Toutes ces opérations se feront au dessus de la secondes.
 
 
 \subsection{Les opérations cryptographiques de FaceCrypt}
 	Notre application java "FaceCrypt" est une autre composante de notre
-projet. Elle est utilisé pour effectuer des opérations de chiffrement, de
+projet. Elle est utilisée pour effectuer des opérations de chiffrement, de
 déchiffrement et de vérification.
 \subsubsection{Mise en place de l'exigence}
 	Pour éprouver la qualité des opérations cryptographiques de notre
@@ -313,11 +313,12 @@ ces tests, nous prendrons un message défini, de X octets. Cette qualité sera
 
 \subsubsection{Vérification du fonctionnement}
 	Les critères de vérifications sont :
-\paragraph{OK : } Le chiffrement se fait en moins de Xms, le dechiffrement
-en moins de Xms et la vérification en moins de Xms.
-\paragraph{Partiel : } Toutes ces opérations se font entre le seuil minimal
-et la seconde.
-\paragraph{NOT OK : } Toutes ces opérations se font au dessus de la secondes.
+\paragraph{OK : } Le chiffrement se fera en moins de X ms, le déchiffrement
+en moins de X ms et la vérification en moins de X ms.
+\paragraph{Partiel : } Toutes ces opérations devront se faire entre le seuil
+minimal et la seconde.
+\paragraph{NOT OK : } Toutes ces opérations se feront au dessus de la
+secondes.
 
 
 
@@ -332,14 +333,14 @@ série de tests. Ces derniers consistent à effectuer des demandes à la carte
 notre critère de qualité sera le temps requis pour l'opération.
 \subsubsection{Vérification du fonctionnement}
 	Les critères de vérifications sont :
-\paragraph{OK : } L'établissement du tunnel se fait en moins de 106ms et le
-nombre aléatoire demandé transitant par le tunnel sécurisé est reçu en
+\paragraph{OK : } L'établissement du tunnel se fera en moins de 106ms et le
+nombre aléatoire demandé transitant par le tunnel sécurisé sera reçu en
 moins de 160ms.
-\paragraph{Partiel : } L'établissement du tunnel se fait entre le seuil
-optimal et 110ms et le nombre aléatoire demandé transitant par le tunnel
-sécurisé est reçu entre le seuil optimal moins de 180ms.
-\paragraph{NOT OK : } L'établissement du tunnel se fait en plus de 110ms et
-le nombre aléatoire demandé transitant par le tunnel sécurisé est reçu en
-plus de 180ms.
+\paragraph{Partiel : } L'établissement du tunnel devra se faire entre le
+seuil optimal et 110 ms et le nombre aléatoire demandé transitant par le
+tunnel sécurisé sera reçu entre le seuil optimal et 180 ms.
+\paragraph{NOT OK : } L'établissement du tunnel se fera en plus de 110 ms
+et le nombre aléatoire demandé transitant par le tunnel sécurisé sera reçu
+en plus de 180ms.
 
 \end{document}
