@@ -17,9 +17,11 @@
 package with_tunnel;
 
 import javacard.framework.APDU;
+import javacard.framework.APDUException;
 import javacard.framework.Applet;
 import javacard.framework.ISOException;
 import javacard.framework.JCSystem;
+import javacard.framework.TransactionException;
 import javacard.framework.Util;
 
 public class datastore extends Applet {
@@ -32,9 +34,9 @@ public class datastore extends Applet {
 	// offset AID values
 	private static final short AID_PIN = 0x00; 
 	private static final short AID_RNG = 0x01;
-	private static final byte AID_CYPHER = 0x03;
-	private static final byte AID_SIGN = 0x04; 
-	
+	private static final byte AID_SIGN = 0x02;
+	private static final byte AID_CYPHER = 0x03; 
+	private static final byte AID_STORE = 0x04;
 	
 	
 	private datastore() {	
@@ -48,7 +50,7 @@ public class datastore extends Applet {
 		tab[2] = 0;
 	}
 
-	public static void putData(byte[] input, short length)	
+	public static void putData(byte[] input, short length)	 throws NullPointerException, ArrayIndexOutOfBoundsException, TransactionException
 	{
 		// store data in the datastore
 		
@@ -61,12 +63,10 @@ public class datastore extends Applet {
 		// increase the actual used memory
 		tab[1] = (short) (tab[1] + length);		
 	}
-	public static void putData(byte[] input, short length, short off)	
+	public static void putData(byte[] input, short length, short off) throws NullPointerException, ArrayIndexOutOfBoundsException, TransactionException
 	{
 		// store data in the datastore
-		
-		Util.arrayCopy(input, (short) off,data ,(short) tab[1],length);
-		
+			Util.arrayCopy(input, (short) off,data ,(short) tab[1],length);
 		/*for (tab[0] = 0; tab[0] <=length; tab[0]++) 
 		{
 			data[(short)(tab[0]+ tab[1])] = input[(short)(tab[0] + off)];
@@ -117,7 +117,10 @@ public class datastore extends Applet {
 
 	public static void execute() {
 		switch(data[OFF_AID]){
-		// we give the data "as-is" to the applets		
+		// we give the data "as-is" to the applets
+		case AID_STORE:			
+			StoreID.execute(data);			
+			break;
 		case AID_PIN:			
 			PIN.execute(data);			
 			break;

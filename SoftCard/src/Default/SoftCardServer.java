@@ -1,8 +1,3 @@
-/**
- * TODO : Commenter doAction
- * TODO : Tester askCredentials
- */
-
 //package Default;
 
 import java.io.Console;
@@ -169,7 +164,7 @@ class ProcessusSock extends Thread {
 	public void run() {
 		byte[] mess = {};
 		boolean cont = true;
-
+		System.out.println("Client connected.");
 		do {
 			try {
 				mess = receiveMessages();
@@ -249,7 +244,9 @@ class ProcessusSock extends Thread {
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_CHECK_LOCKED);		
 			}
-		} else if (id == this.UNLOCK) {
+		}
+		// client wants to manually unlock the card
+		else if (id == this.UNLOCK) {
 			byte[] data = new byte[mess.length - 1];
 			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
@@ -257,7 +254,9 @@ class ProcessusSock extends Thread {
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_UNLOCK_CARD);
 			}
-		} else if (id == this.STORE_CREDENTIALS) {
+		} 
+		// client wants to store his credentials.
+		else if (id == this.STORE_CREDENTIALS) {
 			byte[] data = new byte[mess.length - 1];
 			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
@@ -267,20 +266,25 @@ class ProcessusSock extends Thread {
 				sendMessage(NetworkException.ERROR_STORE_ID);
 
 			}
-		} else if (id == this.RETRIEVE_CRED) {
+		}
+		// client wants to retrieve his credentials.
+		else if (id == this.RETRIEVE_CRED) {
 			try {
 				sendMessage(retrieveCredentials());
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_GET_ID);
 
 			}
-		} else if (id == this.RESET_PWD) {
+		}
+		// client wants to modify the password.
+		else if (id == this.RESET_PWD) {
 			try {
 				sendMessage(resetPassword());
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_RESET_PASSWORD);
 			}
 		}
+		// client tells the card that the password was validated.
 		else if (id == this.VALIDATE_PWD) {
 			try {
 				System.out.println(bytesToHexString(mess));
@@ -449,7 +453,6 @@ class ProcessusSock extends Thread {
 
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
-		System.out.println(b[0]);
 		return b;
 	}
 

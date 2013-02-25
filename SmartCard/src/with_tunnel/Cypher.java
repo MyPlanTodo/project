@@ -1,14 +1,14 @@
 package with_tunnel;
 
+/**
+ * @author Emmanuel Mocquet
+ */
 import javacard.framework.APDU;
 import javacard.framework.APDUException;
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
 import javacard.framework.ISOException;
-import javacard.framework.JCSystem;
-import javacard.framework.Util;
 import javacard.security.CryptoException;
-import javacard.security.Key;
 import javacard.security.KeyBuilder;
 import javacard.security.KeyPair;
 import javacard.security.PrivateKey;
@@ -101,8 +101,6 @@ public class Cypher extends Applet {
 				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				datastore.eraseData();
 				datastore.putData(data, cipherLen);
-
-				//apdu.setOutgoingAndSend((short) 0, (short) cipherLen);
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4244);
@@ -129,7 +127,7 @@ public class Cypher extends Applet {
 
 		case INS_UNCIPHER:
 			try {
-				if(PIN.getState() == (short) 0x90)
+				if(PIN.getState() == (short) 0x9000)
 				{				
 					
 				dataLen = (short) - data[ISO7816.OFFSET_LC];
@@ -173,14 +171,7 @@ public class Cypher extends Applet {
 			}
 
 			break;
-			
-
-
 		}
-
-
-
-
 	}
 	/*
 	 * Méthode appelée lors de l'installation de l'applet sur la carte

@@ -1,5 +1,7 @@
 package with_tunnel;
-
+/**
+ * @author Giovanni Huet 
+ */
 
 import javacard.framework.APDU;
 import javacard.framework.APDUException;
@@ -19,8 +21,6 @@ public class Sign extends Applet {
 
 
 	/* Constantes */
-	public static final byte CLA_MONAPPLET = (byte) 0xB0;
-
 	public static final byte INS_TEST_AUTH = 0x04;
 	public static final byte INS_ASK_AUTH = 0x05;
 
@@ -169,12 +169,6 @@ public class Sign extends Applet {
 		}
 
 		/* On vérifie le CLA de l'applet */
-		if (buffer[ISO7816.OFFSET_CLA] != CLA_MONAPPLET) {
-			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
-		}
-
-
-
 		switch (buffer[ISO7816.OFFSET_INS]) {
 
 		/* Requête de chiffrement */
