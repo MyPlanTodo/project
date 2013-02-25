@@ -339,7 +339,7 @@ N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données chiffrées à l'aide d'un chiffrement sysmétrique (AES-128) & Données non compréhensibles sans la clef de déchiffrement. & ? & OK \\
+1 & Envoyer des données chiffrées à l'aide d'un chiffrement sysmétrique (AES-128) & Données non compréhensibles sans la clef de déchiffrement. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -353,7 +353,7 @@ N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données authentifiées à l'aide de CBC-MAC sans altérer le contenu. & Validation de la non modification des données reçues. & ? & OK \\
+1 & Envoyer des données authentifiées à l'aide de CBC-MAC sans altérer le contenu. & Validation de la non modification des données reçues. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -366,7 +366,8 @@ N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données authentifiées à l'aide de CBC-MAC en altérant leur contenu. & Détection de la modification des données reçues. & ? & OK \\
+1 & Envoyer des données authentifiées à l'aide de CBC-MAC en altérant leur contenu. & Détection de la modification des données reçues. & F-FI-30
+ & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -379,7 +380,7 @@ N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Déchiffrement des données issues d'un cryptosystème sysmétrique à l'aide de la clef secrète partagée. & Récupération en clair des données transitant dans le tunnel. & ? & OK \\
+1 & Déchiffrement des données issues d'un cryptosystème sysmétrique à l'aide de la clef secrète partagée. & Récupération en clair des données transitant dans le tunnel. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -543,18 +544,18 @@ après avoir entré 3 codes PIN erronés en entrant le code PUK valide. \\
 F-Gl-30 & Test & Procédure 7 & Le test consiste à envoyer des données
 contenues sur la carte. \\
 \hline
-? & Test & Procédure 8 & Le test consiste à envoyer des données chiffrées
+F-FI-30 & Test & Procédure 8 & Le test consiste à envoyer des données chiffrées
 via une communication sécurisée par un chiffrement symétrique. \\
 \hline
-? & Test & Procédure 9 & Le test consiste à envoyer des données
+F-FI-30 & Test & Procédure 9 & Le test consiste à envoyer des données
 authentifiées sans altérer leur contenu. Nous devons ensuite vérifier que
 le contenu est bien intègre. \\
 \hline 
-? & Test & Procédure 10 & Le test consiste à envoyer des données
+F-FI-30 & Test & Procédure 10 & Le test consiste à envoyer des données
 authentifiées en altérant leur contenu. Nous devons ensuite pouvoir détecter
 la modification du contenu. \\
 \hline 
-? & Test & Procédure 11 & Le test consiste à recevoir des données au
+F-FI-30 & Test & Procédure 11 & Le test consiste à recevoir des données au
 préalable chiffrées, et vérifier si elles ont bien été déchiffrées. \\
 \hline
 F-Gl-40 & Test & Procédure 12 & Le test consiste à déchiffrer des données
