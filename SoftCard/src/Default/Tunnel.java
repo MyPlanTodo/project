@@ -152,7 +152,7 @@ public class Tunnel {
 		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x10, (byte) 0x00, (byte)0x00, payload));
 
 		if (r.getSW() != 0x9000) {
-			System.out.println(" here : Status word different from 0x9000 : "+r.getSW());
+			System.out.println(" Erreur d'envoi: Status word different from 0x9000 : "+r.getSW());
 		}		
 
 	}
@@ -166,7 +166,7 @@ public class Tunnel {
 		
 		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x12, (byte) 0x00, (byte)0x00));
 		if (r.getSW() != 0x9000) {
-			System.out.println(" here2 : Status word different from 0x9000 : "+r.getSW());
+			System.out.println(" Erreur d'execution : Status word different from 0x9000 : "+r.getSW());
 		}
 
 	}
@@ -213,7 +213,7 @@ public class Tunnel {
 		// reception command
 		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x11, (byte) 0x00, (byte)0x00));
 		if ((r.getSW() != 0x9000) && (r.getSW() != 0x6666)) {
-			System.out.println("Status word different from 0x9000 : "+r.getSW());
+			System.out.println("Erreur de reception Status word different from 0x9000 : "+r.getSW());
 		}
 		
 		
@@ -371,7 +371,7 @@ public class Tunnel {
 		{
 			// sending of the fragmented request
 			// it will erassembled on the other side
-			System.out.println("iteration : "+ i);
+			//System.out.println("iteration : "+ i);
 			sendRaw(segmented_rq[i]);			
 		}		
 	}
