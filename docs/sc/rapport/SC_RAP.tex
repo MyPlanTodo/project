@@ -76,7 +76,7 @@ puisqu'il est le plus utilisé.
 La concrétisation du projet s'est traduite par le développement d'une extension 
 pour le logiciel Mozilla Firefox permettant à l’utilisateur de gérer le 
 chiffrement et le déchiffrement de ses données sur le réseau social Facebook, 
-les traitements lourd étant confiés à une application Java.
+les traitements lourds étant confiés à une application Java.
 
 Concernant l’authentification forte, nous avons utilisé des cartes à puce de 
 type Java Card J3A (marque NXP) avec 40 Kilo-octets (Ko) d'EEPROM, via des 
@@ -102,7 +102,7 @@ regroupant :
 
 \section{SmartCard}
 Aujourd'hui nous sommes tous menés à utiliser les cartes à puce comme les cartes
-bancaires, les cartes vitales. Elle sont notamment utilisées pour effectuer de 
+bancaires, les cartes vitales. Elles sont notamment utilisées pour effectuer de 
 l'authentification forte et pour contenir des informations confidentielles.
 
 Dans cette partie du projet, nous détaillerons notre étude des solutions 
@@ -111,9 +111,9 @@ mettre à profit ces caractéristiques pour la confidentialité liée à Faceboo
 
 
 \subsection{Génération de nombres aléatoires}
-La carte à puce permet de générer des nombres aléatoires, utile dans la création
+La carte à puce permet de générer des nombres aléatoires, utiles dans la création
 d'IV (Initialization Vector), de mots de passe, de clefs, etc. Ce générateur 
-peut donc être admis comme un point crucial dans la sécurité de l'application.
+peut donc être considéré comme un point crucial dans la sécurité de l'application.
 C'est pour cette raison qu'il a fallu nous assurer que les résultats suivent une
 distribution uniforme. 
 
@@ -127,7 +127,7 @@ de nombres aléatoires :
 Bien entendu, pour notre projet, nous avons utilisé l'algorithme décrit comme 
 "cryptographiquement sûr". Cependant, par acquis de conscience, nous avons voulu
 vérifier le niveau de l'aléatoire du générateur dit sûr à l'aide d'un
-outils permettant de réaliser une analyse stastistique dont le compte rendu
+outil permettant de réaliser une analyse stastistique dont le compte rendu
 apparaît ci-dessous:
 
 \begin{verbatim}
@@ -146,12 +146,12 @@ chiffrement et de déchiffrement sysmétriques et asymétriques. Pour notre cas
 d'utilisation, nous avons choisi des clefs RSA de 1024 bits pour l'algorithme de
 chiffrement asymétrique RSA-PKCS1. Quant aux opérations cryptographiques 
 symétriques, des clefs AES de 128 bits ont été générées et utilisées. Ces clefs
-et algorithmes ont été choisies pour le sûreté.
+et algorithmes ont été choisis pour leur sûreté.
 
-% AES 128 = sûr ?
+
 \begin{itemize}
 	\item Asymétrique: ALG\_RSA\_PKCS1
-	\item Sysmétrique: ALG\_AES\_BLOCK\_128\_CBC\_NOPAD 
+	\item Symétrique: ALG\_AES\_BLOCK\_128\_CBC\_NOPAD 
 \end{itemize}
 
 Nous avons testé ces algorithmes en chiffrant et en déchiffrant, à l'aide de 
@@ -227,6 +227,66 @@ de nouveau opérationnelle.
     \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
         trop de codes PIN erronés ont été entrés.
 \end{description}
+
+\section{Annexe A : Fonctionnement détaillé du tunnel entre la carte}
+
+
+\subsection{Objectifs}
+Le tunnel entre la carte et le logiciel qui contr\^ole le lecteur sert à protéger les communications de la carte.
+Contrairement aux autres liens entre logiciels, il n'a pas été possible d'utiliser un protocole de sécurisation tel que TLS 
+car la carte ne dispose pas de pile TCP/IP. En implanter une étant hors de notre champ de compétences, nous avons utilisé 
+les connaissances acquises en cours en cryptographie pour ajouter une couche de sécurité 
+sur la liaison de données déjà présente. Les objectifs cryptographiques réalisés par le tunnel sont les suivants : 
+\begin{description}
+    \item[Confidentialité :] Les données ne peuvent pas être lues par une personne non autorisée.
+    \item[Intégrité :] Les données n'ont pas été modifiées dans le transport.
+    \item[Authentification :] Les données ont été envoyées par une entité qui connait le secret.
+\end{description}
+Les deux derniers objectifs sont réalisables conjointement sans diminuer la sécurité du système alors que le premier nécessite une clé séparée. Dans la suite, le second objectif désigne l'intégrité et l'authentification. 
+
+\subsection{Choix techniques}
+
+Nous avons utilisé AES avec des clés (différentes) de 128 bits pour les deux objectifs. 
+Le mode CBC permettant de faire du chiffrement et de l'authentification-intégrité\footnote{L'un ou l'autre,
+ jamais les deux en même temps}, nous l'avons utilisé pour les deux. 
+Pour conjuguer performance et sécurité, nous avons choisi une version modifiée de CBC-MAC qui intègre la taille du message en début de message.
+ Cette modification garantit la sécurité lorsque les messages ont une taille variable comme indiqué dans [The Security of the Cipher Block Chaining Message Authentication Code]. L'utilisation conjointe de CBC en mode chiffrement et de CBC-MAC avec une clé identique rend les attaques particulièrement triviales.
+ 
+Le choix d'AES nous a paru être le plus pertinent car il correspond bien aux besoins de sécurité du projet. Il a été approuvé par la NSA avec des clés de 128 bits pour protéger des données classifiées au niveau SECRET. L'annexe B1 du RGS publié par l'ANSSI affirme également que cette longueur est satisafaisante. 
+
+  
+L'établissement du tunnel se fait selon un protocole challenge-réponse réciproque pour assurer l'authentification mutuelle de la carte et du logiciel avec laquelle elle communique. Une clé de session est envoyée chiffrée par la carte pour assurer la confidentialité des données.
+
+\subsection{Etablissement du tunnel}
+L'authentification mutuelle peut être résumée comme ceci : 
+\begin{itemize}
+\item Génération d'un nonce client
+\item Envoi du nonce client à la carte
+\item La carte récupère le nonce client, génère un nonce carte, un IV et une clé de session
+\item La carte envoie la clé, le nonce client et le nonce carte chiffrés avec la cle partagée et l'IV.
+\item Le client extrait l'IV et déchiffre le message avec la clé partagée.
+\item Le client vérifie si le nonce client est présent pour authentifier la carte, extrait la clé de session et récupère le nonce carte.
+\item Le client génère un IV et renvoie le nonce carte avec la clé de session établie.
+\item La carte récupère le nonce carte et vérifie s'il est identique à celui envoyé pour authentifier le client.
+\end{itemize}
+
+C'est le constructeur de l'objet java Tunnel qui s'occupe de tout côté client. 
+
+\subsection{Communications dans le tunnel}
+Une fois les entités mutuellement authentifiées et la clé de session échangée, les communications dans le tunnel peuvent se faire. 
+
+L'envoi dans le tunnel d'un fragment se fait comme ceci : 
+\begin{itemize}
+\item Génération d'un IV de transmission
+\item Chiffrement du fragment avec la clé de session et l'IV
+\item Concaténation de l'IV et des données chiffrées
+\item Calcul du CBC-MAC avec la taille totale ajoutée au début
+\item Concaténation de l'IV, des données chiffrées et du MAC
+\item Envoi du message final
+\end{itemize} 
+
+
+ 
 
 
 
