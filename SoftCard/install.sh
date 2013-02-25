@@ -9,7 +9,7 @@ fi
 echo "Done."
 
 echo -n "Installing applets: "
-gpshell install.txt &>/dev/null
+gpshell installTunnel.txt &>/dev/null
 if [ $? -ne 0 ]; then
     echo "Error. Exiting."
     exit 1
