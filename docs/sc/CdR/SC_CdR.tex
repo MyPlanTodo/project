@@ -39,7 +39,7 @@
 \def\docType{Cahier de recettes}
 \def\docDate{\today}
 \def\version{0.1}
-\def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
+\def\author{Giovanni \textsc{Huet}}
 \def\checked{Baptiste \textsc{Dolbeau}}
 \def\approved{}
 
@@ -215,6 +215,7 @@ Pour chaque cas d’utilisation, nous décrivons une procédure de test
 détaillée. Chaque procédure dispose d'un jeu de tests basé sur des
 données réelles.
 
+\newpage
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
@@ -225,7 +226,7 @@ données réelles.
 \hline
 \multicolumn{5}{|l|}{Procédure n°1 : Générer un nombre aléatoire.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Générer un nombre aléatoire à l'aide des fonctions javacard disponibles. & Obtention d'un nombre aléatoire. & F-Gl-10 & OK \\
 \hline
@@ -238,7 +239,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°2 : Evaluer le niveau de l'aléatoire.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Générer plusieurs (millions) nombres aléatoires afin d'établir des stastitiques et vérifier le niveau de l'aléatoire. &
 Générateur non prévisible (Probabilité uniforme) & F-Gl-10 & NC \\
@@ -253,14 +254,15 @@ Générateur non prévisible (Probabilité uniforme) & F-Gl-10 & NC \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°3 : Evaluer le temps d'exécution.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Chronométrer la génération de plusieurs (millions) nombres aléatoires. & Nous souhaitons que le temps de génération soit < 300ms pour que cela soit invisible à l'utilisateur. & F-Gl-10 & OK \\
+1 & Chronométrer la génération de plusieurs (milliers) nombres aléatoires pour en évaluer la moyenne. & Nous souhaitons que le temps de génération d'un nombre aléatoire soit < 300ms pour que cela soit invisible à l'utilisateur. & F-Gl-10 & OK \\
 \hline
 \end{tabular}
 \end{figure}
 
 
+\newpage
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
@@ -271,7 +273,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°4 : Déverrouillage de la carte (via code PIN).} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Entrer le code PIN valide. & Authentification de l'utilisateur rendant la carte utilisable. & F-Gl-20 & OK \\
 \hline
@@ -284,9 +286,9 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°5 : Verrouillage de la carte.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Effectuer un certain nombre d'authentifications erronées. & Verrouillage de la carte au bout d'un nombre prédéfini de tentatives. & F-Gl-20 & OK \\
+1 & Effectuer trois authentifications erronées à la suite. & Verrouillage de la carte. & F-Gl-20 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -297,13 +299,15 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°6 : Déverrouillage de la carte (via code PUK).} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Entrer le code PUK valide. & La carte est de nouveau opérationnelle. & F-Gl-20 & OK \\
 \hline
 \end{tabular}
 \end{figure}
 
+
+\newpage
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
@@ -314,7 +318,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°7 : Transmettre des données.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Envoyer des données de la carte à SoftCard. & Réception intégrale des données par SoftCard. & F-Gl-30 & OK \\
 \hline
@@ -322,18 +326,20 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \end{figure}
 
 
+\newpage
+
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé : Communication sécurisée lecteur/carte} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Communication sécurisée lecteur/carte (Tunnel)} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
 \multicolumn{5}{|l|}{Objectif de test : Vérifier les fonctions de chiffrement, d'authentification et d'intégrité.} \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°8 : Envoi de données chiffrées.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données chiffrées & Données non compréhensibles sans la clef de déchiffrement. & ? & OK \\
+1 & Envoyer des données chiffrées à l'aide d'un chiffrement sysmétrique (AES-128) & Données non compréhensibles sans la clef de déchiffrement. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -343,11 +349,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°9 : Envoi de données authentifiées (grâce au tunnel).} \\
+\multicolumn{5}{|l|}{Procédure n°9 : Envoi de données authentifiées sans altération.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données authentifiées sans altérer le contenu. & Validation de la non modification des données reçues. & ? & OK \\
+1 & Envoyer des données authentifiées à l'aide de CBC-MAC sans altérer le contenu. & Validation de la non modification des données reçues. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -356,11 +362,12 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°10 : Envoi de données authentifiées (grâce au tunnel) avec altération.} \\
+\multicolumn{5}{|l|}{Procédure n°10 : Envoi de données authentifiées avec altération.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données authentifiées en altérant leur contenu. & Détection de la modification des données reçues. & ? & OK \\
+1 & Envoyer des données authentifiées à l'aide de CBC-MAC en altérant leur contenu. & Détection de la modification des données reçues. & F-FI-30
+ & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -371,24 +378,26 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°11 : Déchiffrement de données reçues.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Déchiffrement des données à la sortie du tunnel à l'aide de la clef secrète partagée. & Récupération en clair des données transitant dans le tunnel. & ? & OK \\
+1 & Déchiffrement des données issues d'un cryptosystème sysmétrique à l'aide de la clef secrète partagée. & Récupération en clair des données transitant dans le tunnel. & F-FI-30 & OK \\
 \hline
 \end{tabular}
 \end{figure}
 
 
+\newpage
+
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé : Déchiffrement de données.} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{\begin{tabular}{l}Objet testé : Déchiffrement de données issues\\ d'un cryptosystème asymétrique (RSA)\end{tabular}} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
 \multicolumn{5}{|l|}{Objectif de test : Vérifier si les données reçues peuvent être déchiffrées.} \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°12 : Déchiffrer avec la clef privée.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Déchiffrer des données à partir de la carte avec la clef privée. & Données déchiffrées. & F-Gl-40 & OK \\
 \hline
@@ -402,14 +411,15 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°13 : Déchiffrer avec une clef invalide.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Déchiffrer des données à partir de la carte avec une clef privée invalide. & Données non déchiffrées & F-Gl-40 & OK \\
+1 & Déchiffrer des données à partir de la carte avec une clef privée invalide. & Données non déchiffrées et une erreur est détectée. & F-Gl-40 & OK \\
 \hline
 \end{tabular}
 \end{figure}
 
 
+\newpage
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
@@ -420,7 +430,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°14 : Signer des données.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Signer des données à partir de la carte avec la clef privée. & Données signées. & F-Gl-50 & OK \\
 \hline
@@ -433,7 +443,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°15 : Vérification avec la clef publique associée.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Vérifier des données signées à partir de la carte avec la clef publique. & Données vérifiées. & F-Gl-50 & OK \\
 \hline
@@ -446,7 +456,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°16 : Vérification des données invalides.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Vérifier des données signées d'une autre personne à partir de notre carte avec notre clef publique. & Données non vérifiées. & F-Gl-50 & OK \\
 \hline
@@ -454,6 +464,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \end{figure}
 
 
+\newpage
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
@@ -464,41 +475,42 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 \multicolumn{5}{|l|}{Procédure n°17 : Attribuer un code PIN.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Attribution d'un code PIN à un utilisateur. & L'utilisateur possède un code PIN qui lui est propre. & F-Gl-60 & OK \\
 \hline
 \end{tabular}
 \end{figure}
 
-\paragraph{}
+
+\begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
 \multicolumn{5}{|l|}{Procédure n°18 : Insertion de données sur la carte.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
 1 & Stocker des données qui soient propres à l'utilisateur : login, mot de passe, etc... & La carte contient bien les données. & F-Gl-60 & OK \\
 \hline
 \end{tabular}
+\end{figure}
+
 
 \paragraph{}
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
 \multicolumn{5}{|l|}{Procédure n°19 : Modification des données sur la carte.} \\
 \hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
+N° & Action(s) & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Modification des données préalablement insérées : login, mot de passe, code PIN, etc... & Les données sont bien modifiées. & F-Gl-60 & NC \\
+1 & Modification des données préalablement insérées : login, mot de passe, code PIN, etc... & Les données sont bien modifiées. & F-Gl-60 & OK \\
 \hline
 \end{tabular}
-
 
 
 \section{Couverture de tests}
 Ce tableau reprend les exigences de la STB et précise, pour chacune d’entre elles, la méthode
 de vérification (démonstration / tests) et une description de celle ci.
-
 
 
 \begin{figure}[!h]
@@ -522,28 +534,28 @@ aléatoire, que l'on considérera valide s'il est inférieur à 300 ms. \\
 F-Gl-20 & Test & Procédure 4 & Le test consiste à débloquer la carte en
 s'authentifiant auprès de celle ci via le code PIN. \\
 \hline
-F-Gl-20 & Test & Procédure 5 & Le test consiste à entrer 10 codes PIN
+F-Gl-20 & Test & Procédure 5 & Le test consiste à entrer 3 codes PIN
 erronés afin de verrouiller la carte, et d'entrer ensuite le bon code
 PIN pour vérifier le verrouillage. \\
 \hline
 F-Gl-20 & Test & Procédure 6 & Le test consiste à déverrouiller la carte
-après avoir entré 10 codes PIN erronés en entrant le code PUK valide. \\
+après avoir entré 3 codes PIN erronés en entrant le code PUK valide. \\
 \hline
 F-Gl-30 & Test & Procédure 7 & Le test consiste à envoyer des données
 contenues sur la carte. \\
 \hline
-? & Test & Procédure 8 & Le test consiste à envoyer des données chiffrées
+F-FI-30 & Test & Procédure 8 & Le test consiste à envoyer des données chiffrées
 via une communication sécurisée par un chiffrement symétrique. \\
 \hline
-? & Test & Procédure 9 & Le test consiste à envoyer des données
+F-FI-30 & Test & Procédure 9 & Le test consiste à envoyer des données
 authentifiées sans altérer leur contenu. Nous devons ensuite vérifier que
 le contenu est bien intègre. \\
 \hline 
-? & Test & Procédure 10 & Le test consiste à envoyer des données
+F-FI-30 & Test & Procédure 10 & Le test consiste à envoyer des données
 authentifiées en altérant leur contenu. Nous devons ensuite pouvoir détecter
 la modification du contenu. \\
 \hline 
-? & Test & Procédure 11 & Le test consiste à recevoir des données au
+F-FI-30 & Test & Procédure 11 & Le test consiste à recevoir des données au
 préalable chiffrées, et vérifier si elles ont bien été déchiffrées. \\
 \hline
 F-Gl-40 & Test & Procédure 12 & Le test consiste à déchiffrer des données
@@ -577,4 +589,5 @@ précédemment insérées sur la carte. \\
 \end{tabular}
 \end{figure}
 
+\clearpage
 \end{document}
