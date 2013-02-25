@@ -25,6 +25,7 @@ public class gen_random extends Applet {
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 
 	public static final byte INS_NOUVEL_ALEA = 0x00;
+	private static short[] tab; 
 
 
 	/* Attributs */
@@ -40,8 +41,9 @@ public class gen_random extends Applet {
 
 			// 
 			datastore.eraseData();
-			rng.generateData(data, (short) 0,(short) (data[ISO7816.OFFSET_P1] + data[ISO7816.OFFSET_P2]*256));			
-			datastore.putData(data, (short) (data[ISO7816.OFFSET_P1] + data[ISO7816.OFFSET_P2]*256));
+			tab[0] = (short) (data[ISO7816.OFFSET_P1] + data[ISO7816.OFFSET_P2]*256);
+			rng.generateData(data, (short) 0,tab[0]);			
+			datastore.putData(data, (short) tab[0]);
 
 			break;
 		}
@@ -51,7 +53,7 @@ public class gen_random extends Applet {
 	private gen_random() {
 		// Secure random number generator
 		rng =  RandomData.getInstance(RandomData.ALG_SECURE_RANDOM);
-
+		tab =  JCSystem.makeTransientShortArray((short) 1, JCSystem.CLEAR_ON_RESET);
 
 
 	}
