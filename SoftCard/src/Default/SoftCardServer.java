@@ -449,7 +449,6 @@ class ProcessusSock extends Thread {
 
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
-		System.out.println(b[0]);
 		return b;
 	}
 
