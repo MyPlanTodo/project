@@ -371,7 +371,7 @@ public class Tunnel {
 		{
 			// sending of the fragmented request
 			// it will erassembled on the other side
-			System.out.println("iteration : "+ i);
+			//System.out.println("iteration : "+ i);
 			sendRaw(segmented_rq[i]);			
 		}		
 	}

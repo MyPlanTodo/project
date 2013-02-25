@@ -1,5 +1,9 @@
 package with_tunnel;
 
+/**
+ * @author Romain Pignard
+ */
+
 import javacard.framework.APDU;
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
@@ -8,8 +12,6 @@ import javacard.framework.OwnerPIN;
 
 public class PIN extends Applet {
 	/* Constantes */
-	public static final byte CLA_MONAPPLET = (byte) 0xB0;
-
 	public static final byte INS_VERIF_PIN = 0x00;
 	public static final byte INS_PIN_REMAINING_TRIES = 0x01;
 	public static final byte INS_PUK_REMAINING_TRIES = 0x02;
@@ -174,11 +176,7 @@ public class PIN extends Applet {
 		byte[] buffer = apdu.getBuffer();
 
 		if (this.selectingApplet()) return;
-
-		if (buffer[ISO7816.OFFSET_CLA] != CLA_MONAPPLET) {
-			ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
-		}
-
+		
 		switch (buffer[ISO7816.OFFSET_INS]) {
 		case INS_PIN_REMAINING_TRIES:
 			//renvoie le nombres d'essais de code PIN restant

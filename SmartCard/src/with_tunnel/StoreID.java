@@ -9,9 +9,13 @@ import javacard.framework.JCSystem;
 import javacard.framework.TransactionException;
 import javacard.framework.Util;
 
+/**
+ * This class stores, return and modify credentials.
+ * @author Emmanuel Mocquet
+ *
+ */
 public class StoreID extends Applet {
 	/* Constantes */
-	private static final byte CLA_STORE = (byte) 0xB0;
 	private static final byte INS_STORE_LOGIN = 0x00;
 	private static final byte INS_STORE_PWD = 0x01;
 	private static final byte INS_VALIDATE_PWD = 0x02;
@@ -47,10 +51,6 @@ public class StoreID extends Applet {
 	public static void execute(byte[] buffer)
 	{
 		if (PIN.getState() == (short)0x9000) {
-			if (buffer[ISO7816.OFFSET_CLA] != CLA_STORE) {
-				ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
-			}
-
 			switch (buffer[ISO7816.OFFSET_INS]) {
 			/**
 			 * Store the provided login.
@@ -102,7 +102,8 @@ public class StoreID extends Applet {
 
 				/**
 				 * This block is called when the password has been successfully 
-				 * modified/saved on the user side.
+				 * modified/saved on the user side. The temrorary password replaces
+				 * the old password.
 				 */
 			case INS_VALIDATE_PWD:
 				try{
@@ -136,16 +137,11 @@ public class StoreID extends Applet {
 			case INS_GET:
 				try{
 					Util.arrayCopy(login, (short) 0, buffer, (short) 0, (short) login.length);
-					Util.arrayCopy(delimiter, (short) 0, buffer, (short) login.length, (short) delimiter.length);
-					Util.arrayCopy(tmpPwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) tmpPwd.length);
-					Util.arrayCopy(delimiter, (short) 0, buffer, (short) (login.length + delimiter.length + tmpPwd.length), (short) delimiter.length);
-					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length*2 + tmpPwd.length), (short) pwd.length);
+					Util.arrayCopy(delimiter, (short) 0, buffer, (short) (login.length), (short) delimiter.length);
+					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) pwd.length);
 					
 					datastore.eraseData();
-					datastore.putData(buffer, (short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
-					/*apdu.setOutgoing();
-					apdu.setOutgoingLength((short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
-					apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));*/
+					datastore.putData(buffer, (short)(login.length + delimiter.length + pwd.length));
 				} catch(APDUException e) {
 					ISOException.throwIt((short) 0x0001);
 				} catch(NullPointerException e) {
@@ -197,10 +193,6 @@ public class StoreID extends Applet {
 		if (this.selectingApplet()) return;
 
 		if (PIN.getState() == (short)0x9000) {
-			if (buffer[ISO7816.OFFSET_CLA] != CLA_STORE) {
-				ISOException.throwIt(ISO7816.SW_CLA_NOT_SUPPORTED);
-			}
-
 			switch (buffer[ISO7816.OFFSET_INS]) {
 			/**
 			 * Store the provided login.
@@ -281,14 +273,12 @@ public class StoreID extends Applet {
 			case INS_GET:
 				try{
 					Util.arrayCopy(login, (short) 0, buffer, (short) 0, (short) login.length);
-					Util.arrayCopy(delimiter, (short) 0, buffer, (short) login.length, (short) delimiter.length);
-					Util.arrayCopy(tmpPwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) tmpPwd.length);
-					Util.arrayCopy(delimiter, (short) 0, buffer, (short) (login.length + delimiter.length + tmpPwd.length), (short) delimiter.length);
-					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length*2 + tmpPwd.length), (short) pwd.length);
+					Util.arrayCopy(delimiter, (short) 0, buffer, (short) (login.length), (short) delimiter.length);
+					Util.arrayCopy(pwd, (short) 0, buffer, (short) (login.length + delimiter.length), (short) pwd.length);
 					
 					apdu.setOutgoing();
-					apdu.setOutgoingLength((short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
-					apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + delimiter.length*2 + tmpPwd.length + pwd.length));
+					apdu.setOutgoingLength((short)(login.length + delimiter.length + pwd.length));
+					apdu.sendBytesLong(buffer, (short) 0, (short)(login.length + delimiter.length + pwd.length));
 				} catch(APDUException e) {
 					ISOException.throwIt((short) 0x0001);
 				} catch(NullPointerException e) {
