@@ -40,7 +40,7 @@
 \def\docDate{\today}
 \def\version{0.1}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
-\def\checked{}
+\def\checked{Baptiste \textsc{Dolbeau}}
 \def\approved{}
 
 
@@ -61,7 +61,7 @@
 \hline
 0.1 & 05/02/2013 & Création\\
 \hline
-&&\\
+0.2 & 24/02/2013 & Vérification\\
 \hline
 \end{tabularx}
 \end{center}
@@ -73,46 +73,59 @@
 
 \section{Introduction}
 
-Ce document est un support pour la validation du logiciel lors de la recette auprès du client.
-Il est consacré à la définition des moyens et des procédures utilisés pour assurer la recette du
-produit développée. La recette est un procédé permettant d’assurer que le logiciel est conforme à la
-spécification déjà définie.
-Nous allons recenser dans ce cahier de recette les objectifs de tests de validation et les moyens
-nécessaires pour les atteindre en précisant :
+Ce document est un support pour la validation du logiciel lors de la recette
+auprès du client. Il est consacré à la définition des moyens et des
+procédures utilisés pour assurer la recette du produit développé. La recette
+est un procédé permettant d’assurer la conformité du logiciel à la
+spécification déjà définie. Nous allons recenser dans ce document les
+objectifs de tests de validation et les moyens nécessaires pour les atteindre
+en précisant :
 \begin{itemize}
-	\item les conditions à satisfaire préalablement à l’exécution des tests ;
-	\item les moyens matériels requis (plate-forme de tests) ;
-	\item la logique de leur déroulement (étapes successives).
+	\item Les pré-conditions à satisfaire;
+	\item Les moyens matériels requis (plate-forme de tests);
+	\item La logique de leur déroulement (étapes successives).
 \end{itemize}
-Les fonctionnalités de notre logiciel peuvent être divisées en une liste de constituants qui seront
-testés à tour de rôle. L'ensemble des opérations devront être transparentes vis à vis de l'utilisateur. 
-Nous donnerons par la suite les différents cas d’utilisation prélevé de la spécification technique de besoin :
+Notre logiciel peut être divisé en une liste de constituants qui seront
+testés à tour de rôle. L'ensemble des opérations devra être transparent
+vis à vis de l'utilisateur. Les différents cas d’utilisation prélevés
+de la spécification technique de besoin sont les suivants :
 
 \subsection*{Génération de nombres aléatoires}
-La carte à puce doit pouvoir générer des nombres aléatoires de manière sécurisée, c'est à dire non prévisible.
+La carte à puce doit pouvoir générer des nombres aléatoires de manière
+sécurisée : c'est à dire non prévisible.
 
 \subsection*{Déblocage de la carte (via authentification par code PIN ou via PUK)}
-Afin d'utiliser la carte, il nous faut pour cela nous authentifier à l'aide d'un code PIN. Cependant si l'utilisateur échoue à l'authentification par code PIN suite à un certain nombre de tentatives alors la carte sera verrouillée. Pour la déverrouiller on utilisera un code PUK.
+Afin d'utiliser la carte, il nous faut nous authentifier à l'aide d'un code PIN.
+Si l'utilisateur échoue à l'authentification par code PIN suite à un certain
+nombre de tentatives, la carte sera verrouillée. Pour la déverrouiller nous
+utiliserons le code PUK.
 
-\subsection*{Transimission de données}
-La carte doit pouvoir transmettre des données stockées à SoftCard (login, mot de passe, clef publique,...).
+\subsection*{Transmission de données}
+La carte doit pouvoir transmettre des données stockées à SoftCard telles que
+le login, le mot de passe, la clef publique, etc...
 
 \subsection*{Chiffrement/Déchiffrement de données}
-Sur la carte est stockée la clef public et la clef privée préalablement générées (Crypto système assymétrique de type RSA). Ces clefs nous permettront de chiffrer et de déchiffrer des données reçu ou à envoyer.
+Sur la carte sont stockées la clef publique et la clef privée préalablement
+générées (Crypto-système assymétrique de type RSA). Ces clefs nous
+permettront de chiffrer et de déchiffrer des données reçues ou à envoyer.
 
 \subsection*{Signature/Vérification de données}
-Par le biais de la carte, nous serons en mesure de signer des données avec notre clef privée afin d'authentifier des données afin d'appliquer la non répudiation. A contrario, nous devons également pouvoir vérifier l'auteur des données. Pour cela une vérification des données devra être possible via la clef publique. 
+Par le biais de la carte, nous serons en mesure de signer des données avec
+notre clef privée afin d'assurer la non répudiation. Nous devons également
+pouvoir vérifier l'auteur des données. Nous utiliserons pour cela la clef
+publique. 
 
 \subsection*{Administration des cartes}
-On devra pouvoir également administrer les cartes, telle que la réinitialisation du code PIN, attribution du code PIN,...
+On devra également pouvoir administrer les cartes : effectuer des opérations
+telles que la réinitialisation du code PIN, son attribution, etc...
 
 
-\section{Documents applicables et de référence}
+\section{Documents applicables et de références}
 \begin{itemize}
-	\item SC\_STB : le document renfermant les spécifications techniques de Besoin;
-	\item SC\_DaL : le document contenant l'architecture du logiciel;
+	\item SC\_STB : Le document renfermant les spécifications techniques de Besoin;
+	\item SC\_DaL : Le document contenant l'architecture logicielle;
 	\item Les comptes rendu de réunion du projet;
-	\item cartes-a-puce.pdf, le sujet du projet.
+	\item Le sujet du projet : "cartes-a-puce.pdf".
 \end{itemize}
 
 \section{Terminologie et sigles utilisés}
@@ -121,86 +134,96 @@ On devra pouvoir également administrer les cartes, telle que la réinitialisati
     \item[AdR :] Analyse des Risques;
     \item[DAL :] Document d'Architecture Logicielle;
     \item[PdD :] Plan de développement;
-    \item[STB :] Spécification Technique de Besoins;
-    \item[SC :] SmartCard, relatif au sous-projet sur les cartes à puce;
-    \item[SSN :] \emph{Secure Social Network};
+    \item[STB :] Spécification Technique de Besoin;
+    \item[SC :] \emph{SmartCard}, relatif au sous-projet sur les cartes à puce;
+    \item[SSN :] \emph{Secure Social Network}, relatif au sous-projet sur les
+	réseaux sociaux;
     \item[FaceCrypt :] Application Java gérant les traitements lourds
-    (chiffrement/déchiffrement) de l'extension et étant en relation avec
-        la carte à puce;
+	(chiffrement/déchiffrement) de l'extension et relais entre l'Extension
+	et \emph{SmartCard};
     \item[IHM :] Interface Homme-Machine, (interface graphique);
-    \item[Utilisateur :] entité (humain ou programme) intéragissant avec ce
+    \item[Utilisateur :] Entité (humain ou programme) intéragissant avec ce
         sous-projet;
-    \item[Système :] ce sous-projet;
-    \item[SoftCard :] Application effectuant le relais entre la carte
-        et FaceCrypt;
-    \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] indistingable en temps polynomial, distribution
-        de probabilité uniforme;
-    \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
-        pseudo-aléatoires;
-    \item[PIN :] (Personal Identification Number) code servant à authentifier
-        l'utilisateur;
-    \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
-        trop de codes PIN erronés ont été entrés.
+    \item[Système :] Ce sous-projet;
+    \item[SoftCard :] Application effectuant le relais entre la carte et
+	FaceCrypt;
+    \item[Extension :] Programme incorporé dans le navigateur;
+    \item[Aléatoire :] Indistinguable en temps polynomial, distribution de
+	probabilité uniforme;
+    \item[PRNG :] \emph{Pseudo Random Number Generator} - Générateur de
+	nombres pseudo-aléatoires;
+    \item[PIN :] \emph{Personal Identification Number} - Code servant à
+	authentifier l'utilisateur;
+    \item[PUK :] \emph{Personal Unlock Key} - Code servant à débloquer la
+	carte quand trop de codes PIN erronés ont été entrés.
 \end{description}
 
-\section{Environnemment de tests}
-L'ensemble des tests ce sont effectués sur des machines ayant ces caractéristiques:
+\section{Environnement de tests}
+L'ensemble des tests se sont effectués sur des machines ayant les
+caractéristiques suivantes :
 \begin{itemize} 
-	\item Système d'exploitation: Ubuntu 12.04
-	\item Processeur: Intel(R) Core(TM)2 Duo CPU E8400  @ 3.00GHz
-	\item Mémoire: 2Go RAM
-	\item Logiciel: Eclipse Platform Version: 3.8.0, Java 1.6 (Client) et Java 1.5 (Java card).
+	\item Système d'exploitation : Ubuntu 12.04;
+	\item Processeur : Intel(R) Core(TM)2 Duo CPU E8400  @ 3.00GHz;
+	\item Mémoire : 2Go RAM;
+	\item Logiciel : Eclipse Platform Version: 3.8.0, Java 1.6 (Client) et Java 1.5 (Java card).
 \end{itemize}
 
 
-
-Nous utilisons également des cartes Java Card J3A (marque NXP) avec 40K d'EEPROM et des lecteurs Omnikey 3121.
-Les cartes sont conformes aux standards Java Card 2.2.2 et Global Platform 2.1.1.
+Nous utilisons également des cartes Java Card J3A (marque NXP) avec 40K
+d'EEPROM et des lecteurs Omnikey 3121. Les cartes sont conformes aux standards
+Java Card 2.2.2 et Global Platform 2.1.1.
 
 \section{Responsabilité}
-Afin de mener les tests dans les meilleurs conditions, une organisation au sein du groupe a été mise en place: \\
+Afin de mener les tests dans les meilleurs conditions, une organisation au sein
+du groupe a été mise en place :\\
 
-La conception et la définition des données de tests a été réalisée par Giovanni \textsc{Huet} et Romain \textsc{Pignard}. 
-Après avoir exécuté les différents tests, les responsables de ce module transmettront aux développeurs un compte rendu contenant
-les résultats de ces tests afin d’améliorer la version courante du logiciel et de fournir une nouvelle
-version à tester. Chaque version fournie doit être testée et validée.
+La conception et la définition des données de tests a été réalisée par
+Giovanni \textsc{Huet} et Romain \textsc{Pignard}. Après avoir exécuté
+les différents tests, les responsables de ce module transmettront aux
+développeurs un compte rendu contenant les résultats afin d’améliorer la
+version actuelle du logiciel et d'en fournir une nouvelle à tester. Chaque
+version fournie doit être testée et validée.
 
 \section{Stratégie de tests}
 
 La démarche utilisée pour effectuer les tests est la suivante :
 \begin{itemize}
 \item Mettre à la disposition de l’équipe testeur les modules développés.
-\item Réalisation des tests à travers une procédure de tests, cette procédure comportera un jeu
-de tests et les modalités d’exécution des tests procédure de test.
-\item Élaboration d'un compte rendu des résultats des tests qui sera transmis aux développeurs.
+\item Réalisation des tests à travers une procédure, celle ci comportera
+un jeu de tests ainsi que la modalité de leur exécution.
+\item Élaboration d'un compte rendu des résultats des tests qui sera
+transmis aux développeurs.
 \item Correction des anomalies par l'équipe développeur.
-\item Des tests secondaires seront effectués pour s'assurer que toutes les anomalies ont été corrigées.
+\item Des tests secondaires seront effectués pour s'assurer que toutes les
+anomalies ont été corrigées.
 \end{itemize}
 
-Les tests seront réalisés par ordre de priorité, les modules ayant une priorité indispensable seront
-pris en compte dès que possible. La condition d'arrêt des tests sera le succès de ces derniers après correction 
-des anomalies.
+Les tests seront réalisés par ordre de priorité. Les modules ayant une
+priorité indispensable seront pris en compte dès que possible. La condition
+d'arrêt des tests sera le succès de ces derniers après correction des
+anomalies.
 
 \section{Gestion des anomalies}
 
-A chaque modification apportée (corrigé), nous devons réaliser un nombre de tests permettant de détecter les
-anomalies persistantes. Toute anomalie détectée sera noté en détails dans un rapport et ce dernier sera envoyé
- aux développeurs afin qu'ils apportent les modifications nécessaires.
+A chaque modification apportée (correction), nous devrons réaliser un nombre
+de tests permettant de détecter les anomalies persistantes. Toute anomalie
+détectée sera notée dans un rapport et ce dernier sera envoyé aux
+développeurs afin qu'ils apportent les modifications nécessaires.
 
 \section{Procédures de tests}
-Pour chaque cas d’utilisation, nous décrivons une procédure de test détaillée, chaque
-procédure dispose d'un jeu de test basé sur des données réelles.
+Pour chaque cas d’utilisation, nous décrivons une procédure de test
+détaillée. Chaque procédure dispose d'un jeu de tests basé sur des
+données réelles.
 
 
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: Génération de nombres aléatoire} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Génération de nombres aléatoires} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier le comportement du générateur aléatoire de la carte à puce.} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier le comportement du générateur aléatoire de la carte à puce.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°1: générer un nombre aléatoire} \\
+\multicolumn{5}{|l|}{Procédure n°1 : Générer un nombre aléatoire.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -213,7 +236,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°2: évaluer le niveau de l'aléatoire} \\
+\multicolumn{5}{|l|}{Procédure n°2 : Evaluer le niveau de l'aléatoire.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -228,11 +251,11 @@ Générateur non prévisible (Probabilité uniforme) & F-Gl-10 & NC \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°3: évaluer le temps d'éxecution} \\
+\multicolumn{5}{|l|}{Procédure n°3 : Evaluer le temps d'exécution.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Etablir une moyenne pour la génération d'un nombre aléatoire. & Pour être transparent à l'utilisateur, nous souhaitons que le temps de génération soit < 300ms. & F-Gl-10 & OK \\
+1 & Chronométrer la génération de plusieurs (millions) nombres aléatoires. & Nous souhaitons que le temps de génération soit < 300ms pour que cela soit invisible à l'utilisateur. & F-Gl-10 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -242,15 +265,15 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{\begin{tabular}{l}Objet testé: Déblocage de la carte\\ (via authentification par code PIN et PUK)\end{tabular}} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{\begin{tabular}{l}Objet testé : Déblocage de la carte\\ (via authentification par code PIN et PUK)\end{tabular}} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier le comportement de la carte lors de plusieurs tentive d'authentification.} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier le comportement de la carte lors de plusieurs tentatives d'authentifications.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°4: verrouillage/deverouillage de la carte.} \\
+\multicolumn{5}{|l|}{Procédure n°4 : Déverrouillage de la carte (via code PIN).} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Entrer le code PIN valide. & Déblocage de la carte et authentification de l'utilisateur rendant la carte utilisable. & F-Gl-20 & OK \\
+1 & Entrer le code PIN valide. & Authentification de l'utilisateur rendant la carte utilisable. & F-Gl-20 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -259,11 +282,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°5: verrouillage de la carte} \\
+\multicolumn{5}{|l|}{Procédure n°5 : Verrouillage de la carte.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Effectuer un certain nombre d'authentification erroné. & Verrouillage de la carte au bout d'un nombre prédéfini de tentative. & F-Gl-20 & OK \\
+1 & Effectuer un certain nombre d'authentifications erronées. & Verrouillage de la carte au bout d'un nombre prédéfini de tentatives. & F-Gl-20 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -272,11 +295,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°6: déverrouillage de la carte} \\
+\multicolumn{5}{|l|}{Procédure n°6 : Déverrouillage de la carte (via code PUK).} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Entrer le code PUK valide. & Deverrouillage de la carte rendant celle ci de nouveau opérationnelle. & F-Gl-20 & OK \\
+1 & Entrer le code PUK valide. & La carte est de nouveau opérationnelle. & F-Gl-20 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -285,11 +308,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: transmission de données} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Transmission de données} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier si les données contenu dans la carte peuvent être transmise.} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier si les données contenues dans la carte peuvent être transmises.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°7: transmettre des données.} \\
+\multicolumn{5}{|l|}{Procédure n°7 : Transmettre des données.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -302,11 +325,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: communication sécurisée lecteur/carte} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Communication sécurisée lecteur/carte} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier les fonctions de chiffrement, d'authentification et d'intégrité.} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier les fonctions de chiffrement, d'authentification et d'intégrité.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°8: envoie de données chiffrées} \\
+\multicolumn{5}{|l|}{Procédure n°8 : Envoi de données chiffrées.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -320,7 +343,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°9: envoie de données authentifiées} \\
+\multicolumn{5}{|l|}{Procédure n°9 : Envoi de données authentifiées (grâce au tunnel).} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -333,11 +356,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°10: envoie de données authentifiées avec altération} \\
+\multicolumn{5}{|l|}{Procédure n°10 : Envoi de données authentifiées (grâce au tunnel) avec altération.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Envoyer des données authentifiées en altérerant le contenu. & Détection de la non modification des données reçues. & ? & OK \\
+1 & Envoyer des données authentifiées en altérant leur contenu. & Détection de la modification des données reçues. & ? & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -346,11 +369,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°11: déchiffrement de données reçues} \\
+\multicolumn{5}{|l|}{Procédure n°11 : Déchiffrement de données reçues.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Déchiffrement des données à la sortie du tunnel. & Récupération des données envoyées chiffrées en clair. & ? & OK \\
+1 & Déchiffrement des données à la sortie du tunnel à l'aide de la clef secrète partagée. & Récupération en clair des données transitant dans le tunnel. & ? & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -359,29 +382,15 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: déchiffrement de données} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Déchiffrement de données.} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier si les données reçues peuvent être déchiffrées.} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier si les données reçues peuvent être déchiffrées.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°12: déchiffrer avec la clef associée.} \\
-\hline
-N° & Actions & Résultats attendus & Exigence & OK/NOK \\
-\hline
-1 & Déchiffrer des données à partir de la carte avec la clef privée correspondante. & Données déchiffrées. & F-Gl-40 & OK \\
-\hline
-\end{tabular}
-\end{figure}
-
-
-
-\begin{figure}[!h]
-\begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
-\hline
-\multicolumn{5}{|l|}{Procédure n°13: déchiffrer avec une clef invalide} \\
+\multicolumn{5}{|l|}{Procédure n°12 : Déchiffrer avec la clef privée.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Déchiffrer des données à partir de la carte avec une clef privée non correspondante. & Données non déchiffrées & F-Gl-40 & OK \\
+1 & Déchiffrer des données à partir de la carte avec la clef privée. & Données déchiffrées. & F-Gl-40 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -391,11 +400,25 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: Signature/Vérification de données} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{5}{|l|}{Procédure n°13 : Déchiffrer avec une clef invalide.} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: Signer des données et vérifier la signature} \\
+N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°14: Signer/Vérrifier.} \\
+1 & Déchiffrer des données à partir de la carte avec une clef privée invalide. & Données non déchiffrées & F-Gl-40 & OK \\
+\hline
+\end{tabular}
+\end{figure}
+
+
+
+\begin{figure}[!h]
+\begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
+\hline
+\multicolumn{3}{|l|}{Objet testé : Signature/Vérification de données.} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\hline
+\multicolumn{5}{|l|}{Objectif de test : Signer des données et vérifier la signature.} \\
+\hline
+\multicolumn{5}{|l|}{Procédure n°14 : Signer des données.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -408,11 +431,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°15: Vérification avec la clef publique associée} \\
+\multicolumn{5}{|l|}{Procédure n°15 : Vérification avec la clef publique associée.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Vérifier des données signées à partir de la carte avec la clef publique correspondante. & Données vérifiées. & F-Gl-50 & OK \\
+1 & Vérifier des données signées à partir de la carte avec la clef publique. & Données vérifiées. & F-Gl-50 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -421,11 +444,11 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°16: vérification avec une clef publique invalide} \\
+\multicolumn{5}{|l|}{Procédure n°16 : Vérification des données invalides.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Vérifier des données signées à partir de la carte avec la clef publique non correspondante. & Données non vérifiées. & F-Gl-50 & OK \\
+1 & Vérifier des données signées d'une autre personne à partir de notre carte avec notre clef publique. & Données non vérifiées. & F-Gl-50 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -435,15 +458,15 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \begin{figure}[!h]
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{3}{|l|}{Objet testé: Administration des cartes} & \multicolumn{2}{|l|}{Version: 1.0} \\
+\multicolumn{3}{|l|}{Objet testé : Administration des cartes.} & \multicolumn{2}{|l|}{Version: 1.0} \\
 \hline
-\multicolumn{5}{|l|}{Objectif de test: vérifier si nous pouvons administrer les cartes} \\
+\multicolumn{5}{|l|}{Objectif de test : Vérifier si l'administration des cartes est possible.} \\
 \hline
-\multicolumn{5}{|l|}{Procédure n°17: Attribuer un code PIN} \\
+\multicolumn{5}{|l|}{Procédure n°17 : Attribuer un code PIN.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Attribution d'un code PIN à un utilisateur. & L'utilisateur posséde un code PIN qui lui est propre. & F-Gl-60 & OK \\
+1 & Attribution d'un code PIN à un utilisateur. & L'utilisateur possède un code PIN qui lui est propre. & F-Gl-60 & OK \\
 \hline
 \end{tabular}
 \end{figure}
@@ -451,22 +474,22 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \paragraph{}
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°18: insertion de données sur la carte} \\
+\multicolumn{5}{|l|}{Procédure n°18 : Insertion de données sur la carte.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Insérer des données qui soit propre à l'utilisateur (login, mot de passe,...). & La carte contient les données. & F-Gl-60 & OK \\
+1 & Stocker des données qui soient propres à l'utilisateur : login, mot de passe, etc... & La carte contient bien les données. & F-Gl-60 & OK \\
 \hline
 \end{tabular}
 
 \paragraph{}
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°19: modification des données sur la carte} \\
+\multicolumn{5}{|l|}{Procédure n°19 : Modification des données sur la carte.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Modification de données préalablement insérer (login, mot de passe, code PIN,...). & Données modifiées. & F-Gl-60 & NC \\
+1 & Modification des données préalablement insérées : login, mot de passe, code PIN, etc... & Les données sont bien modifiées. & F-Gl-60 & NC \\
 \hline
 \end{tabular}
 
@@ -474,7 +497,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 
 \section{Couverture de tests}
 Ce tableau reprend les exigences de la STB et précise, pour chacune d’entre elles, la méthode
-de vérification (démonstration / tests) et une description de celles ci.
+de vérification (démonstration / tests) et une description de celle ci.
 
 
 
@@ -483,49 +506,75 @@ de vérification (démonstration / tests) et une description de celles ci.
 \hline
 Exigence & Méthode de vérification & Procédure utilisée & Commentaire \\
 \hline
-F-Gl-10 & Démonstration & Procédure 1 & Ce test consiste à utiliser une fonction disponible via la librairie javacard pour générer un nombre aléatoire. \\
+F-Gl-10 & Démonstration & Procédure 1 & Ce test consiste à utiliser une
+fonction disponible via la librairie javacard pour générer un nombre
+aléatoire. \\
 \hline
-F-Gl-10 & Test & Procédure 2 & Le test consiste à générer plusieurs nombres aléatoires (millions) et les soumettre à un test stastistique pour évaluer le niveau de l'aléatoire. \\
+F-Gl-10 & Test & Procédure 2 & Le test consiste à générer plusieurs nombres
+aléatoires (millions) et les soumettre à un test stastistique pour évaluer
+le niveau de l'aléatoire. \\
 \hline
-F-Gl-10 & Test & Procédure 3 & Le test consiste à générer plusieurs nombres aléatoires (10000) et nous faisons la moyenne afin de connaitre le temps d'éxecution moyen pour la génération d'un nombre aléatoire, qu'on considérera valide si inférieur à 300ms. \\
+F-Gl-10 & Test & Procédure 3 & Le test consiste à chronométrer la génération
+de plusieurs nombres aléatoires (milliers) et d'en faire la moyenne afin de
+connaitre le temps d'exécution moyen pour la génération d'un nombre
+aléatoire, que l'on considérera valide s'il est inférieur à 300 ms. \\
 \hline
-F-Gl-20 & Test & Procédure 4 & Le test consiste à débloquer la carte en s'authentifiant auprès de celle ci en entrant le code PIN associé. \\
+F-Gl-20 & Test & Procédure 4 & Le test consiste à débloquer la carte en
+s'authentifiant auprès de celle ci via le code PIN. \\
 \hline
-F-Gl-20 & Test & Procédure 5 & Le test consiste à entrer 10 code PIN erronés afin de verrouiller la carte, et entrer ensuite le bon code PIN pour vérifier le verrouillage. \\
+F-Gl-20 & Test & Procédure 5 & Le test consiste à entrer 10 codes PIN
+erronés afin de verrouiller la carte, et d'entrer ensuite le bon code
+PIN pour vérifier le verrouillage. \\
 \hline
-F-Gl-20 & Test & Procédure 6 & Le test consiste à déverrouiller la carte après avoir entré 10 codes PINs erroné en entrant le code PUK valide. \\
+F-Gl-20 & Test & Procédure 6 & Le test consiste à déverrouiller la carte
+après avoir entré 10 codes PIN erronés en entrant le code PUK valide. \\
 \hline
-F-Gl-30 & Test & Procédure 7 & Le consiste à envoyer des données contenu sur la carte. \\
+F-Gl-30 & Test & Procédure 7 & Le test consiste à envoyer des données
+contenues sur la carte. \\
 \hline
-? & Test & Procédure 8 & Le test consiste à envoyer des données chiffré via une commincation sécurisé par un chiffrement symétrique. \\
+? & Test & Procédure 8 & Le test consiste à envoyer des données chiffrées
+via une communication sécurisée par un chiffrement symétrique. \\
 \hline
-? & Test & Procédure 9 & Le test consiste à envoyer des données authentifiées sans altérer le contenu. Nous devons ensuite vérifier que le contenu est bien intégre. \\
+? & Test & Procédure 9 & Le test consiste à envoyer des données
+authentifiées sans altérer leur contenu. Nous devons ensuite vérifier que
+le contenu est bien intègre. \\
 \hline 
-? & Test & Procédure 10 & Le test consiste à envoyer des données authentifiées en altérant le contenu. Nous devons ensuite pouvoir voir une détection de modification du contenu. \\
+? & Test & Procédure 10 & Le test consiste à envoyer des données
+authentifiées en altérant leur contenu. Nous devons ensuite pouvoir détecter
+la modification du contenu. \\
 \hline 
-? & Test & Procédure 11 & Le test consiste à recevoir des données au préalable chiffrées, et vérifier si elles ont bien été déchiffrées. \\
+? & Test & Procédure 11 & Le test consiste à recevoir des données au
+préalable chiffrées, et vérifier si elles ont bien été déchiffrées. \\
 \hline
-F-Gl-40 & Test & Procédure 12 & Le test consiste à déchiffrer des données avec la clef privée correspondante, nous devrions alors obtenir le clair associé. \\
+F-Gl-40 & Test & Procédure 12 & Le test consiste à déchiffrer des données
+avec la clef privée, nous devrions alors obtenir les données en clair. \\
 \hline
-F-Gl-40 & Test & Procédure 13 & Le test consiste à déchiffrer des données avec la clef non valide, nous devrions alors obtenir une erreur. \\
+F-Gl-40 & Test & Procédure 13 & Le test consiste à déchiffrer des données
+avec une clef non valide, nous devrions alors obtenir une erreur. \\
 \hline
-F-Gl-50 & Test & Procédure 14 & Le test consiste à signer des données à partir de la clef privée stockée sur la carte. \\
+F-Gl-50 & Test & Procédure 14 & Le test consiste à signer des données à
+partir de la clef privée stockée sur la carte. \\
 \hline
-F-Gl-50 & Test & Procédure 15 & Le test consiste à vérifier avec la clef publique correspondante des données au préalable signées. Les données doivent être alors vérifiées. \\
+F-Gl-50 & Test & Procédure 15 & Le test consiste à vérifier avec la clef
+publique des données au préalable signées. Les données doivent alors être
+vérifiées. \\
 \hline
-F-Gl-50 & Test & Procédure 16 & Le test consiste à vérifier avec une clef publique non correspondante des données au préalable signées. Les données ne sont alors pas vérifiées. \\
+F-Gl-50 & Test & Procédure 16 & Le test consiste à vérifier avec une clef
+publique non correspondante des données au préalable signées. Les données
+ne doivent alors pas être vérifiées. \\
 \hline
-F-Gl-60 & Démonstration & Procédure 17 & Dans cette procédure, nous affectons à un utilisateur, donc à la carte lui appartenant, un code PIN lui étant propre afin de pouvoir débloquer la carte et l'utiliser. \\
+F-Gl-60 & Démonstration & Procédure 17 & Dans cette procédure, nous
+affectons à un utilisateur, donc à la carte lui appartenant, un code PIN
+afin de pouvoir débloquer la carte et l'utiliser. \\
 \hline
-F-Gl-60 & Démonstration & Procédure 18 & Dans cette procédure, nous insérons des données dans une carte telles qu'un mot de passe, un login,... \\
+F-Gl-60 & Démonstration & Procédure 18 & Dans cette procédure, nous
+insérons des données dans une carte telles qu'un mot de passe, un login, 
+etc... \\
 \hline
-F-Gl-60 & Test & Procédure 19 & Ce test consiste à modifier les données précédemment insérer sur la carte. \\
+F-Gl-60 & Test & Procédure 19 & Ce test consiste à modifier les données
+précédemment insérées sur la carte. \\
 \hline
 \end{tabular}
 \end{figure}
-
-
-
-
 
 \end{document}
