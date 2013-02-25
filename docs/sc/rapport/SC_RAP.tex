@@ -16,40 +16,39 @@
 \usetikzlibrary{shapes}
 \usepackage{lastpage}
 
-\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
-
-%Redéfinition des marges
-\addtolength{\hoffset}{-2cm}
-\addtolength{\textwidth}{4cm}
-\addtolength{\topmargin}{-2cm}
-\addtolength{\textheight}{1cm}
-\addtolength{\headsep}{0.8cm}
-\addtolength{\footskip}{1cm}
-
-
-%Import page de garde et structures pour la gestion de projet
-\usepackage{res/structures}
-
-%Variables
-\def\matiere{Conduite de Projet}
-\def\filiere{Master 2 SSI}
-\def\projectDesc{Smart Social Network}
-\def\projectName{\emph{SSN}~}
-\def\completeName{\projectDesc ~- \projectName}
-\def\docType{Rapport}
-\def\docDate{\today}
-\def\version{1.0}
-\def\author{Giovanni \textsc{Huet}}
-\def\checked{Florian \textsc{Guilbert}, Emmanuel \textsc{Mocquet}}
-\def\approved{}
-
-
-% -- Début du document -- %
+%\definecolor{gris}{rgb}{0.95, 0.95, 0.95}
+%
+%%Redéfinition des marges
+%\addtolength{\hoffset}{-2cm}
+%\addtolength{\textwidth}{4cm}
+%\addtolength{\topmargin}{-2cm}
+%\addtolength{\textheight}{1cm}
+%\addtolength{\headsep}{0.8cm}
+%\addtolength{\footskip}{1cm}
+%
+%
+%%Import page de garde et structures pour la gestion de projet
+%\usepackage{res/structures}
+%
+%%Variables
+%\def\matiere{Conduite de Projet}
+%\def\filiere{Master 2 SSI}
+%\def\projectDesc{Smart Social Network}
+%\def\projectName{\emph{SSN}~}
+%\def\completeName{\projectDesc ~- \projectName}
+%\def\docType{Rapport}
+%\def\docDate{\today}
+%
+%
+\title{Smart Social Network\\Rapport de projet SSI }
+%% -- Début du document -- %
 \begin{document}
 %Page de garde
-\makeFirstPage
-\clearpage
+%\makeFirstPage
+%\clearpage
+\maketitle
 
+\tableofcontents
 
 \section{Introduction}
 \renewcommand\labelitemi{\textbullet} %style des puces
@@ -148,7 +147,6 @@ chiffrement asymétrique RSA-PKCS1. Quant aux opérations cryptographiques
 symétriques, des clefs AES de 128 bits ont été générées et utilisées. Ces clefs
 et algorithmes ont été choisies pour le sûreté.
 
-% AES 128 = sûr ?
 \begin{itemize}
 	\item Asymétrique: ALG\_RSA\_PKCS1
 	\item Sysmétrique: ALG\_AES\_BLOCK\_128\_CBC\_NOPAD 
@@ -166,7 +164,7 @@ via un "tunnel" sécurisé par AES-128. Ce dernier a pour objectif d'apporter
 confidentialité, intégrité et authentification aux données échangées entre la 
 carte et SoftCard.
 
-\subsubsection{Signature/Vérification}
+\subsection{Signature/Vérification}
 Nous avons étudié un autre cas où le cryptosystème asymétrique peut être utilisé
 via la carte à puce: la signature et la vérification de données. Grâce à la 
 signature, nous pouvons obtenir authentification et non-répudiation, puisque la
@@ -178,11 +176,11 @@ publique du destinataire. Un booléen nous est alors retourné selon la réponse
 \subsection{Code PIN/PUK}
 Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
 dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
-PIN, affecté chaque carte, et dont seul l'utilisateur a connaissance.
+PIN, affecté à chaque carte, et dont seul l'utilisateur a connaissance.
 
-Le code PIN est défini sur deux octets, ce qui représente $2^{16}$ = 65536 solutions,
-ce qui est relativement faible, notamment contre une attaque de type 
-"bruteforce". Cependant l'attaque est contrée via à un nombre d'essais limité.
+Le code PIN est défini sur deux octets, ce qui représente $2^{16}$ = 65536 solutions.
+Ceci est relativement faible, notamment contre une attaque de type 
+"bruteforce", mais elle est contrée ici via à un nombre d'essais limité.
 Dans notre cas nous limitons le nombre d'essais à trois. En cas de blocage de la
 carte, dû à un nombre de tentatives trop élevé, seul le code PUK pourra 
 débloquer la carte. Tout comme le code PIN, le nombre d'essais pour entrer le 
@@ -190,6 +188,10 @@ code PUK est de trois. Si ce nombre est dépassé la carte devient inutilisable 
 la réinstallation des applets est alors la seule option pour la rendre
 de nouveau opérationnelle.
 
+Durant l'exécution de l'application, dès qu'une fonctionnalité sensible de la 
+carte sera sollicitée, le code PIN de l'utilisateur lui sera demandé, bloquant 
+ainsi temporairement l'accès à la carte. Au final, un déchiffrement, une signature
+et une modification des identifiants engendreront une telle interrogation.
 
 
 \section{Terminologie et sigles utilisés}
@@ -206,7 +208,7 @@ de nouveau opérationnelle.
     (chiffrement/déchiffrement) de l'extension et étant en relation avec
 	la carte à puce;
     \item[IHM :] Interface Homme-Machine, (interface graphique); 
-    \item[Utilisateur :] entité (humain ou programme) interagissant avec ce 
+    \item[Utilisateur :] entité (humaine ou programme) interagissant avec ce 
         sous-projet;
     \item[Système :] ce sous-projet;
     \item[Sécurisé :] ce terme sous-entend un chiffrement des données
