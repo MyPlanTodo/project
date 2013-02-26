@@ -103,20 +103,38 @@ regroupant :
 
 \section{Fonctionnement global}
 % A compléter par ceux d'SSN
-Le fonctionnement global du projet peut se résumer ainsi : lorsque l'utilisateur
-installe l'extension et désire se connecter par la suite à Facebook,
+Nous allons dans cette partie décrire, dans les grandes lignes, le 
+fonctionnement global du projet.
+
+\subsection{Première utilisation}
+Lorsque l'utilisateur installe l'extension et désire se connecter par la suite à Facebook,
 une \og pop-up \fg{} sera affichée, lui demandant ainsi ses identifiants. A cet
 instant, il pourra décider de générer un nouveau mot de passe -- aléatoire -- par
-la carte. Toutes ces informations seront alors stockés sur la carte et il pourra
+la carte. Toutes ces informations seront alors stockées sur la carte et il pourra
 chiffrer des messages destinés à une liste d'amis qu'il aura remplie. 
 
-\paragraph{}
+\subsection{Chiffrement}
 Les chiffrements s'effectuent en plusieurs temps. Tout d'abord, l'utilisateur 
 entre son message, clique sur le bouton \og chiffrer \fg{}, sélectionne la ou les
-listes d'amis concernées et choisit deux modes : l'un garantira l'anonymat mais
-nécessitera plus de ressources, l'autre étant l'opposé du premier.
+listes d'amis concernées et choisit deux modes : l'un garantit l'anonymat mais
+nécessite plus de ressources, l'autre a les propriétés inverses.
 
+%chiffrement à compléter par SSN
 
+\subsection{Déchiffrement}
+Pour le déchiffrement, deux cas se présentent. Si la personne ayant chiffré le
+message avait choisi le mode \og anonyme \fg{}, un application tentera de 
+déchiffrer chacune des lignes composant le contenu chiffré avec la clef privée 
+de l'utilisateur, au préalable obtenue en interrogeant la carte. Ces tentatives
+s'arrêteront dès qu'aucune erreur n'aura été déclenchée, c'est-à-dire lorsque la
+clef privée utilisée correspondra à la clef publique ayant servi à chiffrer la 
+clef symétrique. Cette dernière sera alors utilisée pour déchiffrer le message 
+posté sur Facebook.
+
+\paragraph{}
+Dans le cas où le mode \og non-anonyme \fg{} avait été sélectionné lors du
+chiffrement, l'algorithme se contentera de déchiffrer la partie chiffrée
+associée à l'identifiant de l'utilisateur courant.
 
 
 \section{SmartCard}
@@ -328,47 +346,12 @@ Lors du développement de ce sous-projet, nous avons rencontré des difficultés
     problèmes, ceci dû au fait de la minutie des développeurs de Facebook à
     empêcher les utilisateurs de \og{}scripter \fg{} leurs actions sur le réseau
     social.
-    \item la communications sécurisées entre FaceCrypt et SSNExt. % à finir.
+    \item les communications sécurisées entre FaceCrypt et SSNExt. % à finir.
 \end{itemize}
 
 \subsection{Améliorations possibles}
+% signature de documents
 
-
-\section{Terminologie et sigles utilisés}
-\begin{description}
-    \item[CdR :] Cahier de Recettes;
-    \item[AdR :] Analyse des Risques;
-    \item[DAL :] Document d'Architecture Logicielle;
-    \item[PdD :] Plan de développement;
-    \item[STB :] Spécification Technique de Besoins;
-    \item[SC :] \emph{SmartCard}, relatif au sous-projet sur les cartes à puce;
-    \item[SSN :] \emph{Secure Social Network}, relatif au sous-projet sur 
-        Facebook;
-    \item[FaceCrypt :] Application Java gérant les traitements lourds 
-        (chiffrement/déchiffrement) de l'extension et étant en relation avec
-        la carte à puce;
-    \item[IHM :] Interface Homme-Machine, (interface graphique); 
-    \item[Utilisateur :] entité (humaine ou programme) interagissant avec ce 
-        sous-projet;
-    \item[Système :] ce sous-projet;
-    \item[Sécurisé :] ce terme sous-entend un chiffrement des données
-        et une vérification de leur intégrité;
-    \item[SoftCard :] application effectuant le relais entre la carte
-        et FaceCrypt;
-    \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] les résultats suivent une distribution de
-        probabilité uniforme;
-    \item[Pseudo-aléatoire :] les résultats sont indistingables en temps polynomial 
-        d'une distribution de probabilité uniforme;
-    \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
-        pseudo-aléatoires;
-    \item[RNG :] (Random Number Generator) générateur de nombres
-        aléatoires;
-    \item[PIN :] (Personal Identification Number) code servant à authentifier
-        l'utilisateur auprès de la carte;
-    \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
-        trop de codes PIN erronés ont été entrés.
-\end{description}
 
 \clearpage
 
@@ -404,8 +387,8 @@ suite, le second objectif désigne l'intégrité et l'authentification.
 \subsection{Choix techniques}
 Nous avons utilisé AES avec des clés (différentes) de 128 bits pour les deux 
 objectifs. Le mode CBC permettant de faire du chiffrement et de 
-l'authentification-intégrité\footnote{L'un ou l'autre, jamais les deux en même 
-temps}, nous l'avons utilisé pour les deux. Pour conjuguer performance et 
+l'authentification-intégrité -- l'un ou l'autre, jamais les deux en même 
+temps -- nous l'avons utilisé pour les deux. Pour conjuguer performance et 
 sécurité, nous avons implanté une version modifiée de CBC-MAC qui intègre la 
 taille du message en début de message. Cette modification garantit la sécurité 
 lorsque les messages ont une taille variable comme indiqué dans [The Security of
