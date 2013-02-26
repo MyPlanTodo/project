@@ -201,9 +201,11 @@ class ProcessusSock extends Thread {
 	private boolean doAction(byte[] mess) throws IOException {
 		boolean res = true;
 		byte id = mess[0];
-
+		byte[] data;
+		
+		switch(id) {
 		// Send public key
-		if (id == this.GET_KEY) {
+		case GET_KEY:
 			try {
 				byte[] key = this.getPublicKey();
 				sendMessage(key);
@@ -212,10 +214,10 @@ class ProcessusSock extends Thread {
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_PUBKEY);
 			}
-		}
+			break;
 
-		// Send random number
-		else if (id == this.GET_RANDOM_NUMBER) {
+			// Send random number
+		case GET_RANDOM_NUMBER:
 			byte nb = mess[1];
 			try {
 				sendMessage(this.getRandomNumber(nb));
@@ -225,10 +227,11 @@ class ProcessusSock extends Thread {
 				e.printStackTrace();
 				sendMessage(NetworkException.ERROR_RANDOM_NUMBER);		
 			}
-		}
-		// retrieve the ciphered data and decrypt it.
-		else if (id == this.DECRYPT) {
-			byte[] data = new byte[mess.length - 1];
+			break;
+
+			// retrieve the ciphered data and decrypt it.
+		case DECRYPT:
+			data = new byte[mess.length - 1];
 
 			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
@@ -236,28 +239,31 @@ class ProcessusSock extends Thread {
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_DECRYPT);		
 			}
-		}
-		// check if the card is unlocked.
-		else if (id == this.IS_UNLOCKED) {
+			break;
+
+			// check if the card is unlocked.
+		case IS_UNLOCKED:
 			try {
 				sendMessage((isUnlocked())? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_CHECK_LOCKED);		
 			}
-		}
-		// client wants to manually unlock the card
-		else if (id == this.UNLOCK) {
-			byte[] data = new byte[mess.length - 1];
+			break;
+
+			// client wants to manually unlock the card
+		case UNLOCK:
+			data = new byte[mess.length - 1];
 			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
 				sendMessage(unlock(data)? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_UNLOCK_CARD);
 			}
-		} 
-		// client wants to store his credentials.
-		else if (id == this.STORE_CREDENTIALS) {
-			byte[] data = new byte[mess.length - 1];
+			break;
+
+			// client wants to store his credentials.
+		case STORE_CREDENTIALS:
+			data = new byte[mess.length - 1];
 			System.arraycopy(mess, 1, data, 0, mess.length - 1);
 			try {
 				sendMessage(storeCredentials(data)? new byte[]{1} : new byte[]{0});
@@ -266,44 +272,49 @@ class ProcessusSock extends Thread {
 				sendMessage(NetworkException.ERROR_STORE_ID);
 
 			}
-		}
-		// client wants to retrieve his credentials.
-		else if (id == this.RETRIEVE_CRED) {
+			break;
+
+			// client wants to retrieve his credentials.
+		case RETRIEVE_CRED:
 			try {
 				sendMessage(retrieveCredentials());
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_GET_ID);
 
 			}
-		}
-		// client wants to modify the password.
-		else if (id == this.RESET_PWD) {
+			break;
+
+			// client wants to modify the password.
+		case RESET_PWD:
 			try {
 				sendMessage(resetPassword());
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_RESET_PASSWORD);
 			}
-		}
-		// client tells the card that the password was validated.
-		else if (id == this.VALIDATE_PWD) {
+			break;
+
+			// client tells the card that the password was validated.
+		case VALIDATE_PWD:
 			try {
 				System.out.println(bytesToHexString(mess));
 				sendMessage(validatePassword()? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_VALIDATE_PASSWORD);
 			}
-		}
-		// client wants to disconnect.
-		else if (id == this.QUIT){
+			break;
+
+			// client wants to disconnect.
+		case QUIT:
 			res = false;
 			try {
 				disconnectCard();
 			}
 			catch(Exception e) {}
 			System.out.println("Client disconnected.");
+			break;
 		}
-
 		return res;
+
 	}
 
 
