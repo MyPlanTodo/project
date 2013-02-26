@@ -9,7 +9,7 @@
 
 
 
-package with_tunnel;
+package store;
 
 import javacard.framework.APDU;
 import javacard.framework.Applet;
@@ -21,6 +21,9 @@ import javacard.security.RandomData;
 
 
 public class gen_random extends Applet {
+
+	public static final byte CLA_MONAPPLET = (byte) 0xB0;
+
 	public static final byte INS_NOUVEL_ALEA = 0x00;
 	private static short[] tab; 
 

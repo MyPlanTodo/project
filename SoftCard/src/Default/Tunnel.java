@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -35,7 +36,7 @@ public class Tunnel {
 	 */
 
 	/** tunnel AID on the card */
-	public static byte[] APPLET_AID= {(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x06};
+	public static byte[] APPLET_AID= {(byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09};
 
 
 	/** encryption object */
@@ -134,11 +135,9 @@ public class Tunnel {
 		// crypto object initialization
 		encrypt.init(Cipher.ENCRYPT_MODE, session_key, new IvParameterSpec(iv));
 
-		
+	
 		// padding of the data
-		byte[] padded = ArrayTools.pad(input, CryptoTools.AES_BLOCK_LENGTH);		
-		
-		//encryption
+		byte[] padded = ArrayTools.pad(input, CryptoTools.AES_BLOCK_LENGTH);			
 		byte[] to_be_sent = encrypt.doFinal(padded);		
 
 		
@@ -165,6 +164,9 @@ public class Tunnel {
 	{
 		
 		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x12, (byte) 0x00, (byte)0x00));
+		
+		
+		
 		if (r.getSW() != 0x9000) {
 			System.out.println(" Erreur d'execution : Status word different from 0x9000 : "+r.getSW());
 		}
@@ -189,12 +191,16 @@ public class Tunnel {
 		byte[] received;
 		// reception of the data 
 		received = this.getData();	
-
+		
 		// we build the full response by concatening the received data
+		
 		while(received.length != 0)
 		{    		
-			response = ArrayTools.concat(response,received);							    		
-			received = this.getData();    		
+			
+			response = ArrayTools.concat(response,received);			
+			received = this.getData();  
+			
+			
 		}		
 		return response;
 
@@ -218,7 +224,7 @@ public class Tunnel {
 		
 		
 		// Specific SW to know if the packet is empty or if it the last packet 
-		if (r.getSW() == 0x6666) {
+		if (r.getSW() == 0x6666) {			
 			return new byte[]{};
 		}
 
@@ -245,7 +251,7 @@ public class Tunnel {
 
 		// message decryption	
 		byte[] padded = decrypt.doFinal(msg);				
-
+		//ArrayTools.printByteArray(padded);
 		// unpadding
 		byte[] unpadded = ArrayTools.unpad(padded, CryptoTools.AES_BLOCK_LENGTH);		
 		return unpadded;	
@@ -290,7 +296,7 @@ public class Tunnel {
 
 		// message decryption	
 		byte[] padded = decrypt.doFinal(msg);				
-
+		//ArrayTools.printByteArray(padded);
 		// unpadding
 		byte[] unpadded = ArrayTools.unpad(padded, CryptoTools.AES_BLOCK_LENGTH);
 
@@ -364,8 +370,10 @@ public class Tunnel {
 		// copy of the payload
 		System.arraycopy(data, 0, rq, 5, data.length);
 
-		// segmentation of the request
-		byte[][] segmented_rq = ArrayTools.split(rq,(short) 64);
+		// segmentation of the request	
+		
+		
+		byte[][] segmented_rq = ArrayTools.split(rq,(short) ((short) 64));
 		//ArrayTools.printByteArray(segmented_rq[0]);	
 		for (int i = 0; i < segmented_rq.length; i++) 
 		{

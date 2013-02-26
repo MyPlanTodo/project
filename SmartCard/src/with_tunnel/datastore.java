@@ -14,14 +14,12 @@
 
 
 
-package with_tunnel;
+package store;
 
 import javacard.framework.APDU;
-import javacard.framework.APDUException;
 import javacard.framework.Applet;
 import javacard.framework.ISOException;
 import javacard.framework.JCSystem;
-import javacard.framework.TransactionException;
 import javacard.framework.Util;
 
 public class datastore extends Applet {
@@ -34,14 +32,15 @@ public class datastore extends Applet {
 	// offset AID values
 	private static final short AID_PIN = 0x00; 
 	private static final short AID_RNG = 0x01;
+	private static final byte AID_CYPHER = 0x03;
 	private static final byte AID_SIGN = 0x02;
-	private static final byte AID_CYPHER = 0x03; 
-	private static final byte AID_STORE = 0x04;
+	private static final byte AID_STORE = 0x04; 
+	
 	
 	
 	private datastore() {	
 		// temp data storage, increase for larger capacity
-		data = JCSystem.makeTransientByteArray((short) 256, JCSystem.CLEAR_ON_RESET);
+		data = JCSystem.makeTransientByteArray((short) 512, JCSystem.CLEAR_ON_RESET);
 		// loop variables and indexes
 		tab = JCSystem.makeTransientShortArray((short) 7, JCSystem.CLEAR_ON_RESET);
 		// initial length of the buffer
@@ -50,27 +49,22 @@ public class datastore extends Applet {
 		tab[2] = 0;
 	}
 
-	public static void putData(byte[] input, short length)	 throws NullPointerException, ArrayIndexOutOfBoundsException, TransactionException
+	public static void putData(byte[] input, short length)	
 	{
 		// store data in the datastore
 		
-		Util.arrayCopy(input, (short) 0,data ,(short) tab[1],length);
+		Util.arrayCopy(input, (short) 0,data ,(short) tab[1],length);	
 		
-		/*for (tab[0] = 0; tab[0] <=length; tab[0]++) 
-		{
-			data[(short)(tab[0]+ tab[1])] = input[tab[0]];
-		}*/
 		// increase the actual used memory
 		tab[1] = (short) (tab[1] + length);		
 	}
-	public static void putData(byte[] input, short length, short off) throws NullPointerException, ArrayIndexOutOfBoundsException, TransactionException
+	public static void putData(byte[] input, short length, short off)	
 	{
 		// store data in the datastore
-			Util.arrayCopy(input, (short) off,data ,(short) tab[1],length);
-		/*for (tab[0] = 0; tab[0] <=length; tab[0]++) 
-		{
-			data[(short)(tab[0]+ tab[1])] = input[(short)(tab[0] + off)];
-		}*/
+		
+		Util.arrayCopy(input, (short) off,data ,(short) tab[1],length);
+		
+		
 		// increase the actual used memory
 		tab[1] = (short) (tab[1] + length);		
 	}
@@ -82,9 +76,7 @@ public class datastore extends Applet {
 		
 		Util.arrayCopy(data, (short) tab[2],input ,(short) 0,length);
 		
-		/*for (tab[0] = 0; tab[0] < length;tab[0] ++) {
-			input[tab[0]] = data[(short)(tab[0] + tab[2])];			
-		}*/
+		
 		// increase the current pointer
 		tab[2] = (short) (tab[2] + length);
 	} 
@@ -117,10 +109,7 @@ public class datastore extends Applet {
 
 	public static void execute() {
 		switch(data[OFF_AID]){
-		// we give the data "as-is" to the applets
-		case AID_STORE:			
-			StoreID.execute(data);			
-			break;
+		// we give the data "as-is" to the applets		
 		case AID_PIN:			
 			PIN.execute(data);			
 			break;
@@ -129,8 +118,12 @@ public class datastore extends Applet {
 			break;
 		case AID_SIGN:
 			Sign.execute(data);
+			break;
 		case AID_CYPHER:
 			Cypher.execute(data);
+			break;
+		case AID_STORE:
+			StoreID.execute(data);
 			break;
 		default:
 			ISOException.throwIt((short) 0x60);
