@@ -1,4 +1,4 @@
-OUT = SC_RAP
+OUT = rapport
 
 $(OUT).pdf: $(OUT).tex
 	xelatex $< ; xelatex $<

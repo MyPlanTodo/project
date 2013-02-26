@@ -101,6 +101,24 @@ regroupant :
         \textsc{Otmani} ;
 \end{itemize}
 
+\section{Fonctionnement global}
+% A compléter par ceux d'SSN
+Le fonctionnement global du projet peut se résumer ainsi : lorsque l'utilisateur
+installe l'extension et désire se connecter par la suite à Facebook,
+une \og pop-up \fg{} sera affichée, lui demandant ainsi ses identifiants. A cet
+instant, il pourra décider de générer un nouveau mot de passe -- aléatoire -- par
+la carte. Toutes ces informations seront alors stockés sur la carte et il pourra
+chiffrer des messages destinés à une liste d'amis qu'il aura remplie. 
+
+\paragraph{}
+Les chiffrements s'effectuent en plusieurs temps. Tout d'abord, l'utilisateur 
+entre son message, clique sur le bouton \og chiffrer \fg{}, sélectionne la ou les
+listes d'amis concernées et choisit deux modes : l'un garantira l'anonymat mais
+nécessitera plus de ressources, l'autre étant l'opposé du premier.
+
+
+
+
 \section{SmartCard}
 Aujourd'hui nous sommes tous menés à utiliser les cartes à puce comme les cartes
 bancaires, les cartes vitales. Elles sont notamment utilisées pour effectuer de 
@@ -168,7 +186,7 @@ signature se fait via la clef privée de l'émetteur. Une méthode de vérificat
 existe également permettant de vérifier l'authenticité des données via la clef 
 publique du destinataire. Un booléen nous est alors retourné selon la réponse.
 
-
+\label{CodePIN}
 \subsection{Code PIN/PUK}
 Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
 dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
@@ -190,18 +208,47 @@ carte sera sollicitée, le code PIN de l'utilisateur lui sera demandé, bloquant
 ainsi temporairement l'accès à la carte. Au final, un déchiffrement, une signature
 et une modification des identifiants engendreront une telle interrogation.
 
+\subsection{SoftCard}
+Pour permettre le dialogue avec la carte à puce, il a été nécessaire de développer
+une application tierce : SoftCard. Comme nous l'avons mentionné précédemment,
+la partie SSN avait besoin de certaines opérations ou de certaines données. 
+C'est pourquoi cette application devait aussi servir d'intermédiaire entre 
+FaceCrypt, détaillé plus loin, et Smartcard.
+
+Etant donné que nous disposions déjà d'un environnement de développement en Java
+pour les applets de SmartCard, SoftCard a été développé dans ce même langage. Il
+permettait en outre de disposer des mêmes API que FaceCrypt.
+
+Ainsi, SoftCard a été pensé comme un serveur : pour chaque requête reçue de 
+FaceCrypt, une action est déclenchée. Celle-ci est traitée puis transmise à
+SmartCard. Comme nous l'avons expliqué dans la partie \ref{CodePIN}, s'il s'agit
+d'une opération \og sensible \fg, le code PIN est demandé à l'utilisateur.
+
+\paragraph{}
+Au final, les opérations supportées par SoftCard sont les suivantes:  
+\begin{itemize}
+    \item génération d'un nombre aléatoire;
+    \item obtention de la clef publique
+    \item déchiffrement de données;
+    \item signature de données;
+    \item enregistrement, modification et récupération des identifiants Facebook.
+\end{itemize}
+
+\paragraph{}
+Afin de garantir la sécurité des communications entre SoftCard et SmartCard,
+nous avons aussi implanté un tunnel entre ces deux entités. Pour plus 
+d'informations, l'annexe \ref{TunnelSS} décrit notre raisonnement et son
+fonctionnement.
+
 \subsection{Difficultées rencontrées}
-% Tunnel 
+% Tunnel
 % Taille des données dans l'APDU
 % Les fonctions crypto (compatibilité avec Java, celles non implantées)
+% padding
 
 \subsection{Améliorations possibles}
 % Meilleure gestion code PIN
 % Meilleure gestion de l'arrachage de carte
-
-\subsection{SoftCard}
-%Pour Manu
-%Tunnel à mentionner, dispo dans l'annexe A
 
 \clearpage
 
@@ -217,20 +264,20 @@ la carte à puce comme outils d'authentification forte pour réaliser des
 opérations comme la génération de nombres aléatoires, le déchiffrement 
 avec la clef privée par exemple.
 
-Pour les autres besoins de chiffrement moins sensibles\footnote{Comme chiffrer
-en utilisant un algorithme symétrique et une clef générée par la carte ou
-chiffrer avec une clef publique}, nous avons utilisé une application
-java \og{}FaceCrypt \fg{} qui permet de réaliser les opérations de chiffrement
+Pour les autres besoins de chiffrement moins sensibles -- comme chiffrer
+en utilisant un algorithme symétrique et une clef générée par la carte, ou
+chiffrer avec une clef publique -- nous avons développé une application
+Java \og{}FaceCrypt \fg{} qui permet de réaliser les opérations de chiffrement
 plus rapidement que la carte.
 
-Pour gérer que l'utilisateur puisse gérer facilement nos outils de chiffrement
-dans son compte Facebook, nous avons réalisé une extension \emph{Mozilla Firefox} (SSNExt).
-Cela nous a permis ainsi d'intégrer des éléments appartenant à notre projet 
-dans une page Facebook.
+Afin de proposer une solution de chiffrement au sein de Facebook, nous avons 
+aussi conçu une extension pour \emph{Mozilla Firefox}, SSNExt, servant 
+d'interface entre ce réseau social et l'utilisateur.
 
 \subsection{FaceCrypt}
-C'est une application gérant une partie du chiffrement du projet et 
-faisant le relais entre l'extension Firefox et le composant SoftCard. 
+Comme mentionné précédemment, FaceCrypt est une application gérant une partie du
+chiffrement du projet et faisant le relais entre l'extension Firefox et le 
+composant SoftCard. 
 
 Elle agit comme un serveur pour l'extension et comme un client pour SoftCard, 
 c'est à dire que SSNExt va envoyer des requêtes à FaceCrypt qui va pour 
@@ -238,11 +285,11 @@ sa part traiter ces requêtes et les envoyer à SoftCard si besoin.
 
 \paragraph{}
 FaceCrypt fonctionne donc comme un démon et ne dispose donc pas d'interface
-graphique jugée inutile. Ce composant a été écrit en Java dans un premier 
+graphique, jugée inutile. Ce composant a été écrit en Java dans un premier 
 temps afin de maximiser l'interopérabilité avec SoftCard (lui aussi écrit
 Java). En effet, nous pensions pouvoir disposer des mêmes algorithmes 
 que sur la carte. De plus, ce langage est le seul, avec le C, que tout le
-groupe maitrisait. Nous l'avons préféré au C pour les raisons cités ci-dessus
+groupe maitrisaît. Nous l'avons préféré au C pour les raisons cités ci-dessus
 mais aussi pour le fait qu'il soit plus haut niveau et orienté objet.
 
 \paragraph{}
@@ -251,34 +298,36 @@ FaceCrypt est divisé en trois parties :
 \subsubsection{Cryptographie}
 Une partie majeure de FaceCrypt consiste en un certain nombre de modules 
 permettant d'utiliser la cryptographie symétrique, asymétrique et des 
-fonctions de hachage. Plusieurs algorithmes peuvent être utilisées mais
-pour le projet ce sont AES (CBC avec une clef de 256) et pour RSA ce sont
-des clefs de 1024 bits qui sont utilisées.
+fonctions de hachage. Plusieurs algorithmes peuvent être utilisés mais
+pour ce projet, notre choix s'est porté sur AES (CBC avec une clef de 256) et 
+RSA, avec des clefs de 1024 bits.
 
 
 \subsubsection{Communications sécurisées} % Pour Baptiste
 
 \subsubsection{Base de données}
-Pour manipuler ses amis, un utilisateur peut les placer dans des listes, 
-celles-ci sont géré par FaceCrypt et l'extension \emph{via} une base de données
-\texttt{sqlite}\footnote{C'est une base de données contenue dans un seul fichier
-qui permet d'être utilisé dans des programmes sans avoir à embarquer une 
-base de données traditionnelle suivant un modèle client-serveur}. 
+Pour gérer ses amis pouvant déchiffrer les messages qu'il poste, un utilisateur
+peut les placer dans des listes. Celles-ci sont gérées par FaceCrypt et 
+l'extension \emph{via} une base de données \texttt{sqlite}\footnote{Il s'agit
+d'une base de données contenue dans un seul fichier pouvant être utilisé dans 
+des programmes sans avoir à embarquer une base de données traditionnelle suivant
+un modèle client-serveur}. 
 
 FaceCrypt gère une base (donc un fichier) pour chaque utilisateur. Une base 
 contient trois tables permettant de lier des amis à une liste, la table des 
 amis contient aussi leur clef publique.
 
-\subsection{SSNExt}
+\subsection{SSNExt} % Maxence ou Zako
 
 \subsection{Difficultés rencontrées}
 Lors du développement de ce sous-projet, nous avons rencontré des difficultés
-à multiples endroits :
+à de multiples endroits :
 \begin{itemize}
-    \item manipulation de la page Facebook, un certain nombre de choses que 
-    nous pensions triviales à réaliser nous a finalement posé beaucoup de 
-    problèmes du fait de la minutie des développeurs a empếcher les utilisateurs
-    de \og{}scripter \fg{} leurs actions sur le réseau social.
+    \item les manipulations de la page Facebook : un certain nombre d'éléments 
+    que nous pensions triviaux à réaliser nous a finalement posé beaucoup de 
+    problèmes, ceci dû au fait de la minutie des développeurs de Facebook à
+    empêcher les utilisateurs de \og{}scripter \fg{} leurs actions sur le réseau
+    social.
     \item la communications sécurisées entre FaceCrypt et SSNExt. % à finir.
 \end{itemize}
 
@@ -326,6 +375,7 @@ Lors du développement de ce sous-projet, nous avons rencontré des difficultés
 \appendix
 
 \section{Fonctionnement détaillé du tunnel entre la carte}
+\label{TunnelSS}
 
 
 \subsection{Objectifs}
