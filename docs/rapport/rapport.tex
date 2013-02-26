@@ -258,15 +258,29 @@ nous avons aussi implanté un tunnel entre ces deux entités. Pour plus
 d'informations, l'annexe \ref{TunnelSS} décrit notre raisonnement et son
 fonctionnement.
 
-\subsection{Difficultées rencontrées}
+\subsection{Difficultés rencontrées}
 % Tunnel
 % Taille des données dans l'APDU
 % Les fonctions crypto (compatibilité avec Java, celles non implantées)
 % padding
 
 \subsection{Améliorations possibles}
-% Meilleure gestion code PIN
-% Meilleure gestion de l'arrachage de carte
+Actuellement certaines améliorations sont possibles, notamment au niveau
+de la gestion du code PIN et de celle de l'arrachage de la carte. En effet,
+le code PIN n'est demandé que lorsque des informations sensibles sont
+réquisitionnées auprès de la carte. On pourrait ainsi imaginer un déblocage
+de la carte dès sa connexion au terminal. En outre, si aucune erreur n'est gérée,
+lorsqu'une requête est envoyée à la carte après qu'elle ait subi une reconnexion
+physique \og à chaud \fg{}, une erreur sera générée. Dans notre cas, étant donné
+le temps qu'il nous restait lorsque nous nous sommes penchés sur le problème, 
+nous avons ajouté une surveillance d'une levée d'exception, en forçant une 
+reconnexion à la carte. Si à ce moment la carte n'est toujours pas insérée,
+une erreur est soulevée, terminant ainsi le processus auquel s'est connecté
+FaceCrypt. Une amélioration serait donc de se mettre en attente d'une connection
+correcte avec la carte.
+
+% Amélioration robustesse code
+
 
 \clearpage
 
