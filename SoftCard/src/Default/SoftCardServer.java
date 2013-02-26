@@ -71,9 +71,9 @@ public class SoftCardServer {
 	 * and its public key. 
 	 */
 	public void setContext() {
-		System.setProperty("javax.net.ssl.keyStore", "/home/maguy/certs/carte.jks");
+		System.setProperty("javax.net.ssl.keyStore", "certs/carte.jks");
 		System.setProperty("javax.net.ssl.keyStorePassword", "lolilol");
-		System.setProperty("javax.net.ssl.trustStore", "/home/maguy/certs/trustClientFaceCrypt.jks");
+		System.setProperty("javax.net.ssl.trustStore", "certs/trustClientFaceCrypt.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "lolilol");
 	}
 
