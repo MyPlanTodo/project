@@ -1,0 +1,135 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, amssymb, xcolor, listings}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=blue]{hyperref}
+\usepackage[top=2.6cm,bottom=2.6cm,left=2.6cm,right=2.6cm]{geometry}
+\usepackage[french]{babel}
+
+\hypersetup{breaklinks=true}
+\definecolor{gris}{rgb}{0.9,0.9,0.9}
+
+\title{Gestion des certifications}
+\author{Florian \textsc{Guilbert}}
+
+%opening
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+Le projet est livré avec une PKI permettant à chaque composant de communiquer
+de manière sécurisé. Il est possible d'utiliser vos propres certificats. 
+Nous présentons dans ce document la marche à suivre permettant d'adapter 
+nos outils pour utiliser vos certificats.
+
+\paragraph{}
+Pour la suite, et pour faciliter l'établissement de la PKI nous supposerons
+que tous les certifications que nous allons utilisé sont sujettes à la 
+même autorité. Et que vous disposer déjà d'un certificat racine, dans 
+les exemples ci-dessous, le certificat racine sera \texttt{ca.pem} et 
+il y aura un certificat intermédiaire \texttt{cassl.pem}.
+
+\section{SoftCard}
+Ce composant a besoin d'un certificat serveur que nous créons avec les 
+commandes suivantes : 
+\begin{verbatim}
+$ openssl genrsa -out softCardServer.key -des3 2048
+$ openssl req -new -key softCardServer.key -out softCardServer.csr \
+    -config ./openssl.cnf
+$ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
+    SERVER_RSA_SSL -infiles cassl/softCardServer.csr
+\end{verbatim}
+Qui nous permettent d'obtenir un certificat pour le SoftCard que nous 
+appellerons dans la suite \texttt{softCardServer.pem}.
+
+\paragraph{}
+Pour pouvoir utiliser ce certificat au sein de l'application java, nous allons
+créer un PKCS\#12 que nous convertissons en \emph{Java KeyStore} : 
+\begin{verbatim}
+$ openssl pkcs12 -export -inkey softCardServer.key -in softCardServer.pem \ 
+    -out softCardServer.p12 -name "SoftCard Server Certificate "
+$ keytool -importkeystore -deststorepass motDePasse -destkeypass \ 
+    motDePass -destkeystore softCardServer.jks -srckeystore \ 
+    softCardServer.p12 -srcstoretype PKCS12 -srcstorepass motDePasse \ 
+    -alias "Softcard Server Certificate"
+\end{verbatim}
+
+Pour finir, il nous faut un \emph{package} contenant les certificats pour 
+lesquelles l'application aura confiance, ce \emph{package} est un 
+\emph{trustStore}
+contenant des certificats au formats \emph{DER}.
+\begin{verbatim}
+commande
+\end{verbatim}
+
+Il faut ensuite placer les fichiers .jks dans le répertoire \texttt{cert}
+de SoftCard. Au cas où vos \emph{passphrases} sont différents de 
+\og lolilol \fg{} il faut modifier le code source du fichier 
+\texttt{SoftCardServer} puis recompiler l'application.
+
+\section{FaceCrypt}
+La démarche est très semblable à celle pour SoftCard sauf qu'il faut 
+créer deux certificats pour FaceCrypt un client servant pour sa communication
+avec SoftCard et l'autre serveur pour le dialogue avec l'extension.
+
+Les commandes : 
+\begin{verbatim}
+$ openssl genrsa -out facecryptClient.key -des3 2048
+$ openssl req -new -key facecryptClient.key -out facecryptClient.csr \
+    -config ./openssl.cnf
+$ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
+    SERVER_RSA_SSL -infiles facecryptClient.csr
+\end{verbatim}
+et 
+\begin{verbatim}
+$ openssl genrsa -out facecryptServer.key -des3 2048
+$ openssl req -new -key facecryptServer.key -out facecryptServer.csr \
+    -config ./openssl.cnf
+$ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
+    CLIENT_RSA_SSL -infiles facecryptServer.csr
+\end{verbatim}
+créent les deux certificats.
+
+\paragraph{}
+Ensuite, comme pour SoftCard, il faut créer une enveloppe PKCS\#12 pour ces
+deux certificats et les convertir en \texttt{.jks} : 
+\begin{verbatim}
+$ openssl pkcs12 -export -inkey facecryptClient.key -in facecryptClient.pem \ 
+    -out facecryptClient.p12 -name "FaceCrypt Client Certificate"
+$ keytool -importkeystore -deststorepass motDePasse -destkeypass \ 
+    motDePass -destkeystore facecryptClient.jks -srckeystore \ 
+    facecryptClient.p12 -srcstoretype PKCS12 -srcstorepass motDePasse \ 
+    -alias "FaceCrypt Client Certificate"
+$ openssl pkcs12 -export -inkey facecryptServer.key -in facecryptServer.pem \ 
+    -out facecryptServer.p12 -name "FaceCrypt Server Certificate"
+$ keytool -importkeystore -deststorepass motDePasse -destkeypass \ 
+    motDePass -destkeystore facecryptServer.jks -srckeystore \ 
+    facecryptServer.p12 -srcstoretype PKCS12 -srcstorepass motDePasse \ 
+    -alias "FaceCrypt Server Certificate"
+\end{verbatim}
+Une fois cette étape terminée, il faut maintenant créer un \emph{trustStore}
+pour indiquer les certicats dont FaceCrypt a confiance.
+\begin{verbatim}
+commande
+\end{verbatim}
+
+Il faut ensuite placer les fichiers .jks dans le répertoire \texttt{cert}
+de FaceCrypt. Au cas où vos \emph{passphrases} sont différents de 
+\og lolilol \fg{} il faut modifier le code source du fichier 
+\texttt{ServerSSL} puis recompiler l'application.
+
+\section{SSNExt}
+Cette partie n'a besoin que d'un certificat : 
+\begin{verbatim}
+$ openssl genrsa -out cassl/extensionClient.key -des3 2048
+$ openssl req -new -key extensionClient.key -out extensionClient.csr \
+    -config ./openssl.cnf
+$ openssl ca -config ./openssl.cnf -name CA_ssl_default \ 
+    -extensions CLIENT_RSA_SSL -infiles cassl/extensionClient.csr
+$ openssl pkcs12 -export inkey extensionClient.key in extensionClient.pem \
+        -out extensionClient.p12 -name "Extension Client Certificate"
+\end{verbatim}
+Une fois cela fait, il faut importer dans le navigateur cette enveloppe 
+PKCS\#12 ainsi que les certificats \texttt{cassl.pem} et \texttt{ca.pem}, 
+à placer respectivement dans les onglets serveurs et autorités.
+\end{document}
