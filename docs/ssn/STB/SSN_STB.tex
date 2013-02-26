@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique des besoins}
 \def\docDate{\today}
-\def\version{1.1}
+\def\version{1.2}
 \def\author{Florian \textsc{Guilbert}}
 \def\checked{Baptiste \textsc{Dolbeau}}
 \def\approved{}
@@ -65,6 +65,9 @@
 	\hline
     1.1 & 22/02/2013 & Ajout d'un cas d'utilisation (initialisation) et 
     changement de la priorité (chiffrement document/commentaire) \\
+	\hline
+    1.2 & 26/02/2013 & Ajout d'un cas d'utilisation (génération d'un nouveau
+            mot de passe) \\
 	\hline
 	&&\\
 	\hline
@@ -152,7 +155,9 @@ utilisateur à posséder un unique compte correspondant à son identité réel.
 
 \paragraph{}
 Le cas d'utilisation concernant l'initialisation du système correspond 
-au cas C10 de la STB \emph{SmartCard}.
+au cas C10 de la STB \emph{SmartCard} de même le cas d'utilisation 
+pour à la génération d'un nouveau mot de passe correspond au cas d'utilisation
+C11.
 
 \paragraph{}
 Pour tous les cas d'utilisation décrits ci-dessous, nous supposons que 
