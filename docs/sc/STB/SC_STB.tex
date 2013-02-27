@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Spécification technique de besoins}
 \def\docDate{\today}
-\def\version{1.4}
+\def\version{1.6}
 \def\author{Giovanni \textsc{Huet}, Romain \textsc{Pignard}}
 \def\checked{Florian \textsc{Guilbert}, Emmanuel \textsc{Mocquet}}
 \def\approved{}
@@ -74,6 +74,10 @@
     1.3 & 07/02/2013 & Corrections (modifications C10) \\
 	\hline
     1.4 & 11/02/2013 & Modifications (priorité F-FI-30) \\
+	\hline
+    1.5 & 22/02/2013 & Modifications C10 \\
+	\hline
+    1.6 & 26/02/2013 & Modifications C11 \\
 	\hline
 	&&\\
 	\hline
@@ -549,31 +553,38 @@ application tierce, dans le cas d'une utilisation plus générale.\\
 
 \fiche
 {Modification du mot de passe}
-	{Utilisateur, SmartCard, SoftCard, FaceCrypt}
+	{Utilisateur, SmartCard, SoftCard, FaceCrypt, Extension}
     {L'utilisateur souhaite changer son mot de passe Facebook}
-    {SmartCard et SoftCard sont mutuellement authentifiées et l'utilisateur a
-    déverrouillé la carte}
+    {SmartCard, SoftCard, FaceCrypt et l'extension sont mutuellement 
+        authentifiées et l'utilisateur a déverrouillé la carte}
     {Demande de l'utilisateur}
     {Le mot de passe a été modifié et enregistré sur Facebook et sur la carte.}
     {\begin{itemize}
         \item[]
-        \item[1.] L'utilisateur choisit l'option permettant de générer un 
-            nouveau mot de passe.
-        \item[3.] FaceCrypt enregistre la modification et envoie une confirmation
-            du changement de mot de passe à SoftCard.
+        \item[1.] L'utilisateur choisit l'option modification de mot de passe
+        dans les options du réseau social;
+        \item[6.] L'utilisateur valide la modification.
     \end{itemize}}
 	{\begin{itemize}
         \item[]
-        \item[2.] SoftCard transmet le mot de passe à SmartCard qui le stocke 
-            temporairement. Il notifie ensuite FaceCrypt de la modification.
-        \item[4.] SoftCard transmet la confirmation à SmartCard qui stocke 
+        \item[2.] L'extension envoie une requête à FaceCrypt pour obtenir
+        l'actuel mot de passe un nouveau;
+        \item[3.] FaceCrypt transfère la requête à SoftCard;
+        \item[4.] SoftCard transmet la requête à SmartCard qui envoie le mot
+            de passe actuel et génère un nouveau. SoftCard retourne celui-ci 
+            à FaceCrypt.
+        \item[5.] FaceCrypt transfère le nouveau et l'actuel  mot de passe à 
+        l'extension qui remplie les champs correspondant.
             définitivement le mot de passe et efface l'ancien.
+        \item[7.] L'extension notifie la carte (par l'intermédiaire de FaceCrypt
+            et de SoftCard) du changement effectif.
+        \item[8.] La carte stocke le nouveau mot de passe.
 	\end{itemize}
 	}
 	{}
 \flots
     {}
-    {Si le compte n'existe pas, une erreur est générée.}
+    {}
 \\*
 
 \subsection{One-Time Password}
