@@ -162,18 +162,9 @@ cryptographiquement sûr.
 Bien entendu, pour notre projet, nous avons utilisé l'algorithme décrit comme 
 \og{}cryptographiquement sûr\fg{}. Cependant, par acquis de conscience, nous avons voulu
 vérifier le niveau de l'aléatoire du générateur dit sûr à l'aide d'un
-outil permettant de réaliser une analyse stastistique dont le compte rendu
-apparaît ci-dessous:
-
-\begin{verbatim}
-*************************************************
-*                                               *
-*                  CR de Yicheng                *
-*                                               *
-*************************************************
-\end{verbatim}
-
-%Utile ? "A noter que le temps moyen pour la génération d'un nombre aléatoire est de 28.1ms."
+outil permettant de réaliser une analyse statistique dont le compte-rendu
+est disponible dans le document 
+\texttt{misc/testing\_randomization/Gen\_random.pdf}
 
 \subsection{Chiffrement/Déchiffrement}
 Dans l'étude des cartes à puce, nous avons également utilisé des méthodes de 
@@ -259,7 +250,24 @@ d'informations, l'annexe \ref{TunnelSS} décrit notre raisonnement et son
 fonctionnement.
 
 \subsection{Difficultés rencontrées}
-% Tunnel
+\paragraph{}
+Une première catégorie de difficulté rencontrée était l'utilisation des fonctions
+cryptographiques sur SoftCard et SmartCard.
+
+Tout d'abord, malgré une bonne documentation JavaCard, certaines cartes 
+n'implantent pas toutes les méthodes. Il nous a donc fallu nous assurer 
+qu'elles existaient réellement, en testant parfois \og à l'aveuglette 
+\fg{}. En outre, nous avons du faire de telle sorte que FaceCrypt et SoftCard 
+utilisent les mêmes algorithmes cryptographiques, notamment au niveau des 
+cryptosystèmes asymétriques.
+
+% Taille des données dans l'APDU
+\paragraph{}
+Une seconde source de problèmes est provenue du fait que les informations que nous
+ne pouvions pas envoyer à la carte sont de taille limitée. 
+
+% Tunnel padding
+
 % Taille des données dans l'APDU
 % Les fonctions crypto (compatibilité avec Java, celles non implantées)
 % padding
@@ -394,26 +402,27 @@ Les objectifs cryptographiques réalisés par le tunnel sont les suivants :
         connaît le secret.
 \end{description}
 Les deux derniers objectifs sont réalisables conjointement sans diminuer la 
-sécurité du système alors que le premier nécessite une clé séparée \cite[section 2.5.1]{RGS ANSSI}. Dans la 
-suite, le second objectif désigne à la fois l'intégrité et l'authentification. 
+sécurité du système alors que le premier nécessite une clé séparée \cite[section
+2.5.1]{RGS ANSSI}. Dans la suite, le second objectif désigne à la fois 
+l'intégrité et l'authentification. 
 
 
 \subsection{Choix techniques}
-
-
-Le choix d'AES nous a paru être le plus pertinent car c'est l'algorithme de référence. Il a remporté le concours lancé par le NIST après de nombreuses études par la communauté.
- Il a été approuvé par la NSA avec des clés de 128
-bits pour protéger des données classifiées au niveau SECRET dans \cite{NSA}. L'annexe B1 du RGS
-publié par l'ANSSI affirme également que cette longueur est satisfaisante \cite{RGS ANSSI}. 
+Le choix d'AES nous a paru être le plus pertinent car c'est l'algorithme de 
+référence. Il a remporté le concours lancé par le NIST après de nombreuses 
+études par la communauté. Il a été approuvé par la NSA avec des clés de 128
+bits pour protéger des données classifiées au niveau SECRET dans \cite{NSA}. 
+L'annexe B1 du RGS publié par l'ANSSI affirme également que cette longueur est
+satisfaisante \cite{RGS ANSSI}. 
 
 
 Nous avons utilisé AES avec des clés (différentes) de 128 bits pour les deux 
 objectifs. Le mode CBC permettant de faire du chiffrement et de 
-l'authentification-intégrité, nous l'avons utilisé pour les deux. Pour conjuguer performance et 
-sécurité, nous avons implanté une version modifiée de CBC-MAC qui intègre la 
-taille du message en début de message. Cette modification garantit la sécurité 
-lorsque les messages ont une taille variable, comme indiqué dans \cite{CBC-MAC}.
-
+l'authentification-intégrité, nous l'avons utilisé pour les deux. Pour conjuguer
+performance et sécurité, nous avons implanté une version modifiée de CBC-MAC qui
+intègre la taille du message en début de message. Cette modification garantit la
+sécurité lorsque les messages ont une taille variable, comme indiqué dans 
+\cite{CBC-MAC}.
 
 
 \paragraph{}
@@ -436,8 +445,9 @@ L'authentification mutuelle peut être résumée comme ceci :
         carte, extrait la clé de session et récupère le nonce carte;
     \item le client génère un IV et renvoie le nonce carte avec la clé de session 
         établie;
-    \item la carte récupère le nonce carte  en déchiffrant le message reçu avec la clé de session et vérifie s'il est identique à celui 
-        envoyé pour authentifier le client.
+    \item la carte récupère le nonce carte en déchiffrant le message reçu avec 
+        la clé de session et vérifie s'il est identique à celui envoyé pour 
+        authentifier le client.
 \end{itemize}
 
 C'est le constructeur de l'objet Java \og{}Tunnel \fg{} qui s'occupe de tout,
@@ -448,10 +458,14 @@ Une fois les entités mutuellement authentifiées et la clé de session échang�
 les communications dans le tunnel peuvent se faire. 
 
 
-L'objet \og{}Tunnel \fg{} présente une fonction d'envoi semblable à celle présente pour les envois sans tunnel. Il se charge de l'envoi vers la carte en découpant préalablement le message en fragments de taille inférieure à la capacité du lien.
+L'objet \og{}Tunnel \fg{} présente une fonction d'envoi semblable à celle 
+présente pour les envois sans tunnel. Il se charge de l'envoi vers la carte en
+découpant préalablement le message en fragments de taille inférieure à la capacité 
+du lien.
 
 
-Cet objet présente également une fonction d'exécution qui permet de lancer les fonctions présentes sur la carte selon les paramètres présents dans les données. 
+Cet objet présente également une fonction d'exécution qui permet de lancer les
+fonctions présentes sur la carte selon les paramètres présents dans les données.
 
 Le format général à l'entrée du tunnel est celui-ci : 
 
@@ -462,14 +476,29 @@ AID & Instruction & Paramètre 1  & Paramètre 2 & Longueur des données & Donn�
 \hline
 \end{tabular}
 \paragraph{}
-Ce format est identique à celui des APDU Javacard, la seule différence étant le r\^ole du premier octet qui nous sert à différencier les applets.  Ce fonctionnement est inspiré du monde TCP/IP dans lequel le numéro de port  indique vers quel programme envoyer les données. 
+Ce format est identique à celui des APDU Javacard, la seule différence étant le 
+r\^ole du premier octet qui nous sert à différencier les applets.  Ce 
+fonctionnement est inspiré du modèle TCP/IP dans lequel le numéro de port 
+indique vers quel programme envoyer les données. 
 
 
 \paragraph{}
+Afin de ne pas pouvoir prévoir le contenu du dernier bloc, la taille des 
+fragments varie d'un message à l'autre. En effet, découper le message en 
+fragments de taille fixe à chaque fois fait que le padding sera toujours 
+identique et ceci nous a semblé une divulgation inutile d'information, 
+le pire des cas étant le dernier bloc ne contenant que des 16. Nous avons décidé
+d'envoyer entre 4 et 5 blocs AES, i.e. entre 64 et 80 octets pour chaque 
+fragment, la valeur exacte étant définie aléatoirement pour chaque envoi de
+message. Ainsi, le même message envoyé successivement pourra être découpé en
+blocs de 68 octets la première fois et en blocs de 75 octets la seconde fois.
+C'est un compromis entre performance, sécurité et facilité d'implémentation.
 
-Le message est donc découpé en plusieurs fragments de même taille et en un dernier de taille inférieure pour le reste. Chaque fragment est ensuite complété par un padding selon la norme pkcs7.
+Le message est donc découpé en plusieurs fragments de même taille et en un 
+dernier de taille inférieure pour le reste. Chaque fragment est ensuite complété
+par un padding selon la norme PKCS7.
 
-
+\paragraph{}
 L'envoi dans le tunnel d'un fragment se fait comme ceci : 
 \begin{itemize}
     \item génération d'un IV de transmission;
