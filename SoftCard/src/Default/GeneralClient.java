@@ -99,11 +99,12 @@ public class GeneralClient {
 				System.out.println("3 - Déchiffrer un message");
 				System.out.println("4 - Aléa");
 				System.out.println("5 - Stocker identifiants");
-				System.out.println("6 - Récupérer identifiants");
-				System.out.println("7 - Check PIN");
-				System.out.println("8 - signature");
-				System.out.println("9 - vérification");
-				System.out.println("0 - Quitter");
+				System.out.println("6 - Valider le mot de passe");
+				System.out.println("7 - Récupérer identifiants");
+				System.out.println("8 - Check PIN");
+				System.out.println("9 - signature");
+				System.out.println("10 - vérification");
+				System.out.println("11 - Quitter");
 				System.out.println();
 				System.out.println("Votre choix ?");
 
@@ -115,7 +116,7 @@ public class GeneralClient {
 
 				BigInteger exp = null;
 				byte[] result;
-				String s = "hello world and this is a test for long long long loglg longlong g lllonglong longlong longlong longlong long messages";
+				String s = "hello world and this is a test for long long long loglg longlong g llonglong longlong longlong longlong long messages";
 				
 				switch (choix) {
 				case 1:
@@ -160,6 +161,7 @@ public class GeneralClient {
 				case 3:
 					Cipher c = Cipher.getInstance("RSA");
 					byte[] clearText = s.getBytes();
+					System.out.println(clearText.length);
 					c.init(Cipher.ENCRYPT_MODE, publicKey);
 					byte[] ciphered = c.doFinal(clearText);
 					System.out.println("Clair : " + new String(clearText));
@@ -198,13 +200,13 @@ public class GeneralClient {
 					break;
 
 				case 5:
-					byte[] stored = "pipo plop".getBytes(); 					
-					String strStored = new String(stored);
+					//byte[] stored = "pipo plop".getBytes(); 					
+					//String strStored = new String(stored);
 					
 					Scanner in3 = new Scanner(System.in);
-					in3.nextLine();
-					strStored = in3.nextLine();
-					stored = strStored.getBytes();
+					System.out.println("Login Password");
+					String strStored = in3.nextLine();
+					byte[] stored = strStored.getBytes();
 					
 					int i = 0;
 					boolean stop = false;
@@ -249,10 +251,13 @@ public class GeneralClient {
 					}
 
 
+				case 6: 
+					t.erase();
+					//t.request((short) AID_STORE, INS_, P1, P2));
 
 					break;
 
-				case 6:
+				case 7:
 					// Retrieve data
 					t.erase();
 					t.request((short)AID_STORE,INS_GET_CRED,(byte) 0x00,(byte) 0x00);
@@ -272,7 +277,7 @@ public class GeneralClient {
 					
 					break;
 
-				case 7:
+				case 8:
 					Scanner in = new Scanner(System.in);
 					int pin = in.nextInt();
 
@@ -288,7 +293,7 @@ public class GeneralClient {
 
 					break;
 
-				case 8:
+				case 9:
 					t.erase();
 					t.request((short) AID_SIGN, INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					System.out.println("Clair :" + bytesToHexString(clair));
@@ -300,12 +305,12 @@ public class GeneralClient {
 
 					break;
 					
-				case 9:
+				case 10:
 					t.erase();
 					t.request((short) AID_SIGN,  INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					t.execute();
 					
-					/* On signe d'abord*/
+					/* On signe d'abord */
 					System.out.println("Clair :" + bytesToHexString(clair));
 					byte[] signed = t.getResponse();
 
@@ -327,7 +332,7 @@ public class GeneralClient {
 					System.out.println("(0x00 = vérifié; 0x01 = non vérifié) : " +bytesToHexString(t.getResponse()));
 					break;
 					
-				case 0:
+				case 11:
 					fin = true;
 					break;
 				}
