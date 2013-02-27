@@ -1,4 +1,4 @@
-// TODO : créer classe d'exception personelle
+
 
 //package Default;
 
@@ -42,14 +42,6 @@ public class SoftCard {
 	public static final byte CLA_SMARTCARD = (byte) 0xB0;
 
 	// Constants identifying each applet on the smartcard
-//	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
-//	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
-//	public static byte[] STORE_ID_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
-//	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
-//	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
-//	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
-	
-	
 	public static byte AID_PIN = 0x00;
 	public static byte AID_RANDOM = 0x01;
 	public static byte AID_SIGN = 0x02;
@@ -96,8 +88,6 @@ public class SoftCard {
 	private static Card card = null;
 	private static CardChannel channel = null;
 	private static Tunnel tunnel = null;
-	private boolean unlocked = true; //false;
-
 
 	private static String bytesToHexString(byte[] bytes) {
 		StringBuffer sb = new StringBuffer();
@@ -128,7 +118,6 @@ public class SoftCard {
 			}
 			channel = card.getBasicChannel();
 		}
-
 		return instance;
 	}
 
@@ -241,7 +230,13 @@ public class SoftCard {
 		}
 	}
 
-
+	/**
+	 * This method sends a request to the card in order to obtain the user's public
+	 * key.
+	 * @return the public key, as a bytes' array
+	 * @throws Exception wih the reason message, if an error 
+	 * occured on the card's side.
+	 */
 	public byte[] getPublicKey() throws Exception {
 		try {
 			// Récupération de l'exposant
@@ -279,7 +274,7 @@ public class SoftCard {
 		}
 		catch (Exception e) {}
 		instance = null;
-		unlocked = false;
+		tunnel = null;
 	}
 
 	public byte[] getRandomNumber(byte nb) throws Exception{
@@ -308,8 +303,6 @@ public class SoftCard {
 
 	public byte[] decryptData(byte[] data) throws Exception {
 		try {
-		
-
 			tunnel.erase();
 			tunnel.request(AID_CYPHER,INS_UNCIPHER, (byte)0x00,(byte) 0x00, data);
 			tunnel.execute();
