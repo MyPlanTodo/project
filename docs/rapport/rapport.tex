@@ -411,26 +411,27 @@ Les objectifs cryptographiques réalisés par le tunnel sont les suivants :
         connaît le secret.
 \end{description}
 Les deux derniers objectifs sont réalisables conjointement sans diminuer la 
-sécurité du système alors que le premier nécessite une clé séparée \cite[section 2.5.1]{RGS ANSSI}. Dans la 
-suite, le second objectif désigne à la fois l'intégrité et l'authentification. 
+sécurité du système alors que le premier nécessite une clé séparée \cite[section
+2.5.1]{RGS ANSSI}. Dans la suite, le second objectif désigne à la fois 
+l'intégrité et l'authentification. 
 
 
 \subsection{Choix techniques}
-
-
-Le choix d'AES nous a paru être le plus pertinent car c'est l'algorithme de référence. Il a remporté le concours lancé par le NIST après de nombreuses études par la communauté.
- Il a été approuvé par la NSA avec des clés de 128
-bits pour protéger des données classifiées au niveau SECRET dans \cite{NSA}. L'annexe B1 du RGS
-publié par l'ANSSI affirme également que cette longueur est satisfaisante \cite{RGS ANSSI}. 
+Le choix d'AES nous a paru être le plus pertinent car c'est l'algorithme de 
+référence. Il a remporté le concours lancé par le NIST après de nombreuses 
+études par la communauté. Il a été approuvé par la NSA avec des clés de 128
+bits pour protéger des données classifiées au niveau SECRET dans \cite{NSA}. 
+L'annexe B1 du RGS publié par l'ANSSI affirme également que cette longueur est
+satisfaisante \cite{RGS ANSSI}. 
 
 
 Nous avons utilisé AES avec des clés (différentes) de 128 bits pour les deux 
 objectifs. Le mode CBC permettant de faire du chiffrement et de 
-l'authentification-intégrité, nous l'avons utilisé pour les deux. Pour conjuguer performance et 
-sécurité, nous avons implanté une version modifiée de CBC-MAC qui intègre la 
-taille du message en début de message. Cette modification garantit la sécurité 
-lorsque les messages ont une taille variable, comme indiqué dans \cite{CBC-MAC}.
-
+l'authentification-intégrité, nous l'avons utilisé pour les deux. Pour conjuguer
+performance et sécurité, nous avons implanté une version modifiée de CBC-MAC qui
+intègre la taille du message en début de message. Cette modification garantit la
+sécurité lorsque les messages ont une taille variable, comme indiqué dans 
+\cite{CBC-MAC}.
 
 
 \paragraph{}
@@ -453,8 +454,9 @@ L'authentification mutuelle peut être résumée comme ceci :
         carte, extrait la clé de session et récupère le nonce carte;
     \item le client génère un IV et renvoie le nonce carte avec la clé de session 
         établie;
-    \item la carte récupère le nonce carte  en déchiffrant le message reçu avec la clé de session et vérifie s'il est identique à celui 
-        envoyé pour authentifier le client.
+    \item la carte récupère le nonce carte en déchiffrant le message reçu avec 
+        la clé de session et vérifie s'il est identique à celui envoyé pour 
+        authentifier le client.
 \end{itemize}
 
 C'est le constructeur de l'objet Java \og{}Tunnel \fg{} qui s'occupe de tout,
@@ -465,10 +467,14 @@ Une fois les entités mutuellement authentifiées et la clé de session échang�
 les communications dans le tunnel peuvent se faire. 
 
 
-L'objet \og{}Tunnel \fg{} présente une fonction d'envoi semblable à celle présente pour les envois sans tunnel. Il se charge de l'envoi vers la carte en découpant préalablement le message en fragments de taille inférieure à la capacité du lien.
+L'objet \og{}Tunnel \fg{} présente une fonction d'envoi semblable à celle 
+présente pour les envois sans tunnel. Il se charge de l'envoi vers la carte en
+découpant préalablement le message en fragments de taille inférieure à la capacité 
+du lien.
 
 
-Cet objet présente également une fonction d'exécution qui permet de lancer les fonctions présentes sur la carte selon les paramètres présents dans les données. 
+Cet objet présente également une fonction d'exécution qui permet de lancer les
+fonctions présentes sur la carte selon les paramètres présents dans les données.
 
 Le format général à l'entrée du tunnel est celui-ci : 
 
