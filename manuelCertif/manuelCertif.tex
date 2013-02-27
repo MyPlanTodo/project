@@ -9,13 +9,15 @@
 \definecolor{gris}{rgb}{0.9,0.9,0.9}
 
 \title{Gestion des certifications}
-\author{Florian \textsc{Guilbert}}
+\author{Baptiste \textsc{Dolbeau}, Florian \textsc{Guilbert}}
 
 %opening
 \begin{document}
 
 \maketitle
 \tableofcontents
+
+\clearpage
 
 Le projet est livré avec une PKI permettant à chaque composant de communiquer
 de manière sécurisé. Il est possible d'utiliser vos propres certificats. 
@@ -40,7 +42,7 @@ $ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
     SERVER_RSA_SSL -infiles cassl/softCardServer.csr
 \end{verbatim}
 Qui nous permettent d'obtenir un certificat pour le SoftCard que nous 
-appellerons dans la suite \texttt{softCardServer.pem}.
+appellerons dans la suite \\ \texttt{softCardServer.pem}.
 
 \paragraph{}
 Pour pouvoir utiliser ce certificat au sein de l'application java, nous allons
@@ -59,7 +61,9 @@ lesquelles l'application aura confiance, ce \emph{package} est un
 \emph{trustStore}
 contenant des certificats au formats \emph{DER}.
 \begin{verbatim}
-commande
+$ openssl x509 -outform der -in facecryptClient.pem -out facecryptClient.der
+$ keytool -import -file facecryptClient.der -keystore \ 
+    truststoreSoftCard.jks -storepass motDePasse
 \end{verbatim}
 
 Il faut ensuite placer les fichiers .jks dans le répertoire \texttt{cert}
@@ -88,7 +92,8 @@ $ openssl req -new -key facecryptServer.key -out facecryptServer.csr \
 $ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
     CLIENT_RSA_SSL -infiles facecryptServer.csr
 \end{verbatim}
-créent les deux certificats.
+créent les deux certificats. Pour le certificat serveur de FaceCrypt, il
+est impératif de préciser l'adresse IP de la machine l'hébergeant.
 
 \paragraph{}
 Ensuite, comme pour SoftCard, il faut créer une enveloppe PKCS\#12 pour ces
@@ -110,7 +115,12 @@ $ keytool -importkeystore -deststorepass motDePasse -destkeypass \
 Une fois cette étape terminée, il faut maintenant créer un \emph{trustStore}
 pour indiquer les certicats dont FaceCrypt a confiance.
 \begin{verbatim}
-commande
+$ openssl x509 -outform der -in softCardServer.pem -out softCardServer.der
+$ keytool -import -file softCardServer.der -keystore \ 
+    truststoreSoftCard.jks -storepass motDePasse
+$ openssl x509 -outform der -in extensionClient.pem -out extensionClient.der
+$ keytool -import -file extensionClient.der -keystore \ 
+    truststoreFacecrypt.jks -storepass motDePasse
 \end{verbatim}
 
 Il faut ensuite placer les fichiers .jks dans le répertoire \texttt{cert}
