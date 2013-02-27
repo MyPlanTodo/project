@@ -50,7 +50,7 @@ public class Cypher extends Applet {
 			privKey = (PrivateKey) kp.getPrivate();
 			pubKey = (PublicKey) kp.getPublic();
 			cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-			
+
 		}
 		catch(CryptoException e){
 			ISOException.throwIt((short) 0x4242);
@@ -89,7 +89,7 @@ public class Cypher extends Applet {
 			catch(SecurityException e){
 				ISOException.throwIt((short) 0x4243);
 			}
-			break;		
+			break;
 		case INS_CIPHER:
 			try {
 				dataLen = data[ISO7816.OFFSET_LC];
@@ -110,10 +110,18 @@ public class Cypher extends Applet {
 					ISOException.throwIt((short) 0x0001);
 				else if (ce.getReason() == CryptoException.INVALID_INIT)
 					ISOException.throwIt((short) 0x0002);
-				else if (ce.getReason() == CryptoException.ILLEGAL_USE)
-					ISOException.throwIt((short) 0x0003);
-				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
-					ISOException.throwIt((short) 0x0004);
+				else if (ce.getReason() == CryptoException.ILLEGAL_USE) {
+					//ISOException.throwIt((short) 0x0003);
+					data[0] = CryptoException.ILLEGAL_USE;
+					datastore.eraseData();
+					datastore.putData(data, (short) 1);
+				}
+				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE) {
+					//ISOException.throwIt((short) 0x0004);
+					data[0] = CryptoException.ILLEGAL_VALUE;
+					datastore.eraseData();
+					datastore.putData(data, (short) 1);
+				}
 				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
 					ISOException.throwIt((short) 0x0005);
 				else
@@ -129,17 +137,17 @@ public class Cypher extends Applet {
 			try {
 				if(PIN.getState() == (short) 0x9000)
 				{				
-					
-				dataLen = (short) - data[ISO7816.OFFSET_LC];
-				
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
-				cipher.init(privKey, Cipher.MODE_DECRYPT);
-				cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
+					dataLen = (short) - data[ISO7816.OFFSET_LC];
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
-				datastore.eraseData();
-				datastore.putData(data, cipherLen);
+					cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
+
+					cipher.init(privKey, Cipher.MODE_DECRYPT);
+					cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
+
+					// Besoin d'utiliser ces fonctions pour des réponses "longues"
+					datastore.eraseData();
+					datastore.putData(data, cipherLen);
 				}
 				else
 				{
@@ -157,10 +165,16 @@ public class Cypher extends Applet {
 					ISOException.throwIt((short) 0x0001);
 				else if (ce.getReason() == CryptoException.INVALID_INIT)
 					ISOException.throwIt((short) 0x0002);
-				else if (ce.getReason() == CryptoException.ILLEGAL_USE)
-					ISOException.throwIt((short) 0x0003);
-				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE)
-					ISOException.throwIt((short) 0x0004);
+				else if (ce.getReason() == CryptoException.ILLEGAL_USE) {
+					datastore.eraseData();
+					datastore.putData(new byte[]{CryptoException.ILLEGAL_USE}, (short) 1);
+				}
+				else if (ce.getReason() == CryptoException.ILLEGAL_VALUE) {
+					datastore.eraseData();
+					datastore.putData(new byte[]{CryptoException.ILLEGAL_VALUE}, (short) 1);	
+				}
+
+
 				else if (ce.getReason() == CryptoException.NO_SUCH_ALGORITHM)
 					ISOException.throwIt((short) 0x0005);
 				else

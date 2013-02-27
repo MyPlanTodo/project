@@ -120,6 +120,7 @@ class ProcessusSock extends Thread {
 	private final byte STORE_CREDENTIALS = (byte) 0x48;
 	private final byte RESET_PWD = (byte) 0x49;
 	private final byte VALIDATE_PWD = (byte) 0x50;
+	private final byte SIGN = (byte) 0x51;
 
 	/**
 	 * This constructor links a reader and
@@ -240,6 +241,17 @@ class ProcessusSock extends Thread {
 				sendMessage(NetworkException.ERROR_DECRYPT);		
 			}
 			break;
+			
+		case SIGN:
+			data = new byte[mess.length - 1];
+
+			System.arraycopy(mess, 1, data, 0, mess.length - 1);
+			try {
+				sendMessage(this.signData(data));
+			} catch (Exception e) {
+				sendMessage(NetworkException.ERROR_DECRYPT);		
+			}
+			break;
 
 			// check if the card is unlocked.
 		case IS_UNLOCKED:
@@ -314,9 +326,12 @@ class ProcessusSock extends Thread {
 			break;
 		}
 		return res;
-
 	}
 
+
+	private byte[] signData(byte[] data) throws CardException, Exception {
+		return SoftCard.getInstance().signData(data);
+	}
 
 
 	/**
@@ -464,6 +479,7 @@ class ProcessusSock extends Thread {
 
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
+		System.out.println(bytesToHexString(b));
 		return b;
 	}
 

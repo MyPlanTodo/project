@@ -42,12 +42,12 @@ public class SoftCard {
 	public static final byte CLA_SMARTCARD = (byte) 0xB0;
 
 	// Constants identifying each applet on the smartcard
-	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
-	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
-	public static byte[] STORE_ID_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
-	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
-	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
-	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
+//	public static byte[] GEN_RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
+//	public static byte[] SIGN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x02 };
+//	public static byte[] STORE_ID_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
+//	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
+//	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
+//	public static byte[] TUNNEL_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x09 };
 	
 	
 	public static byte AID_PIN = 0x00;
@@ -244,24 +244,14 @@ public class SoftCard {
 
 	public byte[] getPublicKey() throws Exception {
 		try {
-			/* Sélection de l'applet */
-			ResponseAPDU r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, CIPHER_AID));
-			if (r.getSW() != 0x9000) {
-				throw new Exception("Could not select the applet.");
-			}
 			// Récupération de l'exposant
 			tunnel.erase();
 			tunnel.request(AID_CYPHER, INS_GET_EXPONENT,(byte) 0x00, (byte)0x00);
 			tunnel.execute();
-			
-			
-			
+						
 			// Récupération du modulus
 			BigInteger exp = new BigInteger(1, tunnel.getResponse());
-			
-			
-		
-			
+						
 			tunnel.erase();
 			tunnel.request(AID_CYPHER, INS_GET_MODULUS,(byte) 0x00, (byte)0x00);
 			tunnel.execute();
@@ -324,11 +314,14 @@ public class SoftCard {
 			tunnel.request(AID_CYPHER,INS_UNCIPHER, (byte)0x00,(byte) 0x00, data);
 			tunnel.execute();
 			
-			byte[] res = tunnel.getResponse();
+			byte[] res = tunnel.getData();
 
 			if (res.length == 1 && res[0] == -1) {
 				askPin();	
 				return decryptData(data);
+			}
+			else if (res.length == 1 && (res[0] == 5 || res[0] == 1)) {
+				throw new Exception();
 			}
 			else {
 				return res;
@@ -770,6 +763,34 @@ public class SoftCard {
 				this.getInstance();
 				return isUnlocked();
 			}
+			catch (CardException ce1) {
+				throw new Exception(ce1.getMessage());
+			}
+		}
+	}
+
+	public byte[] signData(byte[] data) throws CardException, Exception {
+		try {
+			tunnel.erase();
+			tunnel.request(AID_SIGN, INS_SIGN, (byte)0x00,(byte) 0x00, data);
+			tunnel.execute();
+
+			byte[] res = tunnel.getData();
+
+			if (res.length == 1 && res[0] == -1) {
+				askPin();	
+				return signData(data);
+			}
+			else {
+				return res;
+			}
+		}
+		catch(CardException ce) {
+			try {
+				disconnect();
+				this.getInstance();
+				return signData(data);
+			} 
 			catch (CardException ce1) {
 				throw new Exception(ce1.getMessage());
 			}

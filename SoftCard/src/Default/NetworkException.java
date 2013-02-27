@@ -15,7 +15,7 @@ public enum NetworkException {
 	ERROR_CHECK_LOCKED(new byte[]{(byte)0xfa}),
 	ERROR_STORE_ID(new byte[]{(byte)0xef}),
 	ERROR_GET_ID(new byte[]{(byte)0xee}),
-	ERROR_RESET_PASSWORD(new byte[]{(byte)0xed}), 
+	ERROR_RESET_PASSWORD(new byte[]{(byte)0xed}),
 	ERROR_VALIDATE_PASSWORD(new byte[]{(byte)0xee});
 	
 	private byte[] value;
