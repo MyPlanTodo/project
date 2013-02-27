@@ -13,7 +13,7 @@ while getopts ":c" opt; do
     esac
 done
 
-if [ $compile ]; then
+if [ $compile == true ]; then
     echo "Compiling server."
     javac -d bin -cp lib/commons-codec-1.7.jar src/Default/NetworkException.java\
     src/Default/SoftCard.java src/Default/SoftCardServer.java src/Default/TestServer.java\

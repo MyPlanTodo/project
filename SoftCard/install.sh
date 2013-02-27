@@ -29,7 +29,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "Done."
 
-if [ $compile  ]; then 
+if [ $compile == true ]; then 
     echo -n "Compiling admin program: "
     javac -d bin -cp lib/commons-codec-1.7.jar src/Default/SoftCard.java\
         src/Admin/getCode.java src/Default/Tunnel.java src/Default/ArrayTools.java\
