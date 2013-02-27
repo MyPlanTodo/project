@@ -488,9 +488,7 @@ public class tunnel2 extends Applet {
 		
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
-		}	
-		
-		// TODO Auto-generated method stub
+		}
 
 	}
 

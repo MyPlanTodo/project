@@ -45,7 +45,7 @@ public class SoftCardServer {
 	 */
 	public SoftCardServer(String adr, int port, int maxConn) {
 		try {
-			adresse = Inet4Address.getByName(adr);			
+			adresse = Inet4Address.getByName(adr);
 		} catch (UnknownHostException e) {
 			System.out.println("Adresse non valide");
 			e.printStackTrace();
@@ -120,6 +120,7 @@ class ProcessusSock extends Thread {
 	private final byte STORE_CREDENTIALS = (byte) 0x48;
 	private final byte RESET_PWD = (byte) 0x49;
 	private final byte VALIDATE_PWD = (byte) 0x50;
+	private final byte SIGN = (byte) 0x51;
 
 	/**
 	 * This constructor links a reader and
@@ -240,6 +241,17 @@ class ProcessusSock extends Thread {
 				sendMessage(NetworkException.ERROR_DECRYPT);		
 			}
 			break;
+			
+		case SIGN:
+			data = new byte[mess.length - 1];
+
+			System.arraycopy(mess, 1, data, 0, mess.length - 1);
+			try {
+				sendMessage(this.signData(data));
+			} catch (Exception e) {
+				sendMessage(NetworkException.ERROR_DECRYPT);		
+			}
+			break;
 
 			// check if the card is unlocked.
 		case IS_UNLOCKED:
@@ -296,7 +308,6 @@ class ProcessusSock extends Thread {
 			// client tells the card that the password was validated.
 		case VALIDATE_PWD:
 			try {
-				System.out.println(bytesToHexString(mess));
 				sendMessage(validatePassword()? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_VALIDATE_PASSWORD);
@@ -314,9 +325,12 @@ class ProcessusSock extends Thread {
 			break;
 		}
 		return res;
-
 	}
 
+
+	private byte[] signData(byte[] data) throws CardException, Exception {
+		return SoftCard.getInstance().signData(data);
+	}
 
 
 	/**
@@ -327,7 +341,6 @@ class ProcessusSock extends Thread {
 	 * occured on the smartcard's side.
 	 */
 	private byte[] resetPassword() throws CardException, Exception {
-		System.out.println(1);
 		return SoftCard.getInstance().resetPassword();
 	}
 

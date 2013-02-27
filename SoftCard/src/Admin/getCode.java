@@ -15,7 +15,6 @@ public class getCode {
 		try {
 			byte[] b;
 			int value1, value2;
-			
 			/*
 			 * XX & 0xFF : cast to unsigned int
 			 */

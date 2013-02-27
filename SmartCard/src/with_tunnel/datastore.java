@@ -12,9 +12,7 @@
  * 
  * */
 
-
-
-package store;
+package with_tunnel;
 
 import javacard.framework.APDU;
 import javacard.framework.Applet;
@@ -49,7 +47,7 @@ public class datastore extends Applet {
 		tab[2] = 0;
 	}
 
-	public static void putData(byte[] input, short length)	
+	public static void putData(byte[] input, short length)
 	{
 		// store data in the datastore
 		

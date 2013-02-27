@@ -20,15 +20,15 @@ import javacardx.crypto.Cipher;
 public class Cypher extends Applet {
 
 	/* 
-	 * Identifiant de la classe
+	 * Class ID
 	 */
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 	/*
-	 * Identifiants pour un chiffrement, un déchiffrement, une récupération
-	 * d'exposant public et une récupération du modulus
+	 * ID for the encryption, decryption, retrieving of the exponent
+	 * and the modulus.
 	 */
 	public static final byte INS_CIPHER = 0x00;
-	public static final byte INS_UNCIPHER = 0x01;
+	public static final byte INS_DECRYPT = 0x01;
 	private static final byte INS_GET_EXPONENT = 0x02;
 	private static final byte INS_GET_MODULUS = 0x03;
 
@@ -41,7 +41,7 @@ public class Cypher extends Applet {
 	private static short cipherLen = 0;
 
 	/* 
-	 * Génération de la paire de la clef 
+	 * Generating the key  
 	 */
 	private Cypher(){
 		try{
@@ -50,7 +50,7 @@ public class Cypher extends Applet {
 			privKey = (PrivateKey) kp.getPrivate();
 			pubKey = (PublicKey) kp.getPublic();
 			cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-			
+
 		}
 		catch(CryptoException e){
 			ISOException.throwIt((short) 0x4242);
@@ -62,6 +62,7 @@ public class Cypher extends Applet {
 	{
 
 		switch (data[ISO7816.OFFSET_INS]) {
+		
 		case INS_GET_EXPONENT:
 			try {
 				dataLen = ((RSAPublicKey) pubKey).getExponent(data, (short) 0);
@@ -77,6 +78,7 @@ public class Cypher extends Applet {
 			}
 			break;			
 
+			
 		case INS_GET_MODULUS:
 			try {				
 				dataLen = ((RSAPublicKey) pubKey).getModulus(data, (short) 0);
@@ -89,7 +91,9 @@ public class Cypher extends Applet {
 			catch(SecurityException e){
 				ISOException.throwIt((short) 0x4243);
 			}
-			break;		
+			break;
+			
+			
 		case INS_CIPHER:
 			try {
 				dataLen = data[ISO7816.OFFSET_LC];
@@ -98,7 +102,6 @@ public class Cypher extends Applet {
 				cipher.init(pubKey, Cipher.MODE_ENCRYPT);
 				cipherLen = cipher.doFinal(data, ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				datastore.eraseData();
 				datastore.putData(data, cipherLen);
 			}
@@ -125,21 +128,20 @@ public class Cypher extends Applet {
 
 			break;
 
-		case INS_UNCIPHER:
+			
+		case INS_DECRYPT:
 			try {
 				if(PIN.getState() == (short) 0x9000)
 				{				
-					
-				dataLen = (short) - data[ISO7816.OFFSET_LC];
-				
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
+					dataLen = (short) (data[ISO7816.OFFSET_LC] & 0xFF);
 
-				cipher.init(privKey, Cipher.MODE_DECRYPT);
-				cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
+					cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
-				datastore.eraseData();
-				datastore.putData(data, cipherLen);
+					cipher.init(privKey, Cipher.MODE_DECRYPT);
+					cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
+	
+					datastore.eraseData();
+					datastore.putData(data, cipherLen);
 				}
 				else
 				{
@@ -173,16 +175,20 @@ public class Cypher extends Applet {
 			break;
 		}
 	}
-	/*
-	 * Méthode appelée lors de l'installation de l'applet sur la carte
-	 * 
+	
+	/**
+	 * Method called when the applet is being installed on the card.
+	 * @return void
+	 * @throws ISOException if an error occured while installing.
 	 */
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
 		new Cypher().register();
 	}
 
-	/*
-	 * Méthode appelée lors de l'appel de l'applet
+	/**
+	 * This method is called when the applet is being called from outside the tunnel.
+	 * @return void
+	 * @throws ISOException if an error occured while processing the request.
 	 */
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
@@ -200,7 +206,7 @@ public class Cypher extends Applet {
 
 		switch (buffer[ISO7816.OFFSET_INS]) {
 
-		// Requête de chiffrement
+		// Ciphering request 
 		case INS_CIPHER:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
@@ -209,12 +215,9 @@ public class Cypher extends Applet {
 				cipher.init(pubKey, Cipher.MODE_ENCRYPT);
 				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(cipherLen);
 				apdu.sendBytesLong(buffer, (short) 0, cipherLen);
-
-				//apdu.setOutgoingAndSend((short) 0, (short) cipherLen);
 			}
 			catch(APDUException e){
 				ISOException.throwIt((short) 0x4244);
@@ -239,8 +242,8 @@ public class Cypher extends Applet {
 
 			break;
 
-			// Requête de déchiffrement
-		case INS_UNCIPHER:
+		// Decrypting request
+		case INS_DECRYPT:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
 
@@ -249,11 +252,9 @@ public class Cypher extends Applet {
 				cipher.init(privKey, Cipher.MODE_DECRYPT);
 				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
-				// Besoin d'utiliser ces fonctions pour des réponses "longues"
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(cipherLen);
 				apdu.sendBytesLong(buffer, (short) 0, cipherLen);
-
 
 			}
 			catch(APDUException e){
@@ -280,7 +281,7 @@ public class Cypher extends Applet {
 
 			break;
 
-			// Requête d'obtention de l'exposant public
+		// Request to obtain the exponent
 		case INS_GET_EXPONENT:
 			try {
 				dataLen = ((RSAPublicKey) pubKey).getExponent(buffer, (short) 0);
@@ -294,7 +295,7 @@ public class Cypher extends Applet {
 			}
 			break;
 
-			// Requête d'obtention du modulus
+		// Request to obtain the modulus
 		case INS_GET_MODULUS:
 			try {
 				RSAPublicKey rsaPubKey= (RSAPublicKey) pubKey;
