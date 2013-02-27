@@ -42,6 +42,7 @@ public class GeneralClient {
 	private static final byte INS_STORE_LOGIN = 0x00;
 	private static final byte INS_STORE_MDP = 0x01;
 	private static final byte INS_GET_CRED = 0x03;
+	private static final byte INS_VAL_PWD = 0x02;
 	public static final byte INS_TEST_AUTH = 0x04;
 	public static final byte INS_ASK_AUTH = 0x05;
 	
@@ -186,10 +187,10 @@ public class GeneralClient {
 
 					if (nb > 127)					
 					{
-						t.request((short)1, INS_GEN, (byte) (nb-256), (byte)0x01);
+						t.request((short)AID_RNG, INS_GEN, (byte) (nb-256), (byte)0x01);
 					}	
 					else{
-						t.request((short)1, INS_GEN, (byte)  nb, (byte)0x00);
+						t.request((short)AID_RNG, INS_GEN, (byte)  nb, (byte)0x00);
 					}
 
 					t.execute();
@@ -250,10 +251,11 @@ public class GeneralClient {
 						throw new Exception("Could not store data");
 					}
 
-
+					break;
 				case 6: 
 					t.erase();
-					//t.request((short) AID_STORE, INS_, P1, P2));
+					t.request((short) AID_STORE, INS_VAL_PWD,(byte)0 ,(byte) 0);
+					t.execute();
 
 					break;
 
