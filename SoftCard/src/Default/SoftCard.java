@@ -37,7 +37,7 @@ import org.apache.commons.codec.binary.Hex;
  * @version 1.1
  */
 public class SoftCard {
-	
+
 	private  final static SecretKey shared_key = new SecretKeySpec(new byte[]{10,1,1,5,9,6,5,4,5,9,6,6,6,9,2,6}, "AES");
 	public static final byte CLA_SMARTCARD = (byte) 0xB0;
 
@@ -97,26 +97,38 @@ public class SoftCard {
 		return new String(sb);
 	}
 
-	private SoftCard() throws CardException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, InterruptedException {
+	/**
+	 * This constructor initialize the connection with the card and 
+	 * setup the tunnel that will be deployed between {@link SoftCard}
+	 * and this card. 
+	 * @throws Exception with a reason message if the card is not connected
+	 * to the reader.
+	 */
+	private SoftCard() throws Exception {
 		factory = TerminalFactory.getDefault();
 		terminals = factory.terminals().list();
-		tunnel = new Tunnel(shared_key);
+		CardTerminal terminal = terminals.get(0);
 
+		try {
+			card = terminal.connect("T=1");
+		}
+		catch(CardException ce) {
+			throw new Exception("Card removed.");
+		}
+		channel = card.getBasicChannel();
+		tunnel = new Tunnel(shared_key);
 	}
 
-	public static SoftCard getInstance() throws CardException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, InterruptedException{
+	/**
+	 * This static method create a new instance of {@link SoftCard}, if 
+	 * necessary, and returns it.  
+	 * @return the current instance of {@link SoftCard}
+	 * @throws Exception with a reason message, if an error occured while
+	 * creating the instance.
+	 */
+	public static SoftCard getInstance() throws Exception {
 		if (instance == null) {
 			instance = new SoftCard();
-			CardTerminal terminal = terminals.get(0);
-
-			/* Connexion à la carte */
-			try {
-				card = terminal.connect("T=1");
-			}
-			catch(CardException ce) {
-				throw new CardException("Card removed.");
-			}
-			channel = card.getBasicChannel();
 		}
 		return instance;
 	}
@@ -125,7 +137,7 @@ public class SoftCard {
 	/**
 	 * This private method translates the PIN entered as an int to
 	 * an array of two bytes.
-	 * @param intPin
+	 * @param intPin - the pin, or puk, to translate.
 	 * @return the new pin, as a bytes's array
 	 */
 	private byte[] intToBytes(int intPin) {
@@ -138,7 +150,7 @@ public class SoftCard {
 	/**
 	 * This private method translates the PIN as an array of bytes to
 	 * an int.
-	 * @param bytesPin
+	 * @param bytesPin - the pin, or puk, to translate.
 	 * @return the new pin, as an integer.
 	 */
 	private int bytesToInt(byte[] bytesPin) {
@@ -149,6 +161,9 @@ public class SoftCard {
 	/**
 	 * This method asks the user's PIN until it is correct or the card
 	 * and is locked. In this case, the method askPuk is called().
+	 * @return void
+	 * @throws Exception with the reason message, if an error occured while
+	 * communicating with the card  (mostly if it is not connected). 
 	 */
 	private void askPin() throws Exception {
 		Console console = System.console();
@@ -194,6 +209,7 @@ public class SoftCard {
 	 * This method asks the user's PUK until it is correct or the card
 	 * and is locked. In this case, the applets will have to be installed
 	 * once again.
+	 * @return void
 	 */
 	private void askPuk() {
 		Console console = System.console();
@@ -231,29 +247,36 @@ public class SoftCard {
 	}
 
 	/**
-	 * This method sends a request to the card in order to obtain the user's public
-	 * key.
+	 * This method sends a request to the card in order to obtain the 
+	 * user's public key. It first retrieves the exponent and the 
+	 * modulus, then generate the public key from these informations. 
 	 * @return the public key, as a bytes' array
 	 * @throws Exception wih the reason message, if an error 
 	 * occured on the card's side.
 	 */
 	public byte[] getPublicKey() throws Exception {
 		try {
-			// Récupération de l'exposant
 			tunnel.erase();
 			tunnel.request(AID_CYPHER, INS_GET_EXPONENT,(byte) 0x00, (byte)0x00);
-			tunnel.execute();
-						
-			// Récupération du modulus
+			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while retrieving the exponent.");
+			}
 			BigInteger exp = new BigInteger(1, tunnel.getResponse());
-						
+
 			tunnel.erase();
 			tunnel.request(AID_CYPHER, INS_GET_MODULUS,(byte) 0x00, (byte)0x00);
-			tunnel.execute();
+			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while retrieving the modulus.");
+			}
+			
 			BigInteger mod = new BigInteger(1, tunnel.getResponse());
+			
 			KeyFactory kf = KeyFactory.getInstance("RSA");
 			RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(mod, exp);
 			PublicKey publicKey = kf.generatePublic(pubKeySpec);
+
 			return publicKey.getEncoded();
 		}
 		catch(CardException ce) {
@@ -268,6 +291,11 @@ public class SoftCard {
 		}
 	}
 
+	/**
+	 * This method shuts down the connection with the card and thus, 
+	 * and unset the current instance of SoftCard. 
+	 * @return void
+	 */
 	public void disconnect() {
 		try {
 			card.disconnect(false);
@@ -277,15 +305,21 @@ public class SoftCard {
 		tunnel = null;
 	}
 
+	/**
+	 * This method sends a request to the card in order to obtain a 
+	 * random numer of a determined length, in bytes.
+	 * @param nb - the number of bytes of the generated number
+	 * @return the generated number, as a bytes' array.
+	 * @throws Exception wih the reason message, if an error 
+	 * occured on the card's side.
+	 */
 	public byte[] getRandomNumber(byte nb) throws Exception{
 		try {
-			
-
 			tunnel.erase();
 			tunnel.request(AID_RANDOM, INS_GEN,(byte) nb,(byte) 0x00);
-			tunnel.execute();
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while generating a random number.");
+			}
 
 			return tunnel.getResponse();
 		}
@@ -301,20 +335,29 @@ public class SoftCard {
 		}
 	}
 
+	/**
+	 * This method sends a request to the card in order to decrypt and 
+	 * receive a crypted message.
+	 * @param data - the data to decrypt.
+	 * @return the generated number, as a bytes' array.
+	 * @throws Exception wih the reason message, if an error 
+	 * occured on the card's side.
+	 */
 	public byte[] decryptData(byte[] data) throws Exception {
 		try {
 			tunnel.erase();
 			tunnel.request(AID_CYPHER,INS_UNCIPHER, (byte)0x00,(byte) 0x00, data);
-			tunnel.execute();
-			
-			byte[] res = tunnel.getData();
 
+			if (tunnel.execute() != 0x9000) {
+				System.out.println("bad decrypt.");
+				throw new Exception("Bad decrypt");
+			}
+
+			byte[] res = tunnel.getResponse();
+			
 			if (res.length == 1 && res[0] == -1) {
 				askPin();	
 				return decryptData(data);
-			}
-			else if (res.length == 1 && (res[0] == 5 || res[0] == 1)) {
-				throw new Exception();
 			}
 			else {
 				return res;
@@ -334,11 +377,11 @@ public class SoftCard {
 
 	public byte[] encryptData(byte[] data) throws Exception {
 		try {
-		
-			
 			tunnel.erase();
 			tunnel.request(AID_CYPHER,INS_CIPHER, (byte)0x00,(byte) 0x00, data);
-			tunnel.execute();
+			if (tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while encrypting data.");
+			}
 			return tunnel.getResponse();
 		}
 		catch(CardException ce) {
@@ -356,7 +399,7 @@ public class SoftCard {
 	/**
 	 * This method calls a method on the smartcard to check the validity of the PIN
 	 * code. It first checks if the user is still allowed to enter such a PIN. 
-	 * @param pin
+	 * @param pin - the pin entered by the user.
 	 * @return -1 if the user is not allowed to try again. 
 	 * @return 0 if the PIN is wrong.
 	 * @return 1 if the PIN is right.
@@ -364,24 +407,22 @@ public class SoftCard {
 	 */
 	public byte unlock(byte[] pin) throws Exception {
 		try {
-			
-			
-			
 			tunnel.erase();
 			tunnel.request(AID_PIN, INS_PIN_REMAINING_TRIES,(byte) 0x00,(byte) 0x00);
-			tunnel.execute();
-			
+			if (tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while checking the PIN");
+			}
 
 			if (tunnel.getResponse()[0] == 0) {
 				return -1;
 			}
 			else {
-				
+
 				tunnel.erase();
 				tunnel.request(AID_PIN, INS_VERIF_PIN, SIZE_PIN, (byte) 0x00, pin);
 				tunnel.execute();
-				
-				
+
+
 				return tunnel.getResponse()[0];
 			}
 
@@ -403,7 +444,7 @@ public class SoftCard {
 	 * This method calls another on the smartcard to check the validity of the PUK
 	 * code. It first checks if the user is still allowed to enter such a PUK. If
 	 * the operation succeeds the card is unlocked.  
-	 * @param pin
+	 * @param puk - the PUK entered by the user.
 	 * @return -1 if the user is not allowed to try again. 
 	 * @return 0 if the PUK is wrong.
 	 * @return 1 if the PUK is right.
@@ -411,7 +452,7 @@ public class SoftCard {
 	 */
 	public byte[] unlockWithPuk(byte[] puk) throws Exception {
 		try {
-		
+
 			tunnel.erase();
 			tunnel.request(AID_PIN,INS_PUK_REMAINING_TRIES, (byte)0x00, (byte)0x00 );
 			tunnel.execute();
@@ -419,13 +460,15 @@ public class SoftCard {
 				return null;
 			}
 			else {
-				
+
 				tunnel.erase();
 				tunnel.request(AID_PIN, INS_UNLOCK_WITH_PUK, (byte)SIZE_PUK,(byte) 0x00, puk);
-				tunnel.execute();
+				if(tunnel.execute() != 0x9000) {
+					throw new Exception("An error occured while unlocking the card with the provided PUK.");
+				}
 				
-					return tunnel.getResponse();
-		
+				return tunnel.getResponse();
+
 			}
 		}
 		catch(CardException ce) {
@@ -485,12 +528,14 @@ public class SoftCard {
 	 */
 	public boolean storeLogin(byte[] login) throws Exception {
 		try {
-		
 			tunnel.erase();
 			tunnel.request(AID_STORE, INS_STORE_LOGIN,(byte) 0x00, (byte)0x00, login);
-			tunnel.execute();
-			byte[] data = tunnel.getResponse();
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while storing the login.");
+			}
 			
+			byte[] data = tunnel.getResponse();
+
 			if (data.length == 1 && data[0] == -1) {
 				askPin();
 				return storeLogin(login);
@@ -522,13 +567,12 @@ public class SoftCard {
 	 */
 	private boolean storePassword(byte[] pwd) throws Exception {
 		try {
-		
-			
 			tunnel.erase();
 			tunnel.request(AID_STORE,  INS_STORE_PWD,(byte) 0x00, (byte) 0x00, pwd);
-			tunnel.execute();
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while storing the password.");
+			}
+
 			byte[] data = tunnel.getResponse();
 
 			if (data.length == 1 && data[0] == -1) {
@@ -560,13 +604,12 @@ public class SoftCard {
 	 */
 	public boolean validatePassword() throws Exception {
 		try {
-			
-
 			tunnel.erase();
 			tunnel.request(AID_STORE,   INS_VALIDATE_PWD,(byte) 0x00,(byte) 0x00);
-			tunnel.execute();
-			
-		
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while validating the password.");
+			}
+
 			return (tunnel.getResponse()[0] == 1) ? true : false;
 		}
 		catch(CardException ce) {
@@ -592,14 +635,12 @@ public class SoftCard {
 	 */
 	public byte[] retrieveCredentials() throws Exception {
 		try {
-			
-
 			tunnel.erase();
 			tunnel.request(AID_STORE,   INS_GET_CRED, (byte)0x00,(byte) 0x00);
-			tunnel.execute();
-			
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while retrieving the credentials.");
+			}
+
 			byte[] data = tunnel.getResponse();
 
 			if (data[0] == (byte)-1) {
@@ -631,14 +672,12 @@ public class SoftCard {
 	 */
 	public byte[] getPIN() throws Exception{
 		try {
-			
-
 			tunnel.erase();
 			tunnel.request(AID_PIN,  INS_GET_PIN, (byte)0x00,(byte) 0x00);
-			tunnel.execute();
-			
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while getting the PIN");
+			}
+
 			return tunnel.getResponse();
 		}
 		catch(CardException ce) {
@@ -663,13 +702,11 @@ public class SoftCard {
 	 */
 	public byte[] getPUK() throws Exception{
 		try {
-		
-
 			tunnel.erase();
 			tunnel.request(AID_PIN,   INS_GET_PUK, (byte)0x00, (byte)0x00);
-			tunnel.execute();
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while retrieving the PUK.");
+			}
 			return tunnel.getResponse();
 		}
 		catch(CardException ce) {
@@ -714,14 +751,10 @@ public class SoftCard {
 			byte[] delimiter = new byte[]{(byte)0x20};
 			byte[] data = new byte[oldPwd.length + newPwd.length + delimiter.length];
 
-			System.out.println(new String(oldPwd) + "|" + bytesToHexString(oldPwd));
-			System.out.println(password + "|" + bytesToHexString(password.getBytes()));
-
 			System.arraycopy(oldPwd, 0, data, 0, oldPwd.length);
 			System.arraycopy(delimiter, 0, data, oldPwd.length, delimiter.length);
 			System.arraycopy(newPwd, 0, data, oldPwd.length + delimiter.length, newPwd.length);
 
-			System.out.println(new String(data));
 			return data;
 		}
 		else { 
@@ -737,12 +770,12 @@ public class SoftCard {
 	 */
 	public boolean isUnlocked() throws Exception {
 		try {
-			
 			tunnel.erase();
 			tunnel.request(AID_PIN,  INS_IS_LOCKED, (byte)0x00,(byte) 0x00);
-			tunnel.execute();
-			
-			
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while checking the lock of the card.");
+			}
+
 			if (tunnel.getResponse().length == 0) {
 				return false;
 			}
@@ -766,8 +799,10 @@ public class SoftCard {
 		try {
 			tunnel.erase();
 			tunnel.request(AID_SIGN, INS_SIGN, (byte)0x00,(byte) 0x00, data);
-			tunnel.execute();
-
+			if(tunnel.execute() != 0x9000) {
+				throw new Exception("An error occured while signing data.");
+			}
+			
 			byte[] res = tunnel.getData();
 
 			if (res.length == 1 && res[0] == -1) {

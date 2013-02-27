@@ -45,7 +45,7 @@ public class SoftCardServer {
 	 */
 	public SoftCardServer(String adr, int port, int maxConn) {
 		try {
-			adresse = Inet4Address.getByName(adr);			
+			adresse = Inet4Address.getByName(adr);
 		} catch (UnknownHostException e) {
 			System.out.println("Adresse non valide");
 			e.printStackTrace();
@@ -308,7 +308,6 @@ class ProcessusSock extends Thread {
 			// client tells the card that the password was validated.
 		case VALIDATE_PWD:
 			try {
-				System.out.println(bytesToHexString(mess));
 				sendMessage(validatePassword()? new byte[]{1} : new byte[]{0});
 			} catch (Exception e) {
 				sendMessage(NetworkException.ERROR_VALIDATE_PASSWORD);
@@ -342,7 +341,6 @@ class ProcessusSock extends Thread {
 	 * occured on the smartcard's side.
 	 */
 	private byte[] resetPassword() throws CardException, Exception {
-		System.out.println(1);
 		return SoftCard.getInstance().resetPassword();
 	}
 
@@ -479,7 +477,6 @@ class ProcessusSock extends Thread {
 
 		byte[] b = new byte[i];
 		in.read(b, 0, i);
-		System.out.println(bytesToHexString(b));
 		return b;
 	}
 
