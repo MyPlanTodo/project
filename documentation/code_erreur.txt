@@ -1,5 +1,0 @@
-//code d'erreurs SW
-SW	signification
-0x1234	Carte non débloquée, entrez le code PIN.
-0x1235	Carte bloquée, entrez le code PUK.
-

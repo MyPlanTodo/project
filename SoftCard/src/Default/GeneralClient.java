@@ -26,6 +26,8 @@ import javax.smartcardio.CardTerminal;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
+import org.apache.commons.codec.binary.Base64;
+
 public class GeneralClient {
 	/* Constantes */
 	public static final byte CLA_CIPHER = (byte) 0xB0;
@@ -46,12 +48,6 @@ public class GeneralClient {
 
 	private static final int INS_PIN = 0x00;
 	private static final int INS_PUK = 0x02;
-
-	public static byte[] CIPHER_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x04 };
-	public static byte[] RANDOM_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x01 };
-	public static byte[] STORE_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x03 };
-	public static byte[] PIN_AID = { (byte)0x01, (byte)0x02, (byte)0x03, (byte)0x04, (byte)0x05, (byte)0x06, (byte)0x07, (byte)0x08, (byte)0x09, (byte)0x00, (byte)0x08 };
-
 	
 	// offset AID values
 	private static final short AID_PIN = 0x00; 
@@ -111,8 +107,9 @@ public class GeneralClient {
 				System.out.println();
 				System.out.println("Votre choix ?");
 
-				int choix = System.in.read();
-				while (!(choix >= '0' && choix <= '9')) {
+				Scanner sc = new Scanner(System.in);
+				int choix = sc.nextInt();
+				while (!(choix >= 0 && choix <= 9)) {
 					choix = System.in.read();
 				}
 
@@ -121,25 +118,8 @@ public class GeneralClient {
 				String s = "hello world and this is a test for long long long loglg longlong g lllonglong longlong longlong longlong long messages";
 				
 				switch (choix) {
-				case '1':
-					/* Sélection de l'applet */
-					/* r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, CIPHER_AID));
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Erreur lors de la sélection de l'applet : "+ r.getSW());
-                            System.exit(1);
-                        }*/
-
+				case 1:
 					// Récupération de l'exposant
-					/* r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_EXPONENT, (byte)0x00, (byte)0x00, 1));
-
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Err: " + r.getSW1() + " " + r.getSW2());
-                        } else {
-                            byte[] data1 = r.getData();
-                            exp = new BigInteger(1, data1);
-                            System.out.println(exp.toString());
-                        }*/
-
 					t.erase();
 					t.request((short)AID_CYPHER, INS_GET_EXPONENT, (byte)0x00, (byte)0x00);
 					if(t.execute() != 0x9000)
@@ -150,22 +130,9 @@ public class GeneralClient {
 					exp = new BigInteger(1, result);
 
 					System.out.println(exp.toString());
-
+	
+					
 					// Récupération du modulus
-					/*  r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_MODULUS, (byte)0x00, (byte)0x00, 1));
-
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Err: " + r.getSW1() + " " + r.getSW2());
-                        } else {
-                            BigInteger mod = new BigInteger(1, r.getData());
-
-                            KeyFactory kf = KeyFactory.getInstance("RSA");
-                            RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(mod, exp);
-                            publicKey = kf.generatePublic(pubKeySpec);
-                            System.out.println(bytesToHexString(publicKey.getEncoded()));
-                            System.out.println(publicKey.toString());
-                        }*/
-
 					t.erase();
 					t.request((short)AID_CYPHER,  INS_GET_MODULUS, (byte)0x00, (byte)0x00);
 					t.execute();
@@ -178,68 +145,35 @@ public class GeneralClient {
 					System.out.println(bytesToHexString(publicKey.getEncoded()));
 					System.out.println(publicKey.toString());
 
-
 					break;
 
-				case '2':
-					/*  r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_CIPHER, (byte)0x00, (byte)0x00, ("hello world").getBytes()));
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Erreur : " + r.getSW1() + " " + r.getSW2());
-                        } else {
-                            data = r.getData();
-                            System.out.println("Texte : " + bytesToHexString("hello world".getBytes()));
-                            System.out.println("Chiffré : " + bytesToHexString(data));
-                        }*/
-					
+				case 2:
 					t.erase();
 					t.request((short)AID_CYPHER, INS_CIPHER, (byte)0x00, (byte)0x00, s.getBytes());
 					t.execute();
 					result = t.getResponse();
-					System.out.println("Texte : " + bytesToHexString(s.getBytes()));
-					System.out.println("Chiffré : " + bytesToHexString(result));
-
+					System.out.println("Texte : " + s);
+					System.out.println("Chiffré : " + Base64.encodeBase64String(result));
 
 					break;
 
-				case '3':
+				case 3:
 					Cipher c = Cipher.getInstance("RSA");
 					byte[] clearText = s.getBytes();
 					c.init(Cipher.ENCRYPT_MODE, publicKey);
 					byte[] ciphered = c.doFinal(clearText);
-					System.out.println("Clair : " + bytesToHexString(clearText));
-					System.out.println("Chiffré : " + bytesToHexString(ciphered));
-					System.out.println("Taille chiffré : " + ciphered.length);
-
-					/* r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_UNCIPHER, (byte) 0x00, (byte)0x00, ciphered));
-
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Erreur : " + r.getSW());
-                        } else {
-                            data = r.getData();
-                            System.out.println("Déchiffré " + bytesToHexString(data));
-                        }*/
+					System.out.println("Clair : " + new String(clearText));
+					System.out.println("Chiffré : " + Base64.encodeBase64String(ciphered));
 
 					t.erase();
 					t.request((short)AID_CYPHER, INS_UNCIPHER, (byte) 0x00, (byte)0x00, ciphered);
-					System.out.println(t.execute());
+					t.execute();
 					result = t.getResponse();
-					System.out.println("Déchiffré " + bytesToHexString(result));
-					System.out.println(new String(result));
-
+					System.out.println("Déchiffré " + new String(result));
+					
 					break;
 
-				case '4':
-					/* r = channel.transmit(new CommandAPDU((byte)0x00, (byte)0xA4, (byte)0x04, (byte)0x00, RANDOM_AID));
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Erreur lors de la sélection de l'applet : "+ r.getSW());
-                            System.exit(1);
-                        }*/
-					/* r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GEN, (byte) 2, (byte)0x00));
-                        if (r.getSW() != 0x9000) {
-                            System.out.println("Erreur : " + r.getSW());
-                        } else {
-                            System.out.println(bytesToHexString(r.getData()));
-                        }*/
+				case 4:
 					t.erase();
 					Scanner in2 = new Scanner(System.in);
 					int nb = in2.nextInt();
@@ -259,17 +193,12 @@ public class GeneralClient {
 					t.execute();
 					result = t.getResponse();
 					ArrayTools.printByteArray(result,(short) 10);
-					System.out.println(result.length);
-					//System.out.println(bytesToHexString(t.getData()));                        
+					//System.out.println(result.length);
+					                        
 					break;
 
-				case '5':
-					/* r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_AID));
-                        if (r.getSW() != 0x9000) {
-                            throw new Exception("Could not select the applet.");
-                        }*/
-
-					byte[] stored = "pipo prout".getBytes(); 					
+				case 5:
+					byte[] stored = "pipo plop".getBytes(); 					
 					String strStored = new String(stored);
 					
 					Scanner in3 = new Scanner(System.in);
@@ -297,25 +226,14 @@ public class GeneralClient {
 
 						System.out.println(login.length + "|" + new String(login) + "|");
 						System.out.println(mdp.length + "|" + new String(mdp) + "|");
+						
 						// Store login
-						/* r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_STORE_LOGIN, 0x00, 0x00, login));
-                            if (r.getSW() != 0x9000) {
-                                throw new Exception("Could not store data.");
-                            }*/
-
-
 						t.erase();
 						t.request((short)AID_STORE,(short) INS_STORE_LOGIN,(byte) 0x00,(byte)  0x00, login);
 						t.execute();
 
 
 						// Store mdp
-						/*   r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_STORE_MDP, 0x00, 0x00, mdp));
-                            if (r.getSW() != 0x9000) {
-                                throw new Exception("Could not store data.");
-                            }*/
-
-
 						t.erase();
 						t.request((short)AID_STORE,(short) INS_STORE_MDP,(byte) 0x00,(byte)  0x00, mdp);
 						t.execute();
@@ -325,7 +243,6 @@ public class GeneralClient {
 						{
 							System.out.println(ErrorMsg);
 						}	
-
 					}
 					else {
 						throw new Exception("Could not store data");
@@ -335,21 +252,12 @@ public class GeneralClient {
 
 					break;
 
-				case '6':
-					/*// Selecting the applet
-					r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, STORE_AID));
-					if (r.getSW() != 0x9000) {
-						throw new Exception("Could not select the applet.");
-					}*/
-
+				case 6:
 					// Retrieve data
-					/*r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_GET_CRED, 0x00, 0x00));*/
-
 					t.erase();
 					t.request((short)AID_STORE,INS_GET_CRED,(byte) 0x00,(byte) 0x00);
 					int res =  t.execute();
 					System.out.println("recup"+res);
-
 
 					data = t.getResponse();
 					if ((data.length == 1) && (data[0] == -1))
@@ -364,7 +272,7 @@ public class GeneralClient {
 					
 					break;
 
-				case '7':
+				case 7:
 					Scanner in = new Scanner(System.in);
 					int pin = in.nextInt();
 
@@ -372,59 +280,37 @@ public class GeneralClient {
 					data1[0] = (byte)(pin >> 8);
 					data1[1] = (byte)(pin & 0xFF);
 
-
-					// Selecting the applet
-					/*	r = channel.transmit(new CommandAPDU(0x00, (byte)0xA4, 0x04, 0x00, PIN_AID));
-					if (r.getSW() != 0x9000) {
-						throw new Exception("Could not select the applet.");
-					}*/
-
-
+					// Check PIN
 					t.erase();
 					t.request((short)AID_PIN,(short) INS_PIN,(byte) 0x02, (byte)0x00, data1);
 					t.execute();
 					System.out.println("Res : " + bytesToHexString(t.getResponse()));
-					// Check PIN
-					/*r = channel.transmit(new CommandAPDU((byte) CLA_CIPHER, INS_PIN, 0x02, 0x00, data1));
-					if (r.getSW() != 0x9000) {
-						throw new Exception("Could not retrieve data." + r.getSW());
-					}
-					else {
-
-					}*/
 
 					break;
 
-				case '8':
+				case 8:
 					t.erase();
 					t.request((short) AID_SIGN, INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					System.out.println("Clair :" + bytesToHexString(clair));
-					//r2 = channel.transmit(new CommandAPDU((byte)0xB0, INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair));
-					/*if (r2.getSW() != 0x9000) {
-						System.out.println("Erreur : "+ r2.getSW());
-					} else {
-						System.out.print("Message signé: ");
-						System.out.println(bytesToHexString(r2.getData()));
-					}*/
+
 					t.execute();
 					byte[] dechiff = t.getResponse();
 					System.out.print("Message signé: ");
 					System.out.println(bytesToHexString(dechiff));
 
 					break;
-				case '9':
+					
+				case 9:
 					t.erase();
 					t.request((short) AID_SIGN,  INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					t.execute();
+					
 					/* On signe d'abord*/
-					/*System.out.println("Clair :" + bytesToHexString(clair));
-					r2 = channel.transmit(new CommandAPDU((byte)0xB0, INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair));
-					 */
+					System.out.println("Clair :" + bytesToHexString(clair));
 					byte[] signed = t.getResponse();
 
 					System.out.print("Message signé: ");
 					System.out.println(bytesToHexString(signed));
-
 
 					t.erase();
 					t.request((short) AID_SIGN, INS_TEST_AUTH, (byte) 0x00, (byte)0x00, signed);
@@ -436,11 +322,12 @@ public class GeneralClient {
 					t.erase();
 					t.request((short) AID_SIGN, INS_TEST_AUTH, (byte) 0x00, (byte)0x01, clair);
 					t.execute();
-					/*r3 = channel.transmit(new CommandAPDU((byte)0xB0, INS_TEST_AUTH, (byte) 0x00, (byte)0x01, clair));
-					System.out.print("vérifié?? ");*/
+
+					System.out.print("vérifié? ");
 					System.out.println("(0x00 = vérifié; 0x01 = non vérifié) : " +bytesToHexString(t.getResponse()));
 					break;
-				case '0':
+					
+				case 0:
 					fin = true;
 					break;
 				}
