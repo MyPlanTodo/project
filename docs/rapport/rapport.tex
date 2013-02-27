@@ -259,7 +259,24 @@ d'informations, l'annexe \ref{TunnelSS} décrit notre raisonnement et son
 fonctionnement.
 
 \subsection{Difficultés rencontrées}
-% Tunnel
+\paragraph{}
+Une première catégorie de difficulté rencontrée était l'utilisation des fonctions
+cryptographiques sur SoftCard et SmartCard.
+
+Tout d'abord, malgré une bonne documentation JavaCard, certaines cartes 
+n'implantent pas toutes les méthodes. Il nous a donc fallu nous assurer 
+qu'elles existaient réellement, en testant parfois \og à l'aveuglette 
+\fg{}. En outre, nous avons du faire de telle sorte que FaceCrypt et SoftCard 
+utilisent les mêmes algorithmes cryptographiques, notamment au niveau des 
+cryptosystèmes asymétriques.
+
+% Taille des données dans l'APDU
+\paragraph{}
+Une seconde source de problèmes est provenue du fait que les informations que nous
+ne pouvions pas envoyer à la carte sont de taille limitée. 
+
+% Tunnel padding
+
 % Taille des données dans l'APDU
 % Les fonctions crypto (compatibilité avec Java, celles non implantées)
 % padding
@@ -462,14 +479,29 @@ AID & Instruction & Paramètre 1  & Paramètre 2 & Longueur des données & Donn�
 \hline
 \end{tabular}
 \paragraph{}
-Ce format est identique à celui des APDU Javacard, la seule différence étant le r\^ole du premier octet qui nous sert à différencier les applets.  Ce fonctionnement est inspiré du monde TCP/IP dans lequel le numéro de port  indique vers quel programme envoyer les données. 
+Ce format est identique à celui des APDU Javacard, la seule différence étant le 
+r\^ole du premier octet qui nous sert à différencier les applets.  Ce 
+fonctionnement est inspiré du modèle TCP/IP dans lequel le numéro de port 
+indique vers quel programme envoyer les données. 
 
 
 \paragraph{}
+Afin de ne pas pouvoir prévoir le contenu du dernier bloc, la taille des 
+fragments varie d'un message à l'autre. En effet, découper le message en 
+fragments de taille fixe à chaque fois fait que le padding sera toujours 
+identique et ceci nous a semblé une divulgation inutile d'information, 
+le pire des cas étant le dernier bloc ne contenant que des 16. Nous avons décidé
+d'envoyer entre 4 et 5 blocs AES, i.e. entre 64 et 80 octets pour chaque 
+fragment, la valeur exacte étant définie aléatoirement pour chaque envoi de
+message. Ainsi, le même message envoyé successivement pourra être découpé en
+blocs de 68 octets la première fois et en blocs de 75 octets la seconde fois.
+C'est un compromis entre performance, sécurité et facilité d'implémentation.
 
-Le message est donc découpé en plusieurs fragments de même taille et en un dernier de taille inférieure pour le reste. Chaque fragment est ensuite complété par un padding selon la norme pkcs7.
+Le message est donc découpé en plusieurs fragments de même taille et en un 
+dernier de taille inférieure pour le reste. Chaque fragment est ensuite complété
+par un padding selon la norme PKCS7.
 
-
+\paragraph{}
 L'envoi dans le tunnel d'un fragment se fait comme ceci : 
 \begin{itemize}
     \item génération d'un IV de transmission;
