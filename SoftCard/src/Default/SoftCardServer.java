@@ -1,20 +1,15 @@
-//package Default;
+package Default;
 
-import java.io.Console;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Scanner;
-
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.smartcardio.CardException;
-
-import org.apache.commons.codec.binary.Hex;
 
 
 /**
@@ -354,18 +349,6 @@ class ProcessusSock extends Thread {
 	 */
 	private boolean validatePassword() throws CardException, Exception {
 		return SoftCard.getInstance().validatePassword();
-	}
-
-	/**
-	 * This method calls the eponymous method of {@link SoftCard} to
-	 * store the user's login.
-	 * @param the login to be stored.
-	 * @return <code>true</code> if the operation succeeded.
-	 * @throws Exception with the reason message, if an error 
-	 * occured on the smartcard's side.
-	 */
-	private boolean storeLogin(byte[] login) throws CardException, Exception {
-		return SoftCard.getInstance().storeLogin(login);
 	}
 
 	/**

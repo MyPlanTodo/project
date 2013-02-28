@@ -1,3 +1,5 @@
+package Default;
+
 /* Author : Romain Pignard */
 
 import java.io.IOException;

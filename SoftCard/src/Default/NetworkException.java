@@ -1,4 +1,4 @@
-//package Default;
+package Default;
 
 /**
  * This class abstracts the errors sent to the client if necessary.

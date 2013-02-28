@@ -1,4 +1,4 @@
-//package crypto;
+package Default;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
@@ -8,7 +8,6 @@ import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
-import java.util.List;
 import java.util.Scanner;
 
 
@@ -19,13 +18,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import javax.smartcardio.Card;
-import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
-import javax.smartcardio.CardTerminal;
-import javax.smartcardio.ResponseAPDU;
-import javax.smartcardio.TerminalFactory;
-
 import org.apache.commons.codec.binary.Base64;
 
 public class GeneralClient {
@@ -69,9 +62,6 @@ public class GeneralClient {
 	}
 
 	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException {
-		ResponseAPDU r;
-
-		
 		try {
 			// Secure tunnel establishment
 			Tunnel t = new Tunnel(shared_key);
