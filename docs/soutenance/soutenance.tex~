@@ -60,40 +60,54 @@
 
 \begin{frame}
 \frametitle{Plan}
-\tableofcontents%[hideallsubsections]
+\tableofcontents[hideallsubsections]
 \end{frame}
 
 \section{Introduction}
 
-\section{Carte à puce}
-
 \subsection{Présentation}
 \begin{frame}
     \frametitle{Présentation}
+    \begin{block}{ }
+    \end{block}
+\end{frame}
+
+\subsection{Gestion de projet}
+\begin{frame}
+    \frametitle{Gestion de projet}
+    \begin{block}{ }
+    \end{block}
+\end{frame}
+
+\section{Carte à puce}
+
+\subsection{Introduction}
+\begin{frame}
+    \frametitle{Introduction}
     \begin{block}{}
     \end{block}
 \end{frame}
 
-
-\subsection{Les besoins}
+\subsection{Présentation de la carte à puce}
 \begin{frame}
-    \frametitle{Les besoins}
+    \frametitle{Présentation de la carte à puce}
     \begin{block}{}
     \end{block}
 \end{frame}
 
-\subsection{Côté carte : SmartCard }
+\subsection{Les applications développées}
 \begin{frame}
-    \frametitle{Côté carte : SmartCard}
+    \frametitle{Les applications développées}
     \begin{block}{}
     \end{block}
 \end{frame}
 
-\subsection{Côté client : GeneralClient}
+\subsection{L'aspect sécurité}
 \begin{frame}
-    \frametitle{Côté client : GeneralClient}
-    \begin{block}{}
-    \end{block}
+    \frametitle{L'aspect sécurité}
+   % \begin{block}{}
+   % \end{block}
+    \includegraphics[width=9cm]{stack}
 \end{frame}
 
 \subsection{Démonstration}
@@ -105,26 +119,37 @@
 
 \subsection{L'interface avec SSN : SoftCard}
 \begin{frame}
+<<<<<<< HEAD
     \frametitle{L'interface avec SSN : SoftCard}
-    \begin{block}{}
-    \end{block}
-\end{frame}
-
-\subsection{Quid de la sécurité ?}
-\begin{frame}
+=======
     \frametitle{Quid de la sécurité ?}
+\includegraphics[width=9cm]{stack}
+
+>>>>>>> 29d513d110413ffa59c83d162cd974aa6ab6cae4
     \begin{block}{}
     \end{block}
 \end{frame}
 
 \section{Une protection vis-à-vis de Facebook}
 
-\subsection{Présentation}
-
+\subsection{Les besoins et exigences}
 \begin{frame}
-    \frametitle{Présentation}
+    \frametitle{Les besoins et exigences}
     \begin{block}{ }
     \end{block}
 \end{frame}
 
+<<<<<<< HEAD
+\subsection{Présentation des composants}
+\begin{frame}
+    \frametitle{Présentation des composants}
+    \begin{block}{ }
+    \end{block}
+\end{frame}
+=======
+
+
+
+
+>>>>>>> 29d513d110413ffa59c83d162cd974aa6ab6cae4
 \end{document}

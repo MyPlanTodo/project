@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.10)  27 FEB 2013 17:54
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=pdflatex 2013.2.10)  28 FEB 2013 19:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1409,7 +1409,7 @@ Overfull \hbox (220.80067pt too wide) has occurred while \output is active
 
 [3
 
-] (./soutenance.toc)
+]
 Overfull \hbox (220.80067pt too wide) has occurred while \output is active
  [][]  
  []
@@ -1423,7 +1423,7 @@ Overfull \hbox (220.80067pt too wide) has occurred while \output is active
 
 [5
 
-]
+] (./soutenance.toc)
 Overfull \hbox (220.80067pt too wide) has occurred while \output is active
  [][]  
  []
@@ -1465,19 +1465,33 @@ Overfull \hbox (220.80067pt too wide) has occurred while \output is active
 
 [11
 
-] (./soutenance.toc)
+]
 Overfull \hbox (220.80067pt too wide) has occurred while \output is active
  [][]  
  []
 
 [12
 
-]
+] (./soutenance.toc)
 Overfull \hbox (220.80067pt too wide) has occurred while \output is active
  [][]  
  []
 
 [13
+
+]
+Overfull \hbox (220.80067pt too wide) has occurred while \output is active
+ [][]  
+ []
+
+[14
+
+]
+Overfull \hbox (220.80067pt too wide) has occurred while \output is active
+ [][]  
+ []
+
+[15
 
 ]
 \tf@nav=\write6
@@ -1489,36 +1503,36 @@ Overfull \hbox (220.80067pt too wide) has occurred while \output is active
 \tf@snm=\write8
 \openout8 = `soutenance.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 130.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 130.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 141.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 141.
  (./soutenance.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 130.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 130.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 141.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 141.
 Package rerunfilecheck Info: File `soutenance.out' has not changed.
-(rerunfilecheck)             Checksum: D5A2D2594E87CDAF265562D62FB332AF;745.
+(rerunfilecheck)             Checksum: 53F85E9227906ACA5D1E881EF25FF904;909.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 130.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 141.
  ) 
 Here is how much of TeX's memory you used:
- 20437 strings out of 493485
- 375523 string characters out of 3143526
- 459305 words of memory out of 3000000
- 23239 multiletter control sequences out of 15000+200000
+ 20450 strings out of 493485
+ 375658 string characters out of 3143526
+ 460308 words of memory out of 3000000
+ 23246 multiletter control sequences out of 15000+200000
  6054 words of font info for 22 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 49i,20n,67p,426b,723s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 49i,20n,67p,426b,725s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb>
-Output written on soutenance.pdf (13 pages, 90286 bytes).
+Output written on soutenance.pdf (15 pages, 94599 bytes).
 PDF statistics:
- 595 PDF objects out of 1000 (max. 8388607)
- 553 compressed objects within 6 object streams
- 38 named destinations out of 1000 (max. 500000)
- 175 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 657 PDF objects out of 1000 (max. 8388607)
+ 612 compressed objects within 7 object streams
+ 44 named destinations out of 1000 (max. 500000)
+ 191 words of extra memory for PDF output out of 10000 (max. 10000000)
 
