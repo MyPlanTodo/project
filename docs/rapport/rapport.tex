@@ -55,50 +55,50 @@
 \renewcommand\labelitemi{\textbullet} %style des puces
 \renewcommand\labelitemii{$\circ$} %style des puces 2e niveau
 De nos jours, les réseaux sociaux ont pris une grande ampleur sur internet
-et accueillent chaque jour de plus en plus d'adhérents. Le principe consiste à 
-y créer un profil, y insérer des données que l'utilisateur désire partagées, 
-telles que des photos, des vidéos, des messages, etc. Sur ce réseau, des \og{}amis \fg{}
-seront ajoutés : ils pourront alors accéder à ces informations.
+et accueillent chaque jour de plus en plus d'adhérents. Le principe consiste
+à créer un profil puis y insérer des données que l'on désire partager, telles
+que des photos, des vidéos, des messages, etc. Sur ce réseau, des \og{}
+amis \fg{} seront ajoutés : ils pourront alors accéder à ces informations.
 
 \paragraph{}
-La problématique soulevée était de limiter la diffusion des informations à 
-certaines personnes dans nos \og{}amis \fg{}, mais surtout limiter la diffusion 
-d'informations vis à vis du réseau social lui-même. En effet, lorsque nous 
-partageons une donnée, celui-ci détient cette information qu'elle soit définie
-comme privée ou non.
+La problématique soulevée était de pouvoir limiter la diffusion des informations
+à certains \og{}amis \fb{}, mais surtout limiter la diffusion d'informations
+vis à vis du réseau social lui-même. En effet, lorsque nous partageons une
+donnée, ce dernier détient cette information qu'elle soit définie comme privée
+ou non.
 
-L'idée de ce projet était alors de limiter cette fuite d'information, afin de 
+L'idée de ce projet était donc de limiter cette fuite d'informations, afin de 
 garantir la confidentialité des données des utilisateurs et ce, renforcé par une
-authentification forte. Nous nous concentrerons sur le réseau social Facebook 
-puisqu'il est le plus utilisé.
+authentification forte. Pour notre projet, nous nous concentrerons sur le réseau
+social Facebook puisqu'il est le plus utilisé.
 
 
 \paragraph{}
 La concrétisation du projet s'est traduite par le développement d'une extension 
-pour le logiciel Mozilla Firefox permettant à l’utilisateur de gérer le 
-chiffrement et le déchiffrement de ses données sur le réseau social Facebook, 
-les traitements lourds étant confiés à une application Java.
+pour le logiciel Mozilla Firefox permettant à l’utilisateur de chiffrer et de
+déchiffrer ses données sur le réseau social Facebook, les traitements lourds
+étant confiés à une application Java.
 
 Concernant l’authentification forte, nous avons utilisé des cartes à puce de 
 type Java Card J3A (marque NXP) avec 40 Kilo-octets (Ko) d'EEPROM, via des 
 lecteurs Omnikey 3121. 
 
 L'intérêt du projet était également d'analyser la sécurité de ces cartes à puce,
-à savoir la génération de nombres aléatoires, de clefs (sysmétriques et 
-asymétriques), chiffrement, déchiffrement et signature. C'est cette même carte
-à puce qui contiendra à posteriori les données sensibles de l’utilisateur 
-comme son identifiant, son mot de passe, sa clef privée... Le dialogue avec 
-la carte se fait par l’intermédiaire d’un client Java : \og{}SoftCard \fg{}. 
+à savoir la génération de nombres aléatoires, de clefs cryptographiques 
+(symétriques et asymétriques), d'opérations de chiffrement, déchiffrement et
+signature. C'est cette même carte à puce qui contiendra à posteriori les données
+sensibles de l’utilisateur comme son identifiant, son mot de passe, sa clef
+privée... Le dialogue avec la carte se fait par l’intermédiaire d’un client
+Java : \og{}SoftCard \fg{}. 
 
 \paragraph{}
-Initialement prévu comme deux projets différents, un par groupe, il s'est avéré 
-que nous travaillerions conjointement pour se concentrer sur un unique projet 
-regroupant :
+Initialement prévu comme deux projets différents, c'est à dire un par groupe,
+ces derniers ont finalement fusionnés en un unique projet regroupant :
 \begin{itemize}
     \item l'étude et la mise en \oe{}uvre de solutions d’authentifications et 
-        de signatures par cartes à puce, proposé par Magali \textsc{Bardet} ;
-    \item les solutions cryptographiques pour les réseaux sociaux, proposé par Ayoub
-        \textsc{Otmani} ;
+        de signatures par cartes à puce, proposées par Magali \textsc{Bardet} ;
+    \item Une solution cryptographique pour les réseaux sociaux, proposée par
+	Ayoub \textsc{Otmani}.
 \end{itemize}
 
 \section{Fonctionnement global}
@@ -107,11 +107,19 @@ Nous allons dans cette partie décrire, dans les grandes lignes, le
 fonctionnement global du projet.
 
 \subsection{Première utilisation}
-Lorsque l'utilisateur installe l'extension et désire se connecter par la suite à Facebook,
-une \og pop-up \fg{} sera affichée, lui demandant ainsi ses identifiants. A cet
-instant, il pourra décider de générer un nouveau mot de passe -- aléatoire -- par
-la carte. Toutes ces informations seront alors stockées sur la carte et il pourra
-chiffrer des messages destinés à une liste d'amis qu'il aura remplie. 
+Lorsque l'utilisateur installe l'extension et désire se connecter par la suite
+à Facebook, une \og pop-up \fg{} sera affichée, lui demandant ainsi ses
+identifiants. Ils seront alors stockés sur la carte et l'utilisateur sera
+redirigé vers la page principale.
+
+
+
+\subsection{Liste d'amis}
+Une fois connecté sur facebook, la personne devra publier sa clef publique
+à l'aide d'un bouton prévu à cet effet. Ceci permettra aux autres utilisateurs
+de notre système de chiffrer des messages à son intention. Ensuite, l'internaute
+devra créer une ou plusieurs listes d'amis qui seront habilités à voir le
+message \og posté \fg{}
 
 \subsection{Chiffrement}
 Les chiffrements s'effectuent en plusieurs temps. Tout d'abord, l'utilisateur 
@@ -119,7 +127,7 @@ entre son message, clique sur le bouton \og chiffrer \fg{}, sélectionne la ou l
 listes d'amis concernées et choisit deux modes : l'un garantit l'anonymat mais
 nécessite plus de ressources, l'autre a les propriétés inverses.
 
-%chiffrement à compléter par SSN
+% Chiffrement à compléter par SSN
 
 \subsection{Déchiffrement}
 Pour le déchiffrement, deux cas se présentent. Si la personne ayant chiffré le
@@ -342,8 +350,18 @@ fonctions de hachage. Plusieurs algorithmes peuvent être utilisés mais
 pour ce projet, notre choix s'est porté sur AES (CBC avec une clef de 256) et 
 RSA, avec des clefs de 1024 bits.
 
-
-\subsubsection{Communications sécurisées} % Pour Baptiste
+\subsubsection{Communications sécurisées}
+Durant son fontionnement, FaceCrypt va effectuer un grand nombre de requêtes
+entre l'Extension et SoftCard. Nous avons utilisé pour cela deux tunnels
+sécurisés (SSL) différents. Ceux ci sont possibles grâce à l'utilisation de
+certificats signés par une autorité de certification intermédiaire. FaceCrypt
+va, dans un premier temps, réceptionner la demande de l'Extension, sous forme
+d'objet JSON. Ce format a été choisi pour sa simplicité de manipulation entre
+les deux entités. En fonction du traitement, Facecrypt va être amené à envoyer
+une requête sous forme de tableaux de bytes à SoftCard (demande d'identifiants
+par exemple). Ce format de message a été choisi pour la facilité de 
+communication coté SoftCard. Pour finir, la réponse est transférée après
+traitement.
 
 \subsubsection{Base de données}
 Pour gérer ses amis pouvant déchiffrer les messages qu'il poste, un utilisateur
