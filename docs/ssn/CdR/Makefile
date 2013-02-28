@@ -1,7 +1,7 @@
 OUT = SSN_CdR
 
 $(OUT).pdf: $(OUT).tex
-	pdflatex $< ; pdflatex $<
+	xelatex $< ; xelatex $<
 
 clean:
 	rm -f *.out *.nav *.log *.toc *.aux *~
