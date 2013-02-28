@@ -313,7 +313,6 @@ plus rapidement que la carte.
 Afin de proposer une solution de chiffrement au sein de Facebook, nous avons 
 aussi conçu une extension pour \emph{Mozilla Firefox}, SSNExt, servant 
 d'interface entre ce réseau social et l'utilisateur.
-% Plutot interface entre utilisateur/reseau et notre extension non?
 
 \subsection{FaceCrypt}
 Comme mentionné précédemment, FaceCrypt est une application gérant une partie du
@@ -385,6 +384,13 @@ de PageMod, qui va insérer ou non les \emph{content scripts} selon un filtre d'
 Enfin, afin de communiquer entre nos deux types de scripts, c'est à dire, dans notre
 cas, entre le contenu des pages facebook et notre base base de données ou Facecrypt, 
 une programmation évènementielle est utilisée.
+
+\subsubsection{Modification du DOM}
+Afin que nous puissions intercaler notre application entre le réseau Facebook et 
+l'utilisateur, nous avons choisi de modifier le DOM\footnote{Document Object Model,
+interface standard permettant un accès à un contenu HTML indépendamment du langage
+de programmation} pour éviter une dégradation de l'expérience utilisateur. 
+
 
 \subsection{Difficultés rencontrées}
 Lors du développement de ce sous-projet, nous avons rencontré des difficultés
