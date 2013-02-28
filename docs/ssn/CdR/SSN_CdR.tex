@@ -38,7 +38,7 @@
 \def\completeName{\projectDesc ~- \projectName}
 \def\docType{Cahier de recettes}
 \def\docDate{\today}
-\def\version{0.1}
+\def\version{1.0}
 \def\author{Baptiste \textsc{Dolbeau}}
 \def\checked{}
 \def\approved{}
@@ -60,6 +60,8 @@
 \bfseries{Version} & \bfseries{Date} & \bfseries{Modifications réalisées}\\
 \hline
 0.1 & 24/02/2013 & Création\\
+\hline
+1.0 & 28/02/2013 & Finalisation\\
 \hline
 \end{tabularx}
 \end{center}
@@ -91,12 +93,12 @@ priorité) :
 
 \subsection*{Chiffrement et déchiffrement d'un statut}
 Notre application doit pouvoir chiffrer et déchiffrer le statut d'un
-utilisateur du réseau social "Facebook". S'il choisi de chiffrer, il
+utilisateur du réseau social "Facebook". S'il choisit de chiffrer, il
 doit spécifier les utilisateurs qui seront autorisés à le déchiffrer.
 
 \subsection*{Chiffrement et déchiffrement d'un commentaire}
 Notre application doit pouvoir chiffrer et déchiffrer un commentaire d'un
-utilisateur du réseau social "Facebook". S'il choisi de chiffrer, il doit
+utilisateur du réseau social "Facebook". S'il choisit de chiffrer, il doit
 spécifier les utilisateurs qui seront autorisés à le déchiffrer.
 
 \subsection*{Déploiement du système sur un compte déjà existant}
@@ -115,6 +117,10 @@ le chiffrement d'un message ou d'un commentaire.
 Notre application doit pouvoir chiffrer et déchiffrer un document d'un
 utilisateur du réseau social "Facebook". S'il choisi de chiffrer, il
 doit spécifier les utilisateurs qui seront autorisés à le déchiffrer.
+
+\subsection*{Génération et changement d'un mot de passe}
+Notre application doit pouvoir gérer la génération d'un nouveau mot de passe
+ainsi que son enregistrement.
 
 \newpage
 
@@ -163,7 +169,7 @@ La conception et la définition des données de tests ont été réalisées par
 Baptiste \textsc{Dolbeau}. Après avoir exécuté les différents tests, les
 responsables de ce module transmettront aux développeurs un compte rendu
 contenant les résultats afin d’améliorer la version actuelle du logiciel
-et d'en fournir une nouvelle à tester. Chaque version fournie doit être
+et d'en fournir une nouvelle à évaluer. Chaque version fournie doit être
 testée et validée.
 
 \newpage
@@ -211,11 +217,9 @@ données réelles.
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Écrire un message dans la zone reservée. & Le bouton "chiffrer" apparait. & F-Gl-10 & OK \\
+2 & Aprés entrée du texte, Appuyer sur le bouton "chiffrer". & Une "pop-up" apparait pour la selection des listes et du mode. & F-Gl-10 & OK \\
 \hline
-2 & Appuyer sur le bouton "chiffrer". & Une "pop-up" apparait pour la selection des listes et du mode. & F-Gl-10 & OK \\
-\hline
-3 & Selectionner une liste d'amis et le mode anonyme. & Les cases sélectionnées sont cochées. & F-Gl-10 & OK \\
+3 & Sélectionner une liste d'amis et le mode anonyme. & Les cases sélectionnées sont cochées. & F-Gl-10 & OK \\
 \hline
 4 & Appuyer sur le bouton "chiffrer". & Obtention d'un chiffré, ne contenant pas les noms des amis de la liste spécifiée, à la place de notre message. & F-Gl-10 & OK \\
 \hline
@@ -229,7 +233,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Sélectionner un message chiffré et appuyer sur le bouton \"Déchiffrer\". & Obtention du message déchiffré ou du message  "Ce message ne vous concerne pas.", à la place de notre message chiffré. & F-Gl-10 & OK \\
+1 & Sélectionner un message chiffré et appuyer sur le bouton \"Déchiffrer\". & Obtention du message déchiffré si il lui était destiné,ou sinon d'un message "Ce message ne vous concerne pas.", à la place de notre message chiffré. & F-Gl-10 & OK \\
 \hline
 \end{tabular}
 
@@ -259,7 +263,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
-1 & Aucune action nécessaire. & Obtention du message déchiffré ou du message \"Ce message ne vous concerne pas\", à la place de notre message chiffré. & F-Gl-10 & OK \\
+1 & Aucune action nécessaire. & Obtention du message déchiffré si il lui était destiné ou du message \"Ce message ne vous concerne pas\", à la place de notre message chiffré. & F-Gl-10 & OK \\
 \hline
 \end{tabular}
 
@@ -352,7 +356,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
 2 & Ajouter un commentaire lié au statut déchiffré & Un bouton "chiffrer" apparait & F-Gl-40 & OK \\
 \hline
-3 & Appuyer sur le bouton "chiffrer". & Le commentaire chiffré apparait à la place de notre commentaire. & F-Gl-40 & OK \\
+3 & Appuyer sur le bouton "chiffrer". & Le commentaire chiffré apparait à la place de notre commentaire, prêt à l'envoi. & F-Gl-40 & OK \\
 \hline
 \end{tabular}
 
@@ -472,7 +476,7 @@ N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hspace{-1cm}
 \begin{tabular}{|p{1cm}|p{5cm}|p{5cm}|p{2cm}|p{2cm}|}
 \hline
-\multicolumn{5}{|l|}{Procédure n°19 : Affichage de la clef publique.} \\
+\multicolumn{5}{|l|}{Procédure n°19 : Insertion de la clef publique.} \\
 \hline
 N° & Actions & Résultats attendus & Exigence & OK/NOK \\
 \hline
@@ -534,19 +538,19 @@ F-Gl-40 & Test & Procédure 12 & Le test consiste à poster un commentaire non c
 \hline
 F-Gl-40 & Test & Procédure 13 & Le test consiste à déchiffrer un (ou plusieurs) commentaire(s) lié(s) à un statut chiffré. \\
 \hline
-F-Gl-50 & Démonstration & Procédure 14 & Le test consiste à tester le chiffrement. \\
+F-Gl-50 & Démonstration & Procédure 14 & Le test consiste à évaluer le chiffrement. \\
 \hline
-F-Gl-50 & Démonstration & Procédure 15 & Le test consiste à tester déchiffrement. \\
+F-Gl-50 & Démonstration & Procédure 15 & Le test consiste à évaluer déchiffrement. \\
 \hline 
-F-Gl-50 & Démonstration & Procédure 16 & Le test consiste à tester l'identification via la carte à puce (carte vierge). \\
+F-Gl-50 & Démonstration & Procédure 16 & Le test consiste à évaluer l'identification via la carte à puce (carte vierge). \\
 \hline 
-F-Gl-50 & Démonstration & Procédure 17 & Le test consiste à tester l'identification via la carte à puce (carte pré-remplie). \\
+F-Gl-50 & Démonstration & Procédure 17 & Le test consiste à évaluer l'identification via la carte à puce (carte pré-remplie). \\
 \hline
-F-Gl-50 & Démonstration & Procédure 18 & Le test consiste à tester le changement de mot de passe. \\
+F-Gl-50 & Démonstration & Procédure 18 & Le test consiste à évaluer le changement de mot de passe. \\
 \hline
-F-Gl-50 & Démonstration & Procédure 19 & Le test consiste à tester l'affichage de la clef publique. \\
+F-Gl-50 & Démonstration & Procédure 19 & Le test consiste à évaluer l'affichage de la clef publique. \\
 \hline
-F-Gl-50 & Démonstration & Procédure 20 & Le test consiste à tester la récupération des clefs publiques. \\
+F-Gl-50 & Démonstration & Procédure 20 & Le test consiste à évaluer la récupération des clefs publiques. \\
 \hline
 \end{tabular}
 \end{document}
