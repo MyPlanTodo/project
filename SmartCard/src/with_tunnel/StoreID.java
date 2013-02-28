@@ -57,7 +57,7 @@ public class StoreID extends Applet {
 			 */
 			case INS_STORE_LOGIN:
 				try{
-					dataLen[0] = buffer[ISO7816.OFFSET_LC];
+					dataLen[0] = (short) (buffer[ISO7816.OFFSET_LC] & 0xFF);
 					login = new byte[dataLen[0]];
 					Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, login, (short) 0, dataLen[0]);
 
@@ -81,7 +81,7 @@ public class StoreID extends Applet {
 				 */
 			case INS_STORE_PWD:
 				try{
-					dataLen[0] = buffer[ISO7816.OFFSET_LC];
+					dataLen[0] = (short) (buffer[ISO7816.OFFSET_LC] & 0xFF);
 					tmpPwd = new byte[dataLen[0]];
 					Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, tmpPwd, (short) 0, dataLen[0]);
 
@@ -314,8 +314,7 @@ public class StoreID extends Applet {
 			default:
 				ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 			}
-		}
-		else {
+		} else {
 			buffer[0] = -1;
 			apdu.setOutgoingAndSend((short) 0, (short) 1);
 		}
