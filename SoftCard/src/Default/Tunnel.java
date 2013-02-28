@@ -211,7 +211,7 @@ public class Tunnel {
 		// reception command
 		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x11, (byte) 0x00, (byte)0x00));
 		if ((r.getSW() != 0x9000) && (r.getSW() != 0x6666)) {
-			System.out.println("Erreur de reception Status word different from 0x9000 : "+r.getSW());
+			System.out.println("Erreur de reception : status word different from 0x9000 : "+r.getSW());
 		}
 		
 		
@@ -251,56 +251,7 @@ public class Tunnel {
 	}
 
 
-	public byte[] getDataMAC() throws IllegalBlockSizeException, BadPaddingException, Exception
-	{
-		ResponseAPDU r = c.transmit(new CommandAPDU((byte)0xB0, 0x11, (byte) 0x00, (byte)0x00));
-		if ((r.getSW() != 0x9000) && (r.getSW() != 0x6666)) {
-			System.out.println("Status word different from 0x9000 : "+r.getSW());
-		}
-
-		if (r.getSW() == 0x6666) {
-			return new byte[]{};
-		}
-
-		// MAC check
-
-		byte[] data = r.getData();		
-
-
-		// IV extraction
-		byte[]  IV = ArrayTools.ExtractFirstBytes(r.getData(), CryptoTools.IV_LENGTH);	
-
-		// message extraction		
-		// "deletion" of the IV 
-		byte[] msg = ArrayTools.ExtractLastBytes(r.getData(), (short) (r.getData().length - CryptoTools.IV_LENGTH));
-		// "deletion" of the MAC 
-		msg = ArrayTools.ExtractFirstBytes(msg, (short) (msg.length - CryptoTools.MAC_LENGTH));
-
-
-		// crypto object initialization
-
-
-
 	
-
-		// crypto object initialization
-		decrypt.init(Cipher.DECRYPT_MODE, session_key, new IvParameterSpec(IV));
-
-		// message decryption	
-		byte[] padded = decrypt.doFinal(msg);				
-		//ArrayTools.printByteArray(padded);
-		// unpadding
-		byte[] unpadded = ArrayTools.unpad(padded, CryptoTools.AES_BLOCK_LENGTH);
-
-
-		/*System.out.println();
-		System.out.println("unpadded");
-		ArrayTools.printHex(unpadded);*/
-
-
-		return unpadded;		
-	}
-
 
 
 	/**
