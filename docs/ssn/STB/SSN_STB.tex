@@ -141,7 +141,7 @@ F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un statut & Utilisateur & \cellcolo
 F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un document & Utilisateur & \cellcolor{blue!50}Secondaire \\
 \hline
 \addtocounter{FGcount}{10}
-F-Gl-\arabic{FGcount} & Gérer les liens d'amitiés & Utilisateur & \cellcolor{red!20}Important \\
+F-Gl-\arabic{FGcount} & Gérer les listes d'amis & Utilisateur & \cellcolor{red!20}Important \\
 \hline
 \addtocounter{FGcount}{10}
 F-Gl-\arabic{FGcount} & Chiffrer/déchiffrer un commentaire & Utilisateur & \cellcolor{green!50}Indispensable\\
@@ -434,37 +434,6 @@ différents groupes. \\*
     {}
 \\*
 
-\fiche
-	{Suppression d'un ami dans une liste}
-	{Utilisateur}
-    {L'utilisateur supprime un ami d'une de ses listes}
-    {La liste d'amis doit déjà exister, et l'ami doit y être présent}
-    {L'utilisateur souhaite supprimer un ami dans une des liste d'amis}
-	{L'utilisateur a supprimé un ami d'une de ses liste d'amis}
-    {\begin{itemize}
-        \item[]
-        \item[1.] L'utilisateur appuie sur le bouton "Gestion des listes".
-        \item[3.] L'utilisateur sélectionne une liste et clique sur le bouton 
-        "Gérer les amis".
-        \item[5] L'utilisateur décoche l'ami voulu et valide.
-    \end{itemize}}
-	{\begin{itemize}
-        \item[]
-        \item[2.] L'extension ouvre la fenêtre de gestion de liste.
-		\item[4.] L'extension ouvre une popup contenant tous les amis de 
-		l'utilisateur.
-		\item[6.] L'extension envoie une requête d'actualisation de la liste à 
-		FaceCrypt et actualise la liste.
-		\item[7.] FaceCrypt supprime un lien entre le(s) ami(s) et la liste
-		dans sa base.
-	\end{itemize}
-	}
-	{}
-\flots
-    {}
-    {}
-\\*
-
 \subsection{Chiffrer/déchiffrer un commentaire}
 De même que pour les messages de statut (de mur), l'utilisateur
 peut chiffrer ses commentaires ou au contraire en déchiffrer (
@@ -535,19 +504,19 @@ mur d'un de ses amis, en appuyant sur un bouton & \cellcolor{green!50}Indispensa
 \hline
 \addtocounter{FNcount}{10}
 F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un document &
-\cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut tenter de déchiffrer un document,
-en appuyant sur un bouton & \cellcolor{green!50}Indispensable\\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un commentaire &
 \cellcolor{blue!50}Secondaire \\
 \hline
 \addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un commentaire, 
+F-FN-\arabic{FNcount} & L'utilisateur peut tenter de déchiffrer un document,
 en appuyant sur un bouton & \cellcolor{blue!50}Secondaire\\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut chiffrer un commentaire &
+\cellcolor{green!50}Secondaire \\
+\hline
+\addtocounter{FNcount}{10}
+F-FN-\arabic{FNcount} & L'utilisateur peut déchiffrer un commentaire, 
+en appuyant sur un bouton & \cellcolor{green!50}Secondaire\\
 \hline
 \addtocounter{FNcount}{10}
 F-FN-\arabic{FNcount} & L'utilisateur peut créer une liste d'amis & \cellcolor{green!50}Indispensable \\
@@ -556,10 +525,7 @@ F-FN-\arabic{FNcount} & L'utilisateur peut créer une liste d'amis & \cellcolor{
 F-FN-\arabic{FNcount} & L'utilisateur peut effacer une liste d'amis & \cellcolor{green!50}Indispensable \\
 \hline 
 \addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut ajouter un ami dans une liste & \cellcolor{green!50}Indispensable \\
-\hline
-\addtocounter{FNcount}{10}
-F-FN-\arabic{FNcount} & L'utilisateur peut retirer un ami d'une liste & \cellcolor{green!50}Indispensable \\
+F-FN-\arabic{FNcount} & L'utilisateur peut modifier une liste d'amis & \cellcolor{green!50}Indispensable \\
 \hline
 \end{longtable}
 \pagebreak
