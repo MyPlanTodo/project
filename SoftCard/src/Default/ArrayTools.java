@@ -68,10 +68,10 @@ public class ArrayTools {
 		{
 			for (int j = 0; j < splitted[i].length; j++) 
 			{
-				System.out.print(splitted[i][j]+" ");
-			}
+				System.out.print((splitted[i][j]  & 0xFF)+" ");
+			}System.out.println();
 			
-		}System.out.println();
+		}
 		
 		
 	}

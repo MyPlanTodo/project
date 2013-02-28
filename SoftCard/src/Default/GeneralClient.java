@@ -42,6 +42,7 @@ public class GeneralClient {
 	private static final byte INS_STORE_LOGIN = 0x00;
 	private static final byte INS_STORE_MDP = 0x01;
 	private static final byte INS_GET_CRED = 0x03;
+	private static final byte INS_VAL_PWD = 0x02;
 	public static final byte INS_TEST_AUTH = 0x04;
 	public static final byte INS_ASK_AUTH = 0x05;
 	
@@ -70,20 +71,13 @@ public class GeneralClient {
 	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchProviderException {
 		ResponseAPDU r;
 
-		/* Connexion au lecteur */
-		TerminalFactory factory = TerminalFactory.getDefault();
-		List<CardTerminal> terminals;
+		
 		try {
-			terminals = factory.terminals().list();
-			CardTerminal terminal = terminals.get(0);
-
-			/* Connexion à la carte */
-			Card card = terminal.connect("T=1");
-			CardChannel channel = card.getBasicChannel();
+			// Secure tunnel establishment
 			Tunnel t = new Tunnel(shared_key);
 
 
-			/* Menu principal */
+			/* Main menu */
 			boolean fin = false;
 			byte[] data = null;
 			PublicKey publicKey = null;
@@ -110,7 +104,7 @@ public class GeneralClient {
 
 				Scanner sc = new Scanner(System.in);
 				int choix = sc.nextInt();
-				while (!(choix >= 0 && choix <= 9)) {
+				while (!(choix >= 0 && choix <= 11)) {
 					choix = System.in.read();
 				}
 
@@ -120,7 +114,7 @@ public class GeneralClient {
 				
 				switch (choix) {
 				case 1:
-					// Récupération de l'exposant
+					// Exponent request
 					t.erase();
 					t.request((short)AID_CYPHER, INS_GET_EXPONENT, (byte)0x00, (byte)0x00);
 					if(t.execute() != 0x9000)
@@ -133,7 +127,7 @@ public class GeneralClient {
 					System.out.println(exp.toString());
 	
 					
-					// Récupération du modulus
+					// Modulus request
 					t.erase();
 					t.request((short)AID_CYPHER,  INS_GET_MODULUS, (byte)0x00, (byte)0x00);
 					t.execute();
@@ -149,6 +143,7 @@ public class GeneralClient {
 					break;
 
 				case 2:
+					// encryption
 					t.erase();
 					t.request((short)AID_CYPHER, INS_CIPHER, (byte)0x00, (byte)0x00, s.getBytes());
 					t.execute();
@@ -159,6 +154,7 @@ public class GeneralClient {
 					break;
 
 				case 3:
+					// decryption
 					Cipher c = Cipher.getInstance("RSA");
 					byte[] clearText = s.getBytes();
 					System.out.println(clearText.length);
@@ -176,6 +172,7 @@ public class GeneralClient {
 					break;
 
 				case 4:
+					// Random number generation
 					t.erase();
 					Scanner in2 = new Scanner(System.in);
 					int nb = in2.nextInt();
@@ -186,23 +183,21 @@ public class GeneralClient {
 
 					if (nb > 127)					
 					{
-						t.request((short)1, INS_GEN, (byte) (nb-256), (byte)0x01);
+						t.request((short)AID_RNG, INS_GEN, (byte) (nb-256), (byte)0x01);
 					}	
 					else{
-						t.request((short)1, INS_GEN, (byte)  nb, (byte)0x00);
+						t.request((short)AID_RNG, INS_GEN, (byte)  nb, (byte)0x00);
 					}
 
 					t.execute();
 					result = t.getResponse();
 					ArrayTools.printByteArray(result,(short) 10);
-					//System.out.println(result.length);
+					
 					                        
 					break;
 
 				case 5:
-					//byte[] stored = "pipo plop".getBytes(); 					
-					//String strStored = new String(stored);
-					
+					// ID storage					
 					Scanner in3 = new Scanner(System.in);
 					System.out.println("Login Password");
 					String strStored = in3.nextLine();
@@ -250,10 +245,12 @@ public class GeneralClient {
 						throw new Exception("Could not store data");
 					}
 
-
+					break;
 				case 6: 
+					// ID validation
 					t.erase();
-					//t.request((short) AID_STORE, INS_, P1, P2));
+					t.request((short) AID_STORE, INS_VAL_PWD,(byte)0 ,(byte) 0);
+					t.execute();
 
 					break;
 
@@ -278,6 +275,7 @@ public class GeneralClient {
 					break;
 
 				case 8:
+					// PIN check
 					Scanner in = new Scanner(System.in);
 					int pin = in.nextInt();
 
@@ -285,7 +283,7 @@ public class GeneralClient {
 					data1[0] = (byte)(pin >> 8);
 					data1[1] = (byte)(pin & 0xFF);
 
-					// Check PIN
+					
 					t.erase();
 					t.request((short)AID_PIN,(short) INS_PIN,(byte) 0x02, (byte)0x00, data1);
 					t.execute();
@@ -294,6 +292,7 @@ public class GeneralClient {
 					break;
 
 				case 9:
+					// Signature
 					t.erase();
 					t.request((short) AID_SIGN, INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					System.out.println("Clair :" + bytesToHexString(clair));
@@ -306,17 +305,19 @@ public class GeneralClient {
 					break;
 					
 				case 10:
+					// Signature check
 					t.erase();
 					t.request((short) AID_SIGN,  INS_ASK_AUTH, (byte)0x00, (byte)0x00, clair);
 					t.execute();
 					
-					/* On signe d'abord */
+					/* We ask for the signature first */
 					System.out.println("Clair :" + bytesToHexString(clair));
 					byte[] signed = t.getResponse();
 
 					System.out.print("Message signé: ");
 					System.out.println(bytesToHexString(signed));
 
+					/* We send the signature */
 					t.erase();
 					t.request((short) AID_SIGN, INS_TEST_AUTH, (byte) 0x00, (byte)0x00, signed);
 					t.execute();					
@@ -324,15 +325,24 @@ public class GeneralClient {
 					System.out.print("Chiffré renvoyé : ");
 					System.out.println(bytesToHexString(res2));
 
+					/* We send the original message  and the card automagically checks if the signature matches */
 					t.erase();
 					t.request((short) AID_SIGN, INS_TEST_AUTH, (byte) 0x00, (byte)0x01, clair);
 					t.execute();
-
-					System.out.print("vérifié? ");
-					System.out.println("(0x00 = vérifié; 0x01 = non vérifié) : " +bytesToHexString(t.getResponse()));
+					
+					if(t.getResponse()[0] == 1)
+					{
+						System.out.println("You fail at failing");
+					}
+					else
+					{
+						System.out.println("Success");
+					}
+					
 					break;
 					
 				case 11:
+					// end
 					fin = true;
 					break;
 				}
