@@ -1,4 +1,9 @@
 #! /bin/bash
+#
+# This script launches the server (SoftCard)
+# If the user gave the option "-c", the program will first 
+#
+# by Emmanuel Mocquet
 
 # Checking if an option is provided
 compile=false
