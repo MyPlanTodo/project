@@ -151,9 +151,9 @@ utilisation est adaptable à d'autres situations.
     \item[SoftCard :] application effectuant le relais entre la carte
         et FaceCrypt;
     \item[Extension :] programme incorporé dans le navigateur;
-    \item[Aléatoire :] les résultats suivent une distribution de
+    \item[Aléatoire :] les résultats suivent une distribution de
         probabilité uniforme;
-    \item[Pseudo-aléatoire :] les résultats sont indistingables en temps polynomial 
+    \item[Pseudo-aléatoire :] les résultats sont indistingables en temps polynomial 
         d'une distribution de probabilité uniforme;
     \item[PRNG :] (Pseudo Random Number Generator) générateur de nombres
         pseudo-aléatoires;
@@ -163,6 +163,7 @@ utilisation est adaptable à d'autres situations.
         l'utilisateur;
     \item[PUK :] (Personal Unlock Key) code servant à débloquer la carte quand
         trop de codes PIN erronés ont été entrés.
+ 	\item[OTP :] (One-Time Password) Mot de passe à usage unique.
 \end{description}
 
 \clearpage
@@ -193,6 +194,9 @@ F-Gl-\arabic{FGcount} & Signature/Vérification de données & SmartCard, SoftCar
 \hline
 \addtocounter{FGcount}{10}
 F-Gl-\arabic{FGcount} & Administration des cartes & Administrateur & \cellcolor{blue!50}Secondaire\\
+\hline
+\addtocounter{FGcount}{10}
+F-Gl-\arabic{FGcount} & One-time password & Utilisateur & \cellcolor{blue!50}Secondaire\\
 \hline
 \end{tabularx}
 
@@ -256,7 +260,7 @@ Pour utiliser une SmartCard, l'utilisateur devra entrer son code PIN afin de
 		\item[2.] SoftCard demande le code PIN à l'utilisateur
         \item[4.] SoftCard envoie le code PIN à SmartCard
         \item[5.] SmartCard vérifie le code PIN et passe en état 
-            \og{}débloqué \fg{} pendant 30 minutes s'il est correct
+            \og{}débloqué \fg{} pendant 30 minutes s'il est correct
         \item[6.] SoftCard informe l’utilisateur du résultat
 	\end{itemize}
 	}
@@ -582,6 +586,11 @@ application tierce, dans le cas d'une utilisation plus générale.\\
     {}
     {}
 \\*
+
+\subsection{One-Time Password}
+
+Possibilité de lancer une connexion SSH sur une machine distante avec un
+système OTP (One Time Passwd), en faisant générer les OTP par la carte à puce. 
 
 
 \section{Exigences opérationnelles}

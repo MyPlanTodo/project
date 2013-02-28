@@ -313,6 +313,7 @@ plus rapidement que la carte.
 Afin de proposer une solution de chiffrement au sein de Facebook, nous avons 
 aussi conçu une extension pour \emph{Mozilla Firefox}, SSNExt, servant 
 d'interface entre ce réseau social et l'utilisateur.
+% Plutot interface entre utilisateur/reseau et notre extension non?
 
 \subsection{FaceCrypt}
 Comme mentionné précédemment, FaceCrypt est une application gérant une partie du
@@ -324,12 +325,12 @@ c'est à dire que SSNExt va envoyer des requêtes à FaceCrypt qui va pour
 sa part traiter ces requêtes et les envoyer à SoftCard si besoin.
 
 \paragraph{}
-FaceCrypt fonctionne donc comme un démon et ne dispose donc pas d'interface
+FaceCrypt fonctionne donc comme un démon et ne dispose pas d'interface
 graphique, jugée inutile. Ce composant a été écrit en Java dans un premier 
-temps afin de maximiser l'interopérabilité avec SoftCard (lui aussi écrit
+temps afin de maximiser l'interopérabilité avec SoftCard (lui aussi écrit en 
 Java). En effet, nous pensions pouvoir disposer des mêmes algorithmes 
 que sur la carte. De plus, ce langage est le seul, avec le C, que tout le
-groupe maitrisaît. Nous l'avons préféré au C pour les raisons cités ci-dessus
+groupe maitrisaît. Nous l'avons préféré au C pour les raisons citées ci-dessus
 mais aussi pour le fait qu'il soit plus haut niveau et orienté objet.
 
 \paragraph{}
@@ -357,7 +358,33 @@ FaceCrypt gère une base (donc un fichier) pour chaque utilisateur. Une base
 contient trois tables permettant de lier des amis à une liste, la table des 
 amis contient aussi leur clef publique.
 
-\subsection{SSNExt} % Maxence ou Zako
+\subsection{SSNExt} 
+Comme indiqué précédemment, l'extension SSNExt va permettre l'injection de 
+scripts dans la page Facebook afin d'autoriser notre application à en modifier 
+le contenu selon nos exigences. Elle est donc à la fois le point d'entrée et 
+le point de sortie de notre projet. 
+
+Dans un souci de transparence maximale, nous cherchons à ne modifier la page 
+Facebook qu'au minimum. Le rendu final ne trahit la présence de notre extension 
+que par la présence de quelques boutons de chiffrement et déchiffrement. Sans 
+rentrer dans le même détail que nos commentaires de codes, nous allons présenter 
+rapidement le principe de fonctionnement d'une extension Firefox et les principaux 
+axes de traitement de la nôtre.
+
+\subsubsection{Extensions Firefox}
+Les extensions Firefox sont codées en Javascript, un langage de programmation de 
+scripts orienté objet. Pour développer notre extension, nous utilisons l'add-on 
+SDK fournit par Mozilla, et son editeur online \emph{Add-on Builder}.
+
+Une extension possède deux parties principales. La première est formée des 
+\emph{add-on scripts} qui ont pour rôle de communiquer avec le système de fichiers 
+et tout ce qui est généralement en dehors des pages web. Pour la seconde partie, 
+ce sont tout simplement les \emph{content scripts} que l'on voudra injecter dans
+les pages. Au coeur de ce fonctionnement, nous avons à notre disposition un système 
+de PageMod, qui va insérer ou non les \emph{content scripts} selon un filtre d'url. 
+Enfin, afin de communiquer entre nos deux types de scripts, c'est à dire, dans notre
+cas, entre le contenu des pages facebook et notre base base de données ou Facecrypt, 
+une programmation évènementielle est utilisée.
 
 \subsection{Difficultés rencontrées}
 Lors du développement de ce sous-projet, nous avons rencontré des difficultés
@@ -368,7 +395,9 @@ Lors du développement de ce sous-projet, nous avons rencontré des difficultés
     problèmes, ceci dû au fait de la minutie des développeurs de Facebook à
     empêcher les utilisateurs de \og{}scripter \fg{} leurs actions sur le réseau
     social.
-    \item les communications sécurisées entre FaceCrypt et SSNExt. % à finir.
+    \item les communications sécurisées entre FaceCrypt et SSNExt. La documentation
+	fourni par Mozilla à ce sujet est assez minime et il nous a fallu trouver 
+	la solution via des ressources secondaires.% à finir.
 \end{itemize}
 
 \subsection{Améliorations possibles}
