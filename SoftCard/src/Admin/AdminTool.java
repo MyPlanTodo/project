@@ -1,6 +1,6 @@
-//package Admin;
+package Admin;
 
-//import Default.SoftCard;
+import Default.SoftCard;
 
 /**
  * This class allow the administrator to get (only once) the code PIN and PUK
@@ -10,7 +10,7 @@
  * @author Emmanuel Mocquet
  *
  */
-public class getCode {
+public class AdminTool {
 	public static void main(String[] args) {
 		try {
 			byte[] b;

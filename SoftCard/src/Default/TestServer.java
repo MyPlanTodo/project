@@ -1,4 +1,4 @@
-//package Default;
+package Default;
 
 /**
  * This class allows us to test

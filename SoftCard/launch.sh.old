@@ -3,6 +3,7 @@
 # This script launches the server (SoftCard)
 # If the user gave the option "-c", the program will first 
 #
+# DEPRECATED : launch with ./SoftCard.jar
 # by Emmanuel Mocquet
 
 # Checking if an option is provided
