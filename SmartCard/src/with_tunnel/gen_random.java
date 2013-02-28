@@ -31,15 +31,16 @@ public class gen_random extends Applet {
 	/* Attributs */
 
 	private static RandomData rng;
-
+	
+	/**
+	 * Execute the action requested by the user
+ 	 */
 	public static void execute(byte[] data)
 	{
 		switch (data[ISO7816.OFFSET_INS]) {
-
+		/*   */	
 		case INS_NOUVEL_ALEA:
 			// the required number is in big endian
-
-			// 
 			datastore.eraseData();
 			tab[0] = (short) (data[ISO7816.OFFSET_P1] + data[ISO7816.OFFSET_P2]*256);
 			rng.generateData(data, (short) 0,tab[0]);			
@@ -94,12 +95,6 @@ public class gen_random extends Applet {
 	}
 
 	public void process(APDU apdu) throws ISOException {
-
-		
-
-
-
-
 	}
 
 }
