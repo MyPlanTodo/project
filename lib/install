@@ -50,4 +50,12 @@ then
     exit 1;
 fi
 
+pcscd
+if [ $? -ne 0 ]
+then
+    echo "An error occured: pcscd"
+    exit 1;
+fi
+echo "PCSC started"
+
 echo "Installation complete"
