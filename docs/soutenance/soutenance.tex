@@ -9,6 +9,7 @@
 \usepackage{listings}
 \usepackage{tikz}
 
+
 \usetheme{Warsaw}
 
 %\setbeamercolor{normal text}{fg=white,bg=black!90}
@@ -218,39 +219,33 @@ Clés publiques
 \end{frame}
 
 
-\subsection{Présentation des composants}
+\subsection{Facecrypt}
 \begin{frame}
-    \frametitle{Présentation des composants}
-    %\begin{block}{ }
-
- \includegraphics[width=11cm]{schema_dolby}
-
-
-
-   % \end{block}
+    \frametitle{La communication}
+    \includegraphics[width=11cm]{schema_dolby}
 \end{frame}
 
-
+\begin{frame}
+    \frametitle{Composition}
+	\begin{block}{Quatres classes java}
+	\begin{itemize}
+	\item ServerSSL
+	\item Client
+	\item Dataprocess
+	\item CacheManager
+	\end{itemize}
+	\end{block}
+\end{frame}
 
 \begin{frame}
-    \frametitle{Exemples de JSON}
-    %\begin{block}{ }
-\begin{itemize}
-\item Received from Facecrypt : \{"action":"getID"\}
+    \frametitle{Exemple de cycle}
 
-
-\item Sent to Softcard : 47
-
-
-\item Received from Softcard : 666f6f2e6261722e3333343439313320726f6f74726f6f74
-
-
-\item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
+	\begin{itemize}
+	\item Received from Facecrypt : \{"action":"getID"\}
+	\item Sent to Softcard : 47
+	\item Received from Softcard : $\underbrace{666f6f2e6261722e33333434393133}_{\textrm{login}} 20 \underbrace{726f6f74726f6f74}_{\textrm{password}}$
+	\item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
 \end{itemize}
-
-
-
-   % \end{block}
 \end{frame}
 
 
