@@ -223,7 +223,7 @@ signature se fait via la clef privée de l'émetteur. Une méthode de vérificat
 existe également permettant de vérifier l'authenticité des données via la clef 
 publique du destinataire. Un booléen nous est alors retourné selon la réponse.
 
-\label{CodePIN}
+\label{Code PIN}
 \subsection{Code PIN/PUK}
 Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
 dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
@@ -283,22 +283,31 @@ Une première catégorie de difficulté rencontrée était l'utilisation des fon
 cryptographiques sur SoftCard et SmartCard.
 
 Tout d'abord, malgré une bonne documentation JavaCard, certaines cartes 
-n'implantent pas toutes les méthodes. Il nous a donc fallu nous assurer 
+n'implantent pas toutes les méthodes. Il a donc fallu nous assurer 
 qu'elles existaient réellement, en testant parfois \og à l'aveuglette 
 \fg{}. En outre, nous avons du faire de telle sorte que FaceCrypt et SoftCard 
 utilisent les mêmes algorithmes cryptographiques, notamment au niveau des 
 cryptosystèmes asymétriques.
 
-% Taille des données dans l'APDU
+
 \paragraph{}
 Une seconde source de problèmes est provenue du fait que les informations que nous
-ne pouvions pas envoyer à la carte sont de taille limitée. 
+ pouvions envoyer à la carte sont de taille limitée par l'APDU. En effet, il est possible de transmettre au maximum 256 octets de charge utile dans chaque sens. Nous avons donc dû découper les données avant de les envoyer 
+si leur longueur était trop importante.
+Ce découpage a été fait avant le padding et le chiffrement.
 
-% Tunnel padding
 
-% Taille des données dans l'APDU
-% Les fonctions crypto (compatibilité avec Java, celles non implantées)
-% padding
+\paragraph{}
+Comme dit précédemment, l'implémentation de l'API Java Card sur les cartes fournies n'était pas complètes, certaines fonctions étant optionnelles dans la 
+spécification. Le chiffrement AES en mode CBC n'est pas disponible avec les différents schémas de padding normalisés par exemple. Nous avons donc dû implémenter 
+à la main un schéma de padding compatible pkcs7 des deux cotés.
+Pour cette même raison, nous avons choisi un MAC à base de CBC-MAC basé sur AES car c'était le seul disponible sur les deux plateformes.
+Ce CBC-MAC a été amélioré en insérant la taille du message au début pour gérer des messages de taille variable sans affaiblir la sécurité. 
+
+
+
+
+
 
 \subsection{Améliorations possibles}
 Actuellement certaines améliorations sont possibles, notamment au niveau
@@ -312,11 +321,15 @@ le temps qu'il nous restait lorsque nous nous sommes penchés sur le problème,
 nous avons ajouté une surveillance d'une levée d'exception, en forçant une 
 reconnexion à la carte. Si à ce moment la carte n'est toujours pas insérée,
 une erreur est soulevée, terminant ainsi le processus auquel s'est connecté
-FaceCrypt. Une amélioration serait donc de se mettre en attente d'une connection
+FaceCrypt. Une amélioration serait donc de se mettre en attente d'une connexion
 correcte avec la carte.
 
-% Amélioration robustesse code
+La robustesse du code sur la carte à puce n'est pas optimale, nous n'avons pas pu explorer toutes les possibilités d'erreur 
+pour pouvoir les traiter. En effet, la carte renvoie un code d'erreur générique en cas de problème non traité et ceci rend très difficile
+ le débogage. Ce comportement est semblable à celui d'une panique du noyau, très difficile à comprendre sans vidage de la mémoire.
 
+
+La gestion de la mémoire sur la carte est également à optimiser car certaines zones mémoires ne sont utilisées que très peu. La programmation JavaCard étant très différente de Java traditionnel car plus proche du matériel, les différents tutoriels nous ont conseillés de penser comme en C. 
 
 \clearpage
 
@@ -522,7 +535,7 @@ et de pouvoir tout de même les déchiffrer après modification.
 
 \appendix
 
-\section{Fonctionnement détaillé du tunnel entre la carte}
+\section{Fonctionnement détaillé du tunnel entre SmartCard et SoftCard}
 \label{TunnelSS}
 
 
