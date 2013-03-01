@@ -67,8 +67,12 @@
 
 \subsection{Présentation}
 \begin{frame}
-    \frametitle{Présentation}
-    \begin{block}{ }
+    \frametitle{Contexte}
+    \begin{block}{SmartCard}
+        titi
+    \end{block}
+    \begin{block}{Secure Social Network}
+        toto
     \end{block}
 \end{frame}
 
@@ -248,10 +252,78 @@ Clés publiques
 \item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
 \end{itemize}
 
-
-
    % \end{block}
 \end{frame}
 
+\section{Démonstration}
+\begin{frame}
+\frametitle{Démonstration}
+schéma
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Difficultés rencontrées}
+\begin{itemize}
+    \item SmartCard : 
+    \begin{itemize}
+        \item taille des données; % limitées dans les APDUs (256)
+        \item communications sécurisées entre la carte à puce et l'application
+            cliente;
+        \item installations des lecteurs;
+        \item stockage "caché"; % vérifier que c'est vraiment caché
+        \item algorithmes implantés sur la carte;
+    \end{itemize}
+    \item Secure Social Network : 
+        \begin{itemize}
+            \item manipulation de la page Facebook;
+            \item communications sécurisées entre SSNExt et FaceCrypt;
+            \item fonctionnement d'une extension.
+        \end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Améliorations possibles}
+\begin{itemize}
+    \item SmartCard : 
+    \begin{itemize}
+        \item IHM pour entrer le code PIN; % => démon
+        \item Gestion de l'arrachage de la carte; % lors d'une opération, 
+                                                  % la carte plante le cliente, débranchage, rebranchage avant une opération est géré.
+        \item communications sécurisées entre la carte à puce et l'application
+            cliente;
+        \item One Time Password;
+        \item prendre en compte les attaques (canaux cachés);
+        \item algorithmes implantés sur la carte;
+    \end{itemize}
+    \item Secure Social Network : 
+        \begin{itemize}
+           \item finalisation pour mise en production;
+           \item étudier le tatouage d'images
+        \end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion}
+\begin{block}{Les apports}
+\begin{itemize}
+    \item SmartCard : 
+    \begin{itemize}
+        \item manipulation d'une carte à puce;
+    \end{itemize}
+    \item Secure Social Network : 
+        \begin{itemize}
+           \item finalisation de l'extension;
+           \item étudier le tatouage (signature en filigrane)
+        \end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
 
 \end{document}
