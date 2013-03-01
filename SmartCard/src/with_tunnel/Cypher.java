@@ -194,7 +194,6 @@ public class Cypher extends Applet {
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 		short dataLen;
-		Cipher cipher;
 		short cipherLen = 0;
 
 		if (this.selectingApplet()){
@@ -211,7 +210,6 @@ public class Cypher extends Applet {
 		case INS_CIPHER:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
 				cipher.init(pubKey, Cipher.MODE_ENCRYPT);
 				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
