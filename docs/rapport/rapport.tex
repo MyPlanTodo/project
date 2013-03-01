@@ -290,6 +290,7 @@ utilisent les mêmes algorithmes cryptographiques, notamment au niveau des
 cryptosystèmes asymétriques.
 
 
+
 \paragraph{}
 Une seconde source de problèmes est provenue du fait que les informations que nous
  pouvions envoyer à la carte sont de taille limitée par l'APDU. En effet, il est possible de transmettre au maximum 256 octets de charge utile dans chaque sens. Nous avons donc dû découper les données avant de les envoyer 
@@ -303,6 +304,8 @@ spécification. Le chiffrement AES en mode CBC n'est pas disponible avec les dif
 à la main un schéma de padding compatible pkcs7 des deux cotés.
 Pour cette même raison, nous avons choisi un MAC à base de CBC-MAC basé sur AES car c'était le seul disponible sur les deux plateformes.
 Ce CBC-MAC a été amélioré en insérant la taille du message au début pour gérer des messages de taille variable sans affaiblir la sécurité. 
+
+
 
 
 
