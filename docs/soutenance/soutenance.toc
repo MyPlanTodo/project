@@ -13,3 +13,5 @@
 \beamer@sectionintoc {3}{Une protection vis-\IeC {\`a}-vis de Facebook}{17}{0}{3}
 \beamer@subsectionintoc {3}{1}{Les besoins et exigences}{18}{0}{3}
 \beamer@subsectionintoc {3}{2}{Pr\IeC {\'e}sentation des composants}{19}{0}{3}
+\beamer@subsectionintoc {3}{3}{Pr\IeC {\'e}sentation des composants}{20}{0}{3}
+\beamer@subsectionintoc {3}{4}{Facecrypt}{21}{0}{3}
