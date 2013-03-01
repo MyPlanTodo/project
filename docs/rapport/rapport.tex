@@ -114,6 +114,11 @@ ces derniers ont finalement fusionné en un unique projet regroupant :
 	Ayoub \textsc{Otmani}.
 \end{itemize}
 
+\paragraph{}
+Les documents, les sources et tous les autres fichiers dont nous nous sommes
+servis durant ce projet se trouve dans un dépot \texttt{git} à l'adresse
+suivante : \url{https://github.com/smartSocialNetwork}
+
 \section{Fonctionnement global}
 Nous allons dans cette partie décrire, dans les grandes lignes, le 
 fonctionnement global du projet.
@@ -180,6 +185,8 @@ l'authentification forte et pour contenir des informations confidentielles.
 Dans cette partie du projet, nous détaillerons notre étude des solutions 
 cryptographiques pouvant permettre l'authentification ou la signature, puis de 
 mettre à profit ces caractéristiques pour la confidentialité liée à Facebook.
+
+Nous nous sommes basés sur \cite{LinuxMag}  pour notre étude sur les carte à puce.
 
 
 \subsection{Génération de nombres aléatoires}
@@ -539,10 +546,10 @@ Le chiffrement d'un message depuis la \emph{timeline} est possible mais
 pas depuis son mur ni depuis celui d'un ami, il faudrait adapter notre 
 méthode pour pouvoir y chiffrer et déchiffrer des messages.
 
-Enfin, une autre amélioration intéressante serait d'étudier les techniques
-d'\emph{homomorphic encryption} pour chiffrer et déchiffrer des images. Ce
-sont des algorithmes permettant de chiffrer des données, de les modifier après chiffrement
-et de pouvoir tout de même les déchiffrer après modification.
+Enfin, une autre amélioration intéressante serait d'ajouter un procédé
+de tatouage numérique (\emph{watermarking} pour pouvoir incorporer une 
+signature dans une image et ainsi protéger nos images par rapport à 
+Facebook.
 
 \clearpage
 
@@ -595,10 +602,10 @@ sécurité lorsque les messages ont une taille variable, comme indiqué dans
 
 
 \paragraph{}
-L'établissement du tunnel se fait selon un protocole challenge-réponse 
-réciproque pour assurer l'authentification mutuelle de la carte et du logiciel 
+L'établissement du tunnel se fait selon un protocole question-réponse 
+réciproque avec une clé pré-partagée  pour assurer l'authentification mutuelle de la carte et du logiciel 
 avec laquelle elle communique. Une clef de session est envoyée chiffrée par la 
-carte pour assurer la confidentialité des données.
+carte pour assurer la confidentialité des données. La clé pré-partagée servira ensuite pour les codes MAC.
 
 \subsection{Etablissement du tunnel}
 L'authentification mutuelle peut être résumée comme ceci : 
@@ -608,7 +615,7 @@ L'authentification mutuelle peut être résumée comme ceci :
     \item la carte récupère le nonce client, génère un nonce carte, un IV et une clef
         de session;
     \item la carte envoie la clef, le nonce client et le nonce carte chiffrés avec la
-        cle partagée et l'IV;
+        clé partagée et l'IV;
     \item le client extrait l'IV et déchiffre le message avec la clef partagée;
     \item le client vérifie si le nonce client est présent pour authentifier la 
         carte, extrait la clef de session et récupère le nonce carte;
@@ -694,6 +701,13 @@ Juin 2003
 \bibitem[RGS ANSSI]{RGS ANSSI}
 Agence nationale de la sécurité des systèmes d’information,
 \emph{Annexe B1 - Référentiel Général de Sécurité}, 26 janvier 2010
+
+
+\bibitem[LinuxMag]{LinuxMag}
+Linux Mag - Hors Série, 
+Cartes à puces - Administration et utilisation, 
+Nov-Déc 2008
+
 \end{thebibliography}
 
 
