@@ -138,8 +138,6 @@ public class Cypher extends Applet {
 				{				
 					dataLen = (short) (data[ISO7816.OFFSET_LC] & 0xFF);
 
-					cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-
 					cipher.init(privKey, Cipher.MODE_DECRYPT);
 					cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
 	
@@ -196,7 +194,6 @@ public class Cypher extends Applet {
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 		short dataLen;
-		Cipher cipher;
 		short cipherLen = 0;
 
 		if (this.selectingApplet()){
@@ -213,7 +210,6 @@ public class Cypher extends Applet {
 		case INS_CIPHER:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
 
 				cipher.init(pubKey, Cipher.MODE_ENCRYPT);
 				cipherLen = cipher.doFinal(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
@@ -249,9 +245,7 @@ public class Cypher extends Applet {
 		case INS_DECRYPT:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
-
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-
+				
 				cipher.init(privKey, Cipher.MODE_DECRYPT);
 				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
