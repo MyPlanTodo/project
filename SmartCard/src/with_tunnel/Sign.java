@@ -20,7 +20,9 @@ import javacard.security.Signature;
 public class Sign extends Applet {
 
 
-	/* Constantes */
+	/*
+         * ID for the verification and the signature.
+         */
 	public static final byte INS_TEST_AUTH = 0x04;
 	public static final byte INS_ASK_AUTH = 0x05;
 
@@ -37,28 +39,23 @@ public class Sign extends Applet {
 	private static short dataLen1;
 
 
-	/* Constructeur */
+	/* Constructor */
 	private Sign() {
-		/* Préparation du couple de clé */
+		/* We use a RSA algorithm with a key of 1024 bits */
 		KeyPair kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short)1024);
-		/* génération de la bi-clé */
 		kp.genKeyPair();
-		/* On récupère la clé privée */
 		privKey = (PrivateKey) kp.getPrivate();
-		/* On récupère la clé publique */
 		pubKey = (PublicKey) kp.getPublic();
 
 		signe = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_RESET);
 		clair = JCSystem.makeTransientByteArray((short) 128, JCSystem.CLEAR_ON_RESET);
 
-		/* Choix de l'algorithme de signature */
+		/* The variable signature is used for signature */
 		signature = Signature.getInstance(Signature.ALG_RSA_SHA_PKCS1, false);
-		/* On définit le mode (signature) */
 		signature.init(privKey, Signature.MODE_SIGN);
 
-		/* Choix de l'algorithme de signature */
+		/* The variable signature1 is used for verification */
 		signature1 = Signature.getInstance(Signature.ALG_RSA_SHA_PKCS1, false);
-		/* On définit le mode (vérification) */
 		signature1.init(pubKey, Signature.MODE_VERIFY);
 
 	}
@@ -67,24 +64,24 @@ public class Sign extends Applet {
 		new Sign().register();
 	}
 
-
+	
+	/* Execute the action resquested */
 	public static void execute(byte[] data)
 	{
 		switch (data[ISO7816.OFFSET_INS]) {
 
-
+		/* Reception of the plain text and check it */
 		case INS_TEST_AUTH:
-			/* réception du clair(buffer) et vérification*/
 			if (data[ISO7816.OFFSET_P2] == (byte) 1) {
 				dataLen = data[ISO7816.OFFSET_LC];
 				
 				try {
-					/* Si le message est authentifié alors on renvoie 0x00 */
+					/* Return 0x00 if the message is authenticated */
 					if (signature1.verify(data, (short) ISO7816.OFFSET_CDATA, dataLen, signe, (short) 0, dataLen1)) {
 						data[0] = 0x00;
 						datastore.eraseData();
 						datastore.putData(data, (short) 1);
-					} else { /* 0x01 sinon */ 
+					} else { /* 0x01 otherwise */ 
 						data[0] = 0x01;
 						datastore.eraseData();
 						datastore.putData(data, (short) 1);
@@ -103,13 +100,12 @@ public class Sign extends Applet {
 					ISOException.throwIt((short) 0x4141);
 				}
 
-				/* réception du signé et sauvegarde de celui ci*/
+			/* Reception of the signature and save it */
 			} else {
 				try {
 					dataLen1 = (short) -data[ISO7816.OFFSET_LC];
 					if (dataLen1 > 255) {
 						ISOException.throwIt((short) 0x0128);
-						//throw new IllegalArgumentException("Clair trop grand!!!");
 					}
 
 					Util.arrayCopy(data, (short)ISO7816.OFFSET_CDATA, signe, (short)0, dataLen1);
@@ -132,18 +128,12 @@ public class Sign extends Applet {
 			break;	
 			
 			
-			
+		/* Signature  */			
 		case INS_ASK_AUTH:
 			dataLen = data[ISO7816.OFFSET_LC];
 
-			/* On le signe et on récupère la taille du signé */
 			short len1 = (short) signature.sign(data, ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
-			//ISOException.throwIt(len1);
 			try {
-				/* Envoie du message signé */
-				/*apdu.setOutgoing();
-				apdu.setOutgoingLength(len1);
-				apdu.sendBytesLong(buffer, (short) 0, len1);*/
 				datastore.eraseData();
 				datastore.putData(data, len1);
 			} catch (CryptoException c){
@@ -158,7 +148,11 @@ public class Sign extends Applet {
 	}
 
 
-
+	/**     
+         * This method is called when the applet is being called from outside the tunnel.
+         * @return void
+         * @throws ISOException if an error occured while processing the request.
+         */
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 
@@ -168,24 +162,22 @@ public class Sign extends Applet {
 			return;
 		}
 
-		/* On vérifie le CLA de l'applet */
 		switch (buffer[ISO7816.OFFSET_INS]) {
 
-		/* Requête de chiffrement */
 
-		/* Vérification du message signé */
+		/* Vérification of the signature */
 		case INS_TEST_AUTH:
-			/* réception du clair(buffer) et vérification*/
+			/* Reception of plain text and ckeck it */
 			if (buffer[ISO7816.OFFSET_P2] == (byte) 1) {
 				dataLen = apdu.setIncomingAndReceive();
 
 				try {
 
-					/* Si le message est authentifié alors on renvoie 0x00 */
+					/* Return 0x00 if the message is authenticated */
 					if (signature1.verify(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, signe, (short) 0, dataLen1)) {
 						buffer[0] = 0x00;
 						apdu.setOutgoingAndSend((short) 0, (short) 1);
-					} else { /* 0x01 sinon */ 
+					} else { /* 0x01 otherwise */ 
 						buffer[0] = 0x01;
 						apdu.setOutgoingAndSend((short) 0, (short) 1);
 					}
@@ -203,13 +195,12 @@ public class Sign extends Applet {
 					ISOException.throwIt((short) 0x4141);
 				}
 
-				/* réception du signé et sauvegarde de celui ci*/
+			/* Reception of the signature and save it */
 			} else {
 				try {
 					dataLen1 = apdu.setIncomingAndReceive();
 					if (dataLen1 > 255) {
 						ISOException.throwIt((short) 0x0128);
-						//throw new IllegalArgumentException("Clair trop grand!!!");
 					}
 
 					javacard.framework.Util.arrayCopy(buffer, (short)ISO7816.OFFSET_CDATA, signe, (short)0, dataLen1);
@@ -235,15 +226,13 @@ public class Sign extends Applet {
 
 
 
-			/* Signature du message clair et envoie */
+		/* Signature */
 		case INS_ASK_AUTH:
 			dataLen = apdu.setIncomingAndReceive();
 
-			/* On le signe et on récupère la taille du signé */
 			short len1 = signature.sign(buffer, ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
 			try {
-				/* Envoie du message signé */
 				apdu.setOutgoing();
 				apdu.setOutgoingLength(len1);
 				apdu.sendBytesLong(buffer, (short) 0, len1);

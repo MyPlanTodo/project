@@ -3,6 +3,7 @@ package with_tunnel;
 /**
  * @author Emmanuel Mocquet
  */
+
 import javacard.framework.APDU;
 import javacard.framework.APDUException;
 import javacard.framework.Applet;
@@ -45,6 +46,7 @@ public class Cypher extends Applet {
 	 */
 	private Cypher(){
 		try{
+			/* We use a RSA algorithm with a key of 1024 bits  */
 			kp = new KeyPair(KeyPair.ALG_RSA_CRT, (short) KeyBuilder.LENGTH_RSA_1024);
 			kp.genKeyPair();
 			privKey = (PrivateKey) kp.getPrivate();
@@ -57,12 +59,13 @@ public class Cypher extends Applet {
 		}
 	}
 
-
+	/* Execute the action requested by the user  */
 	public static void execute(byte[] data)
 	{
 
 		switch (data[ISO7816.OFFSET_INS]) {
 		
+		/* Returns the private exponent value of the key */
 		case INS_GET_EXPONENT:
 			try {
 				dataLen = ((RSAPublicKey) pubKey).getExponent(data, (short) 0);
@@ -78,7 +81,7 @@ public class Cypher extends Applet {
 			}
 			break;			
 
-			
+		/* Returns the modulus value of the key */
 		case INS_GET_MODULUS:
 			try {				
 				dataLen = ((RSAPublicKey) pubKey).getModulus(data, (short) 0);
@@ -93,7 +96,7 @@ public class Cypher extends Applet {
 			}
 			break;
 			
-			
+		/* Generates encrypted output from input data */
 		case INS_CIPHER:
 			try {
 				dataLen = data[ISO7816.OFFSET_LC];
@@ -128,7 +131,7 @@ public class Cypher extends Applet {
 
 			break;
 
-			
+		/* Generates decrypted output from input data  */	
 		case INS_DECRYPT:
 			try {
 				if(PIN.getState() == (short) 0x9000)
@@ -183,7 +186,7 @@ public class Cypher extends Applet {
 		new Cypher().register();
 	}
 
-	/**
+	/**	
 	 * This method is called when the applet is being called from outside the tunnel.
 	 * @return void
 	 * @throws ISOException if an error occured while processing the request.
