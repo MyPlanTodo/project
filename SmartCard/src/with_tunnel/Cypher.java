@@ -247,9 +247,7 @@ public class Cypher extends Applet {
 		case INS_DECRYPT:
 			try {
 				dataLen = apdu.setIncomingAndReceive();
-
-				cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-
+				
 				cipher.init(privKey, Cipher.MODE_DECRYPT);
 				cipherLen = cipher.doFinal(buffer, (short) ISO7816.OFFSET_CDATA, dataLen, buffer, (short) 0);
 
