@@ -25,9 +25,9 @@ Nous présentons dans ce document la marche à suivre permettant d'adapter
 nos outils pour utiliser vos certificats.
 
 \paragraph{}
-Pour la suite, et pour faciliter l'établissement de la PKI nous supposerons
+Pour la suite, et pour faciliter l'établissement de la PKI, nous supposerons
 que tous les certifications que nous allons utilisé sont sujettes à la 
-même autorité. Et que vous disposer déjà d'un certificat racine, dans 
+même autorité. Et que vous disposez déjà d'un certificat racine, dans 
 les exemples ci-dessous, le certificat racine sera \texttt{ca.pem} et 
 il y aura un certificat intermédiaire \texttt{cassl.pem}.
 
@@ -57,9 +57,8 @@ $ keytool -importkeystore -deststorepass motDePasse -destkeypass \
 \end{verbatim}
 
 Pour finir, il nous faut un \emph{package} contenant les certificats pour 
-lesquelles l'application aura confiance, ce \emph{package} est un 
-\emph{trustStore}
-contenant des certificats au formats \emph{DER}.
+lesquels l'application aura confiance, ce \emph{package} est un 
+\emph{trustStore} contenant des certificats au formats \emph{DER}.
 \begin{verbatim}
 $ openssl x509 -outform der -in facecryptClient.pem -out facecryptClient.der
 $ keytool -import -file facecryptClient.der -keystore \ 
@@ -93,7 +92,8 @@ $ openssl ca -config ./openssl.cnf -name CA_ssl_default -extensions \
     CLIENT_RSA_SSL -infiles facecryptServer.csr
 \end{verbatim}
 créent les deux certificats. Pour le certificat serveur de FaceCrypt, il
-est impératif de préciser l'adresse IP de la machine l'hébergeant.
+est impératif de préciser l'adresse IP de la machine l'hébergeant, pour 
+un fonctionnement en local, nous mettons \texttt{127.0.0.1}.
 
 \paragraph{}
 Ensuite, comme pour SoftCard, il faut créer une enveloppe PKCS\#12 pour ces

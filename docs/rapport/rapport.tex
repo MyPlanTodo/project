@@ -42,6 +42,18 @@
 %
 %
 \title{Smart Social Network\\Rapport de projet SSI }
+\author{
+    Zakaria \textsc{Addi}
+    Baptiste \textsc{Dolbeau}\\
+    Yicheng \textsc{Gao}
+    Florian \textsc{Guilbert}\\
+    Giovanni \textsc{Huet}
+    Emmanuel \textsc{Mocquet}\\
+    Maxence \textsc{Péchoux}
+    Romain \textsc{Pignard}
+}
+
+
 %% -- Début du document -- %
 \begin{document}
 %Page de garde
@@ -62,7 +74,7 @@ amis \fg{} seront ajoutés : ils pourront alors accéder à ces informations.
 
 \paragraph{}
 La problématique soulevée était de pouvoir limiter la diffusion des informations
-à certains \og{}amis \fb{}, mais surtout limiter la diffusion d'informations
+à certains \og amis \fg{}, mais surtout limiter la diffusion d'informations
 vis à vis du réseau social lui-même. En effet, lorsque nous partageons une
 donnée, ce dernier détient cette information qu'elle soit définie comme privée
 ou non.
@@ -112,37 +124,45 @@ Lorsque l'utilisateur installe l'extension et désire se connecter par la suite
 identifiants. Ils seront alors stockés sur la carte et l'utilisateur sera
 redirigé vers la page principale.
 
-
-
 \subsection{Liste d'amis}
 Une fois connecté sur facebook, la personne devra publier sa clef publique
 à l'aide d'un bouton prévu à cet effet. Ceci permettra aux autres utilisateurs
 de notre système de chiffrer des messages à son intention. Ensuite, l'internaute
 devra créer une ou plusieurs listes d'amis qui seront habilités à voir le
-message \og posté \fg{}
+message \og posté \fg{}. Les listes créées sont dans un premier temps vides.
+Il faut les modifier pour pouvoir y ajouter des amis. Des amis pourront être
+supprimés ou ajoutés à chaque modification. Un processus de synchronisation
+des clefs va permettre d'aller récupérer la clef publique de chaque ami. Nous
+serons ainsi en mesure d'échanger des messages chiffrés avec eux.
 
 \subsection{Chiffrement}
 Les chiffrements s'effectuent en plusieurs temps. Tout d'abord, l'utilisateur 
 entre son message, clique sur le bouton \og chiffrer \fg{}, sélectionne la ou les
 listes d'amis concernées et choisit deux modes : l'un garantit l'anonymat mais
-nécessite plus de ressources, l'autre a les propriétés inverses.
-
-% Chiffrement à compléter par SSN
+nécessite plus de ressources, l'autre a les propriétés inverses. Un message
+chiffré est composé de deux parties. L'une concerne la clef de message chiffrée
+avec la clef publique de chaque personne concernée. L'autre concerne le message
+chiffré avec la clef de message. Lorsque l'on procède au chiffrement non anonyme,
+FaceCrypt ajoute à la partie clef du chiffré le nom de chaque personne à qui est
+adressé le message. Le déchiffrement s'en trouvera simplifié. Lors d'un
+chiffrement anonyme, Facecrypt ne présente que chaque clef de message chiffrée.
+Dans tous les cas, les champs sont séparés par une clef de message.
 
 \subsection{Déchiffrement}
 Pour le déchiffrement, deux cas se présentent. Si la personne ayant chiffré le
-message avait choisi le mode \og anonyme \fg{}, un application tentera de 
-déchiffrer chacune des lignes composant le contenu chiffré avec la clef privée 
-de l'utilisateur, au préalable obtenue en interrogeant la carte. Ces tentatives
-s'arrêteront dès qu'aucune erreur n'aura été déclenchée, c'est-à-dire lorsque la
-clef privée utilisée correspondra à la clef publique ayant servi à chiffrer la 
-clef symétrique. Cette dernière sera alors utilisée pour déchiffrer le message 
-posté sur Facebook.
+message avait choisi le mode \og anonyme \fg{}. Dans ce cas, l'utilisateur devra
+choisir de tenter de déchiffrer ce message. L'application tentera de déchiffrer
+chacune des lignes composant le contenu chiffré avec la clef privée de
+l'utilisateur, au préalable obtenue en interrogeant la carte. Ces tentatives
+s'arrêteront lorsque la clef publique ayant servi à chiffrer la clef de message
+correspondra à la clef privée utilisée. Dans ce dernier cas, la clef privée sera
+alors utilisée pour déchiffrer le message posté sur Facebook ainsi que la liste
+des commentaires si celle ci existe.
 
 \paragraph{}
 Dans le cas où le mode \og non-anonyme \fg{} avait été sélectionné lors du
-chiffrement, l'algorithme se contentera de déchiffrer la partie chiffrée
-associée à l'identifiant de l'utilisateur courant.
+chiffrement, l'algorithme se contentera de tenter de déchiffrer automatiquement
+le message chiffré avec la clef publique de l'utilisateur courant.
 
 
 \section{SmartCard}
@@ -203,7 +223,7 @@ signature se fait via la clef privée de l'émetteur. Une méthode de vérificat
 existe également permettant de vérifier l'authenticité des données via la clef 
 publique du destinataire. Un booléen nous est alors retourné selon la réponse.
 
-\label{CodePIN}
+\label{Code PIN}
 \subsection{Code PIN/PUK}
 Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
 dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
@@ -263,22 +283,34 @@ Une première catégorie de difficulté rencontrée était l'utilisation des fon
 cryptographiques sur SoftCard et SmartCard.
 
 Tout d'abord, malgré une bonne documentation JavaCard, certaines cartes 
-n'implantent pas toutes les méthodes. Il nous a donc fallu nous assurer 
+n'implantent pas toutes les méthodes. Il a donc fallu nous assurer 
 qu'elles existaient réellement, en testant parfois \og à l'aveuglette 
 \fg{}. En outre, nous avons du faire de telle sorte que FaceCrypt et SoftCard 
 utilisent les mêmes algorithmes cryptographiques, notamment au niveau des 
 cryptosystèmes asymétriques.
 
-% Taille des données dans l'APDU
+
+
 \paragraph{}
 Une seconde source de problèmes est provenue du fait que les informations que nous
-ne pouvions pas envoyer à la carte sont de taille limitée. 
+ pouvions envoyer à la carte sont de taille limitée par l'APDU. En effet, il est possible de transmettre au maximum 256 octets de charge utile dans chaque sens. Nous avons donc dû découper les données avant de les envoyer 
+si leur longueur était trop importante.
+Ce découpage a été fait avant le padding et le chiffrement.
 
-% Tunnel padding
 
-% Taille des données dans l'APDU
-% Les fonctions crypto (compatibilité avec Java, celles non implantées)
-% padding
+\paragraph{}
+Comme dit précédemment, l'implémentation de l'API Java Card sur les cartes fournies n'était pas complètes, certaines fonctions étant optionnelles dans la 
+spécification. Le chiffrement AES en mode CBC n'est pas disponible avec les différents schémas de padding normalisés par exemple. Nous avons donc dû implémenter 
+à la main un schéma de padding compatible pkcs7 des deux cotés.
+Pour cette même raison, nous avons choisi un MAC à base de CBC-MAC basé sur AES car c'était le seul disponible sur les deux plateformes.
+Ce CBC-MAC a été amélioré en insérant la taille du message au début pour gérer des messages de taille variable sans affaiblir la sécurité. 
+
+
+
+
+
+
+
 
 \subsection{Améliorations possibles}
 Actuellement certaines améliorations sont possibles, notamment au niveau
@@ -292,11 +324,15 @@ le temps qu'il nous restait lorsque nous nous sommes penchés sur le problème,
 nous avons ajouté une surveillance d'une levée d'exception, en forçant une 
 reconnexion à la carte. Si à ce moment la carte n'est toujours pas insérée,
 une erreur est soulevée, terminant ainsi le processus auquel s'est connecté
-FaceCrypt. Une amélioration serait donc de se mettre en attente d'une connection
+FaceCrypt. Une amélioration serait donc de se mettre en attente d'une connexion
 correcte avec la carte.
 
-% Amélioration robustesse code
+La robustesse du code sur la carte à puce n'est pas optimale, nous n'avons pas pu explorer toutes les possibilités d'erreur 
+pour pouvoir les traiter. En effet, la carte renvoie un code d'erreur générique en cas de problème non traité et ceci rend très difficile
+ le débogage. Ce comportement est semblable à celui d'une panique du noyau, très difficile à comprendre sans vidage de la mémoire.
 
+
+La gestion de la mémoire sur la carte est également à optimiser car certaines zones mémoires ne sont utilisées que très peu. La programmation JavaCard étant très différente de Java traditionnel car plus proche du matériel, les différents tutoriels nous ont conseillés de penser comme en C. 
 
 \clearpage
 
@@ -304,32 +340,32 @@ correcte avec la carte.
 Ce projet avait initialement pour objectif d'étudier les différents 
 procédés cryptographiques que nous pouvions utiliser pour sécuriser la vie
 privée des utilisateurs vis-à-vis d'un réseau social. C'est Facebook qui a 
-été choisi car plus pertinent étant donné son ampleur. 
+été choisi car plus pertinent étant donnée son ampleur.
 
 \paragraph{}
 Après la fusion des deux projets, il a été jugé intéressant d'utiliser 
 la carte à puce comme outils d'authentification forte pour réaliser des 
-opérations comme la génération de nombres aléatoires, le déchiffrement 
+opérations comme la génération de nombres aléatoires ou le déchiffrement 
 avec la clef privée par exemple.
 
-Pour les autres besoins de chiffrement moins sensibles -- comme chiffrer
-en utilisant un algorithme symétrique et une clef générée par la carte, ou
-chiffrer avec une clef publique -- nous avons développé une application
-Java \og{}FaceCrypt \fg{} qui permet de réaliser les opérations de chiffrement
-plus rapidement que la carte.
+Pour les besoins de chiffrement -- comme chiffrer en utilisant un algorithme
+symétrique et une clef générée par la carte, ou chiffrer avec une clef
+publique -- nous avons développé une application Java \og{}FaceCrypt \fg{}
+qui permet de réaliser les opérations de chiffremernt plus rapidement que la
+carte.
 
-Afin de proposer une solution de chiffrement au sein de Facebook, nous avons 
+Afin de proposer une solution cryptographique au sein de Facebook, nous avons 
 aussi conçu une extension pour \emph{Mozilla Firefox}, SSNExt, servant 
 d'interface entre ce réseau social et l'utilisateur.
 
 \subsection{FaceCrypt}
-Comme mentionné précédemment, FaceCrypt est une application gérant une partie du
-chiffrement du projet et faisant le relais entre l'extension Firefox et le 
-composant SoftCard. 
+Comme mentionné précédemment, FaceCrypt est une application gérant une partie
+des opérations cryptographiques du projet et jouant également le rôle de
+relais entre l'extension Firefox et le composant SoftCard. 
 
 Elle agit comme un serveur pour l'extension et comme un client pour SoftCard, 
-c'est à dire que SSNExt va envoyer des requêtes à FaceCrypt qui va pour 
-sa part traiter ces requêtes et les envoyer à SoftCard si besoin.
+c'est à dire que SSNExt va envoyer des requêtes à FaceCrypt qui va dans un 
+premier temps les traiter. Il pourra faire intervenir SoftCard si besoin.
 
 \paragraph{}
 FaceCrypt fonctionne donc comme un démon et ne dispose pas d'interface
@@ -338,7 +374,7 @@ temps afin de maximiser l'interopérabilité avec SoftCard (lui aussi écrit en
 Java). En effet, nous pensions pouvoir disposer des mêmes algorithmes 
 que sur la carte. De plus, ce langage est le seul, avec le C, que tout le
 groupe maitrisaît. Nous l'avons préféré au C pour les raisons citées ci-dessus
-mais aussi pour le fait qu'il soit plus haut niveau et orienté objet.
+mais également pour le fait qu'il soit plus haut niveau et orienté objet.
 
 \paragraph{}
 FaceCrypt est divisé en trois parties : 
@@ -407,7 +443,59 @@ une programmation évènementielle est utilisée.
 Afin que nous puissions intercaler notre application entre le réseau Facebook et 
 l'utilisateur, nous avons choisi de modifier le DOM\footnote{Document Object Model,
 interface standard permettant un accès à un contenu HTML indépendamment du langage
-de programmation} pour éviter une dégradation de l'expérience utilisateur. 
+de programmation} pour éviter une dégradation de l'expérience utilisateur. Les
+principales modifications s'effectuent au niveau de la \emph{timeline} du profil,
+ou journal des évènements :
+\begin{itemize}
+\item Il y a tout d'abord un bouton chiffrer ajouté à côté
+de celui pour poster, qui permettra l'interception et le traitement du message
+avant sa publication
+\item Deux boutons sont rajoutés dans le coin en haut à gauche pour à la fois
+insérer la clef publique de l'utilisateur dans son profil via la carte, et 
+synchroniser la BDD en fonctions des clefs de ses amis publiées sur leur profil.
+\item Une liste de listes d'amis est insérée dans le panneau gauche de la page, 
+en bas. On peut y gérer entièrement nos listes : ajout, modification, suppression.
+\item Pour chaque post présentant une balise qui indique un message chiffré 
+anonymement, un bouton y est acollé pour permettre à l'utilisateur de le déchiffrer
+s'il le souhaite. Pour les chiffrements non anonymes, leur déchiffrement nécessitant
+moins de ressources sont directement effectués a leur chargement dans la page.
+\item Différentes popups sont également ajoutées, et affichées lors d'un ajout d'une
+liste d'amis, ou de la modification d'une autre, ou encore lors d'un post, afin
+de sélectionner les destinataires.
+\end{itemize}
+Il existe d'autres modifications, comme pour les commentaires ou la connexion,
+qui sont détaillés dans les commentaires de code.
+
+\subsubsection{Communication avec Facecrypt}
+Sans Facecrypt, SSNExtension ne serait guère qu'une coquille vide. Son interaction
+avec elle est donc primordiale. Comme expliqué précédemment, ce sont les scripts de
+l'addon, considérés comme des librairies, qui peuvent communiquer avec le système de
+fichiers, et en l'occurrence via des sockets. Facecrypt est en écoute sur le port 4242
+et nous lui envoyons nos requêtes par un objet réalisant un tunnel sécurisé avec lui
+comme indiqué plus haut. Un système d'évènements nous permet de réagir aux réponses
+reçues de Facecrypt et modifier le DOM en conséquence. Il y'a donc un double niveau
+de communication par évènements. Par exemple, pour le déchiffrement d'un post :
+\begin{itemize}
+\item Le content script injecté dans la \emph{timeline} détecte une balise de message
+chiffré non anonymement (SSNEncryptedN) et envoie un évènement a son add-on script.
+\item A la réception de cet évènement, l'add-on script doit construire un objet JSON
+et l'envoyer à Facecrypt via la tunnel.
+\item Lorsque l'add-on reçoit la réponse de Facecrypt sous forme d'un 
+évènement, il doit le transmettre au script qui est injecté dans la page par un autre
+évènement.
+\item Enfin à la reception de ce dernier, le content script retrouve le post concerné,
+et en modifie son contenu.
+\end{itemize}
+
+\subsubsection{Intéraction avec la BDD}
+Un add-on script est entièrement consacré aux interrogations de la BDD. Celui-ci 
+contient la structure d'un objet Database donc les méthodes contiennent les requêtes
+nécessaires au bon fonctionnement de notre application. Cet objet est exporté afin
+d'être utilisé là ou il faut, dans le main.js par exemple. L'objet est instancié 
+avec le pseudo de l'utilisateur. Il est ainsi possible de communiquer avec notre base
+de données dans le cas de manipulations des listes dans le panneau gauche de la page,
+ou avec la synchronisation des clefs publiques, qui supprime tous les amis de la base
+afin de réinsérer toutes les clefs publiques possibles.
 
 
 \subsection{Difficultés rencontrées}
@@ -418,21 +506,39 @@ Lors du développement de ce sous-projet, nous avons rencontré des difficultés
     que nous pensions triviaux à réaliser nous a finalement posé beaucoup de 
     problèmes, ceci dû au fait de la minutie des développeurs de Facebook à
     empêcher les utilisateurs de \og{}scripter \fg{} leurs actions sur le réseau
-    social.
+    social;
     \item les communications sécurisées entre FaceCrypt et SSNExt. La documentation
 	fourni par Mozilla à ce sujet est assez minime et il nous a fallu trouver 
-	la solution via des ressources secondaires.% à finir.
+	la solution via des ressources secondaires;
+    \item le fonctionnement des extensions en elles-mêmes s'est avéré très
+    complexe à apréhender.
 \end{itemize}
 
 \subsection{Améliorations possibles}
-% signature de documents
+Le produit final que nous livrons est une preuve de concept (un prototype)
+qui démontre que c'est en effet possible d'allier réseau social et 
+sécurité cryptographique, malheureusement, nous n'avons pas eu le temps de 
+finaliser au mieux notre application ce qui a pour effet qu'elle n'est pas 
+prête à être \og mise en prodution \fg{} par exemple. 
 
+De plus, dan l'état actuel de notre application, nos procédés de 
+chiffrement et de déchiffrement ne gère pas les caractères unicodes, 
+les accents sont donc mal encodés.
+
+Le chiffrement d'un message depuis la \emph{timeline} est possible mais
+pas depuis son mur ou depuis le mur d'un ami, il faudrait adapter notre 
+méthode pour pouvoir chiffrer et déchiffrer depuis ces endroits là.
+
+Enfin, une amélioration vraiment intéressante serait d'étudier les techniques
+d'\emph{homomorphic encryption} pour chiffrer et déchiffrer des images. Ce
+sont des algorithmes permettant de chiffrer des données, de les modifier après chiffrement
+et de pouvoir tout de même les déchiffrer après modification.
 
 \clearpage
 
 \appendix
 
-\section{Fonctionnement détaillé du tunnel entre la carte}
+\section{Fonctionnement détaillé du tunnel entre SmartCard et SoftCard}
 \label{TunnelSS}
 
 
