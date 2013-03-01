@@ -56,8 +56,16 @@
 \headcommand {\beamer@subsectionentry {0}{3}{2}{19}{Pr\IeC {\'e}sentation des composants}}\headcommand {\beamer@subsectionpages {18}{18}}
 \headcommand {\slideentry {3}{2}{1}{19/19}{Pr\IeC {\'e}sentation des composants}{0}}
 \headcommand {\beamer@framepages {19}{19}}
-\headcommand {\beamer@partpages {1}{19}}
-\headcommand {\beamer@subsectionpages {19}{19}}
-\headcommand {\beamer@sectionpages {17}{19}}
-\headcommand {\beamer@documentpages {19}}
-\headcommand {\def \inserttotalframenumber {19}}
+\headcommand {\beamer@subsectionentry {0}{3}{3}{20}{Pr\IeC {\'e}sentation des composants}}\headcommand {\beamer@subsectionpages {19}{19}}
+\headcommand {\slideentry {3}{3}{1}{20/20}{Pr\IeC {\'e}sentation des composants}{0}}
+\headcommand {\beamer@framepages {20}{20}}
+\headcommand {\beamer@subsectionentry {0}{3}{4}{21}{Pr\IeC {\'e}sentation des composants}}\headcommand {\beamer@subsectionpages {20}{20}}
+\headcommand {\slideentry {3}{4}{1}{21/21}{Pr\IeC {\'e}sentation des composants}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {3}{4}{2}{22/22}{Pr\IeC {\'e}sentation des composants}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\beamer@partpages {1}{22}}
+\headcommand {\beamer@subsectionpages {21}{22}}
+\headcommand {\beamer@sectionpages {17}{22}}
+\headcommand {\beamer@documentpages {22}}
+\headcommand {\def \inserttotalframenumber {22}}

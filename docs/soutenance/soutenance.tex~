@@ -99,28 +99,25 @@
 \begin{frame}
     \begin{block}{Qu'est-ce que Java Card ?}
         \begin{itemize}
-            \item Désigne techno permettant dev applets "sécurisées"
-                sur carte à puce 
+            \item Désigne la technologie permettant de développer
+                des applets \og sécurisées \fg{} sur carte à puce 
 
-            \item 
+            \item Côté carte : 
                 \begin{itemize}
                     \item carte à puce programmable 
-                    \item carte à puce multi-appli
+                    \item carte à puce multi-applications
                 \end{itemize}
         \end{itemize}
     \end{block}
 \end{frame}
 
 \begin{frame}
-    \begin{block}{Fonctionnement}
-        APDU
-
-
-        L'API JavaCard
-            
-
-
-        Identifications des applets
+    \frametitle{Fonctionnement}
+    \begin{block}{APDU}
+    \end{block}
+    \begin{block}{L'API Java Card }
+    \end{block}
+    \begin{block}{Identifications des applets}
     \end{block}
 \end{frame}
 
