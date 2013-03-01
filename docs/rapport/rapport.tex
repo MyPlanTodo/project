@@ -477,7 +477,7 @@ reçues de Facecrypt et modifier le DOM en conséquence. Il y'a donc un double n
 de communication par évènements. Par exemple, pour le déchiffrement d'un post :
 \begin{itemize}
 \item Le content script injecté dans la \emph{timeline} détecte une balise de message
-chiffré non anonymement (SSNExtensionN) et envoie un évènement a son add-on script.
+chiffré non anonymement (SSNEncryptedN) et envoie un évènement a son add-on script.
 \item A la réception de cet évènement, l'add-on script doit construire un objet JSON
 et l'envoyer à Facecrypt via la tunnel.
 \item Lorsque l'add-on reçoit la réponse de Facecrypt sous forme d'un 
@@ -531,7 +531,7 @@ méthode pour pouvoir chiffrer et déchiffrer depuis ces endroits là.
 
 Enfin, une amélioration vraiment intéressante serait d'étudier les techniques
 d'\emph{homomorphic encryption} pour chiffrer et déchiffrer des images. Ce
-sont des algorithmes de chiffrer des données, de les modifier après chiffrement
+sont des algorithmes permettant de chiffrer des données, de les modifier après chiffrement
 et de pouvoir tout de même les déchiffrer après modification.
 
 \clearpage
