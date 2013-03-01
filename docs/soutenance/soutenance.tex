@@ -93,6 +93,7 @@
     \frametitle{Présentation de la carte à puce}
     \begin{block}{Les zones dans la carte à puce}
         Partie "cachée" 
+
         Partie visible
     \end{block}
 
@@ -100,7 +101,8 @@
 
     \begin{block}{Les dialogues}
         APDU
-        l'API JavaCard
+
+        L'API JavaCard
             
     \end{block}
 \end{frame}
@@ -140,14 +142,76 @@
 \subsection{Les besoins et exigences}
 \begin{frame}
     \frametitle{Les besoins et exigences}
-    \begin{block}{ }
+    \begin{block}{}
+
+Protection des données utilisateur vis-à-vis de tiers
+
+Authentification forte par carte à puce 
     \end{block}
 \end{frame}
 
 \subsection{Présentation des composants}
 \begin{frame}
     \frametitle{Présentation des composants}
-    \begin{block}{ }
+    %\begin{block}{ }
+ \includegraphics[width=12cm]{schema_zako}
+   % \end{block}
+\end{frame}
+
+
+\subsection{Présentation des composants}
+\begin{frame}
+    \frametitle{Base de données}
+    \begin{block}{Moteur SQLite }
+ Base de données locale
+
+Accessible depuis Java et l'extension 
+    \end{block}
+  \begin{block}{Stockage des liens d'amitié dans la base}
+Listes d'amis
+
+
+Clés publiques
+
+
     \end{block}
 \end{frame}
+
+
+\subsection{Présentation des composants}
+\begin{frame}
+    \frametitle{Présentation des composants}
+    %\begin{block}{ }
+
+ \includegraphics[width=11cm]{schema_dolby}
+
+
+
+   % \end{block}
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Exemples de JSON}
+    %\begin{block}{ }
+\begin{itemize}
+\item Received from Facecrypt : \{"action":"getID"\}
+
+
+\item Sent to Softcard : 47
+
+
+\item Received from Softcard : 666f6f2e6261722e3333343439313320726f6f74726f6f74
+
+
+\item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
+\end{itemize}
+
+
+
+   % \end{block}
+\end{frame}
+
+
 \end{document}
