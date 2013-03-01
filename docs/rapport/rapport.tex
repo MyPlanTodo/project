@@ -427,7 +427,59 @@ une programmation évènementielle est utilisée.
 Afin que nous puissions intercaler notre application entre le réseau Facebook et 
 l'utilisateur, nous avons choisi de modifier le DOM\footnote{Document Object Model,
 interface standard permettant un accès à un contenu HTML indépendamment du langage
-de programmation} pour éviter une dégradation de l'expérience utilisateur. 
+de programmation} pour éviter une dégradation de l'expérience utilisateur. Les
+principales modifications s'effectuent au niveau de la \emph{timeline} du profil,
+ou journal des évènements :
+\begin{itemize}
+\item Il y a tout d'abord un bouton chiffrer ajouté à côté
+de celui pour poster, qui permettra l'interception et le traitement du message
+avant sa publication
+\item Deux boutons sont rajoutés dans le coin en haut à gauche pour à la fois
+insérer la clef publique de l'utilisateur dans son profil via la carte, et 
+synchroniser la BDD en fonctions des clefs de ses amis publiées sur leur profil.
+\item Une liste de listes d'amis est insérée dans le panneau gauche de la page, 
+en bas. On peut y gérer entièrement nos listes : ajout, modification, suppression.
+\item Pour chaque post présentant une balise qui indique un message chiffré 
+anonymement, un bouton y est acollé pour permettre à l'utilisateur de le déchiffrer
+s'il le souhaite. Pour les chiffrements non anonymes, leur déchiffrement nécessitant
+moins de ressources sont directement effectués a leur chargement dans la page.
+\item Différentes popups sont également ajoutées, et affichées lors d'un ajout d'une
+liste d'amis, ou de la modification d'une autre, ou encore lors d'un post, afin
+de sélectionner les destinataires.
+\end{itemize}
+Il existe d'autres modifications, comme pour les commentaires ou la connexion,
+qui sont détaillés dans les commentaires de code.
+
+\subsubsection{Communication avec Facecrypt}
+Sans Facecrypt, SSNExtension ne serait guère qu'une coquille vide. Son interaction
+avec elle est donc primordiale. Comme expliqué précédemment, ce sont les scripts de
+l'addon, considérés comme des librairies, qui peuvent communiquer avec le système de
+fichiers, et en l'occurrence via des sockets. Facecrypt est en écoute sur le port 4242
+et nous lui envoyons nos requêtes par un objet réalisant un tunnel sécurisé avec lui
+comme indiqué plus haut. Un système d'évènements nous permet de réagir aux réponses
+reçues de Facecrypt et modifier le DOM en conséquence. Il y'a donc un double niveau
+de communication par évènements. Par exemple, pour le déchiffrement d'un post :
+\begin{itemize}
+\item Le content script injecté dans la \emph{timeline} détecte une balise de message
+chiffré non anonymement (SSNExtensionN) et envoie un évènement a son add-on script.
+\item A la réception de cet évènement, l'add-on script doit construire un objet JSON
+et l'envoyer à Facecrypt via la tunnel.
+\item Lorsque l'add-on reçoit la réponse de Facecrypt sous forme d'un 
+évènement, il doit le transmettre au script qui est injecté dans la page par un autre
+évènement.
+\item Enfin à la reception de ce dernier, le content script retrouve le post concerné,
+et en modifie son contenu.
+\end{itemize}
+
+\subsubsection{Intéraction avec la BDD}
+Un add-on script est entièrement consacré aux interrogations de la BDD. Celui-ci 
+contient la structure d'un objet Database donc les méthodes contiennent les requêtes
+nécessaires au bon fonctionnement de notre application. Cet objet est exporté afin
+d'être utilisé là ou il faut, dans le main.js par exemple. L'objet est instancié 
+avec le pseudo de l'utilisateur. Il est ainsi possible de communiquer avec notre base
+de données dans le cas de manipulations des listes dans le panneau gauche de la page,
+ou avec la synchronisation des clefs publiques, qui supprime tous les amis de la base
+afin de réinsérer toutes les clefs publiques possibles.
 
 
 \subsection{Difficultés rencontrées}
