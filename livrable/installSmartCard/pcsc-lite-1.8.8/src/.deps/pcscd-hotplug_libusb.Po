@@ -1,3 +1,0 @@
-pcscd-hotplug_libusb.o: hotplug_libusb.c ../config.h
-
-../config.h:
