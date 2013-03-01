@@ -6,10 +6,10 @@
 \beamer@sectionintoc {2}{Carte \IeC {\`a} puce}{6}{0}{2}
 \beamer@subsectionintoc {2}{1}{Introduction}{7}{0}{2}
 \beamer@subsectionintoc {2}{2}{Pr\IeC {\'e}sentation de la carte \IeC {\`a} puce}{8}{0}{2}
-\beamer@subsectionintoc {2}{3}{Les applications d\IeC {\'e}velopp\IeC {\'e}es}{9}{0}{2}
-\beamer@subsectionintoc {2}{4}{L'aspect s\IeC {\'e}curit\IeC {\'e}}{10}{0}{2}
-\beamer@subsectionintoc {2}{5}{D\IeC {\'e}monstration}{11}{0}{2}
-\beamer@subsectionintoc {2}{6}{L'interface avec SSN : SoftCard}{12}{0}{2}
-\beamer@sectionintoc {3}{Une protection vis-\IeC {\`a}-vis de Facebook}{13}{0}{3}
-\beamer@subsectionintoc {3}{1}{Les besoins et exigences}{14}{0}{3}
-\beamer@subsectionintoc {3}{2}{Pr\IeC {\'e}sentation des composants}{15}{0}{3}
+\beamer@subsectionintoc {2}{3}{Les applications d\IeC {\'e}velopp\IeC {\'e}es}{12}{0}{2}
+\beamer@subsectionintoc {2}{4}{L'aspect s\IeC {\'e}curit\IeC {\'e}}{13}{0}{2}
+\beamer@subsectionintoc {2}{5}{D\IeC {\'e}monstration}{14}{0}{2}
+\beamer@subsectionintoc {2}{6}{L'interface avec SSN : SoftCard}{15}{0}{2}
+\beamer@sectionintoc {3}{Une protection vis-\IeC {\`a}-vis de Facebook}{17}{0}{3}
+\beamer@subsectionintoc {3}{1}{Les besoins et exigences}{18}{0}{3}
+\beamer@subsectionintoc {3}{2}{Pr\IeC {\'e}sentation des composants}{19}{0}{3}
