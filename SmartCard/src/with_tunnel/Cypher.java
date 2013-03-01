@@ -135,8 +135,6 @@ public class Cypher extends Applet {
 				{				
 					dataLen = (short) (data[ISO7816.OFFSET_LC] & 0xFF);
 
-					cipher = Cipher.getInstance(Cipher.ALG_RSA_PKCS1, false);
-
 					cipher.init(privKey, Cipher.MODE_DECRYPT);
 					cipherLen = cipher.doFinal(data, (short) ISO7816.OFFSET_CDATA, dataLen, data, (short) 0);
 	
