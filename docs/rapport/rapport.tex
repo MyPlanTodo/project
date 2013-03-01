@@ -114,7 +114,6 @@ ces derniers ont finalement fusionnés en un unique projet regroupant :
 \end{itemize}
 
 \section{Fonctionnement global}
-% A compléter par ceux d'SSN
 Nous allons dans cette partie décrire, dans les grandes lignes, le 
 fonctionnement global du projet.
 
@@ -164,6 +163,13 @@ Dans le cas où le mode \og non-anonyme \fg{} avait été sélectionné lors du
 chiffrement, l'algorithme se contentera de tenter de déchiffrer automatiquement
 le message chiffré avec la clef publique de l'utilisateur courant.
 
+\subsection{Commentaires}
+Notre projet permet également le chiffrement des commentaires. Il y a cependant
+une pré-condition : le statut doit avoir été déchiffré. Ainsi, FaceCrypt récupère
+la clef de message utilisée pour le statut et chiffre le commentaire avec. Pour
+le déchiffrement, la liste des commentaires est envoyée avec le statut lors d'une
+demande de déchiffrement standard.
+ 
 
 \section{SmartCard}
 Aujourd'hui nous sommes tous menés à utiliser les cartes à puce comme les cartes
