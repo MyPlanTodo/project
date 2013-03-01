@@ -76,7 +76,7 @@ seront ajoutés : ils pourront alors accéder à ces informations.
 \paragraph{}
 La problématique soulevée était de pouvoir limiter la diffusion des informations
 à certains \og amis \fg{}, mais surtout limiter la diffusion d'informations
-vis à vis du réseau social lui-même. En effet, lorsque nous partageons une
+vis-à-vis du réseau social lui-même. En effet, lorsque nous partageons une
 donnée, ce dernier détient cette information qu'elle soit définie comme privée
 ou non.
 
@@ -105,7 +105,7 @@ privée... Le dialogue avec la carte se fait par l’intermédiaire d’un clien
 Java : \og{}SoftCard \fg{}. 
 
 \paragraph{}
-Initialement prévu comme deux projets différents, c'est à dire un par groupe,
+Initialement prévu comme deux projets différents, c'est-à-dire un par groupe,
 ces derniers ont finalement fusionné en un unique projet regroupant :
 \begin{itemize}
     \item l'étude et la mise en \oe{}uvre de solutions d’authentifications et 
@@ -233,7 +233,7 @@ publique du destinataire. Un booléen nous est alors retourné selon la réponse
 \label{CodePIN}
 \subsection{Code PIN/PUK}
 Une carte à puce étant associée à un utilisateur, il va de soi que ce dernier 
-dispose d'un secret pour pouvoir la carte protéger. Il existe pour cela un code 
+dispose d'un secret pour pouvoir protéger la carte. Il existe pour cela un code 
 PIN, affecté à chaque carte, et dont seul l'utilisateur a connaissance.
 
 Le code PIN est défini sur deux octets, ce qui représente $2^{16}$ = 65536 solutions.
@@ -300,13 +300,16 @@ cryptosystèmes asymétriques.
 
 \paragraph{}
 Une seconde source de problèmes est provenue du fait que les informations que nous
- pouvions envoyer à la carte sont de taille limitée par l'APDU. En effet, il est possible de transmettre au maximum 256 octets de charge utile dans chaque sens. Nous avons donc dû découper les données avant de les envoyer 
-si leur longueur était trop importante.
-Ce découpage a été fait avant le padding et le chiffrement.
+pouvions envoyer à la carte étaient de taille limitée par l'APDU. En effet, il 
+est possible de transmettre au maximum 256 octets de charge utile dans chaque 
+sens. Nous avons donc dû découper les données avant de les envoyer si leur 
+longueur était trop importante. Ce découpage a été fait avant le padding et le 
+chiffrement.
 
 
 \paragraph{}
-Comme dit précédemment, l'implémentation de l'API Java Card sur les cartes fournies n'était pas complète, certaines fonctions étant optionnelles dans la 
+Comme dit précédemment, l'implémentation de l'API Java Card sur les cartes 
+fournies n'était pas complète, certaines fonctions étant optionnelles dans la 
 spécification. Le chiffrement AES en mode CBC n'est pas disponible avec les différents schémas de padding normalisés par exemple. Nous avons donc dû implémenter 
 à la main un schéma de padding compatible pkcs7 des deux côtés.
 Pour cette même raison, nous avons choisi un code MAC à base de CBC-MAC basé sur AES car c'était le seul disponible sur les deux plateformes.
@@ -350,7 +353,7 @@ privée des utilisateurs vis-à-vis d'un réseau social. C'est Facebook qui a
 été choisi car plus pertinent étant donnée son ampleur.
 
 \paragraph{}
-Après la fusion des deux projets, il a été jugé intéressant d'utiliser 
+Après la fusion des deux projets, nous avons jugé intéressant d'utiliser 
 la carte à puce comme outils d'authentification forte pour réaliser des 
 opérations comme la génération de nombres aléatoires ou le déchiffrement 
 avec la clef privée par exemple.
@@ -358,7 +361,7 @@ avec la clef privée par exemple.
 Pour les besoins de chiffrement -- comme chiffrer en utilisant un algorithme
 symétrique et une clef générée par la carte, ou chiffrer avec une clef
 publique -- nous avons développé une application Java \og{}FaceCrypt \fg{}
-qui permet de réaliser les opérations de chiffremernt plus rapidement que la
+qui permet de réaliser les opérations de chiffrement plus rapidement que la
 carte.
 
 Afin de proposer une solution cryptographique au sein de Facebook, nous avons 
@@ -380,7 +383,7 @@ graphique, jugée inutile. Ce composant a été écrit en Java dans un premier
 temps afin de maximiser l'interopérabilité avec SoftCard (lui aussi écrit en 
 Java). En effet, nous pensions pouvoir disposer des mêmes algorithmes 
 que sur la carte. De plus, ce langage est le seul, avec le C, que tout le
-groupe maitrisaît. Nous l'avons préféré au C pour les raisons citées ci-dessus
+groupe maîtrisait. Nous l'avons préféré au C pour les raisons citées ci-dessus
 mais également pour le fait qu'il soit plus haut niveau et orienté objet.
 
 \paragraph{}
@@ -397,7 +400,7 @@ RSA, avec des clefs de 1024 bits.
 Durant son fontionnement, FaceCrypt va effectuer un grand nombre de requêtes
 entre l'Extension et SoftCard. Nous avons utilisé pour cela deux tunnels
 sécurisés (SSL) différents. Ceux-ci sont possibles grâce à l'utilisation de
-certificats signés par une autorité de certification intermédiaire. FaceCrypt
+certificats signés par une autorité de certification. FaceCrypt
 va, dans un premier temps, réceptionner la demande de l'extension, sous forme
 d'objet JSON. Ce format a été choisi pour sa simplicité de manipulation entre
 les deux entités. En fonction du traitement, Facecrypt va être amené à envoyer
@@ -442,8 +445,8 @@ et tout ce qui est généralement en dehors des pages web. Pour la seconde parti
 ce sont tout simplement les \emph{content scripts} que l'on voudra injecter dans
 les pages. Au coeur de ce fonctionnement, nous avons à notre disposition un système 
 de PageMod, qui va insérer ou non les \emph{content scripts} selon un filtre d'url. 
-Enfin, afin de communiquer entre nos deux types de scripts -- c'est à dire, dans notre
-cas, entre le contenu des pages facebook et notre base base de données ou Facecrypt -- 
+Enfin, afin de communiquer entre nos deux types de scripts -- c'est-à-dire, dans notre
+cas, entre le contenu des pages facebook et notre base de données ou Facecrypt -- 
 une programmation évènementielle est utilisée.
 
 \subsubsection{Modification du DOM}
@@ -536,7 +539,7 @@ Le chiffrement d'un message depuis la \emph{timeline} est possible mais
 pas depuis son mur ni depuis celui d'un ami, il faudrait adapter notre 
 méthode pour pouvoir y chiffrer et déchiffrer des messages.
 
-Enfin, une amélioration vraiment intéressante serait d'étudier les techniques
+Enfin, une autre amélioration intéressante serait d'étudier les techniques
 d'\emph{homomorphic encryption} pour chiffrer et déchiffrer des images. Ce
 sont des algorithmes permettant de chiffrer des données, de les modifier après chiffrement
 et de pouvoir tout de même les déchiffrer après modification.
@@ -568,7 +571,7 @@ Les objectifs cryptographiques réalisés par le tunnel sont les suivants :
         connaît le secret.
 \end{description}
 Les deux derniers objectifs sont réalisables conjointement sans diminuer la 
-sécurité du système alors que le premier nécessite une clé séparée \cite[section
+sécurité du système alors que le premier nécessite une clef séparée \cite[section
 2.5.1]{RGS ANSSI}. Dans la suite, le second objectif désigne à la fois 
 l'intégrité et l'authentification. 
 
@@ -576,13 +579,13 @@ l'intégrité et l'authentification.
 \subsection{Choix techniques}
 Le choix d'AES nous a paru être le plus pertinent car c'est l'algorithme de 
 référence. Il a remporté le concours lancé par le NIST après de nombreuses 
-études par la communauté. Il a été approuvé par la NSA avec des clés de 128
+études par la communauté. Il a été approuvé par la NSA avec des clefs de 128
 bits pour protéger des données classifiées au niveau SECRET dans \cite{NSA}. 
 L'annexe B1 du RGS publié par l'ANSSI affirme également que cette longueur est
 satisfaisante \cite{RGS ANSSI}. 
 
 
-Nous avons utilisé AES avec des clés (différentes) de 128 bits pour les deux 
+Nous avons utilisé AES avec des clefs (différentes) de 128 bits pour les deux 
 objectifs. Le mode CBC permettant de faire du chiffrement et de 
 l'authentification-intégrité, nous l'avons utilisé pour les deux. Pour conjuguer
 performance et sécurité, nous avons implanté une version modifiée de CBC-MAC qui
@@ -594,7 +597,7 @@ sécurité lorsque les messages ont une taille variable, comme indiqué dans
 \paragraph{}
 L'établissement du tunnel se fait selon un protocole challenge-réponse 
 réciproque pour assurer l'authentification mutuelle de la carte et du logiciel 
-avec laquelle elle communique. Une clé de session est envoyée chiffrée par la 
+avec laquelle elle communique. Une clef de session est envoyée chiffrée par la 
 carte pour assurer la confidentialité des données.
 
 \subsection{Etablissement du tunnel}
@@ -602,17 +605,17 @@ L'authentification mutuelle peut être résumée comme ceci :
 \begin{itemize}
     \item génération d'un nonce client;
     \item envoi du nonce client à la carte;
-    \item la carte récupère le nonce client, génère un nonce carte, un IV et une clé
+    \item la carte récupère le nonce client, génère un nonce carte, un IV et une clef
         de session;
-    \item la carte envoie la clé, le nonce client et le nonce carte chiffrés avec la
+    \item la carte envoie la clef, le nonce client et le nonce carte chiffrés avec la
         cle partagée et l'IV;
-    \item le client extrait l'IV et déchiffre le message avec la clé partagée;
+    \item le client extrait l'IV et déchiffre le message avec la clef partagée;
     \item le client vérifie si le nonce client est présent pour authentifier la 
-        carte, extrait la clé de session et récupère le nonce carte;
-    \item le client génère un IV et renvoie le nonce carte avec la clé de session 
+        carte, extrait la clef de session et récupère le nonce carte;
+    \item le client génère un IV et renvoie le nonce carte avec la clef de session 
         établie;
     \item la carte récupère le nonce carte en déchiffrant le message reçu avec 
-        la clé de session et vérifie s'il est identique à celui envoyé pour 
+        la clef de session et vérifie s'il est identique à celui envoyé pour 
         authentifier le client.
 \end{itemize}
 
@@ -620,7 +623,7 @@ C'est le constructeur de l'objet Java \og{}Tunnel \fg{} qui s'occupe de tout,
 côté client.
 
 \subsection{Communications dans le tunnel}
-Une fois les entités mutuellement authentifiées et la clé de session échangée, 
+Une fois les entités mutuellement authentifiées et la clef de session échangée, 
 les communications dans le tunnel peuvent se faire. 
 
 
@@ -668,7 +671,7 @@ par un padding selon la norme PKCS7.
 L'envoi dans le tunnel d'un fragment se fait comme ceci : 
 \begin{itemize}
     \item génération d'un IV de transmission;
-    \item chiffrement du fragment avec la clé de session et l'IV;
+    \item chiffrement du fragment avec la clef de session et l'IV;
     \item concaténation de l'IV et des données chiffrées;
     \item calcul du CBC-MAC avec la taille totale ajoutée au début;
     \item concaténation de l'IV, des données chiffrées et du MAC;

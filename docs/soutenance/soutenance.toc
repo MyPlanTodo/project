@@ -5,7 +5,7 @@
 \beamer@subsectionintoc {1}{2}{Gestion de projet}{5}{0}{1}
 \beamer@sectionintoc {2}{Carte \IeC {\`a} puce}{6}{0}{2}
 \beamer@subsectionintoc {2}{1}{Introduction}{7}{0}{2}
-\beamer@subsectionintoc {2}{2}{Pr\IeC {\'e}sentation de la carte \IeC {\`a} puce}{8}{0}{2}
+\beamer@subsectionintoc {2}{2}{Java Card}{8}{0}{2}
 \beamer@subsectionintoc {2}{3}{Les applications d\IeC {\'e}velopp\IeC {\'e}es}{12}{0}{2}
 \beamer@subsectionintoc {2}{4}{L'aspect s\IeC {\'e}curit\IeC {\'e}}{13}{0}{2}
 \beamer@subsectionintoc {2}{5}{D\IeC {\'e}monstration}{14}{0}{2}

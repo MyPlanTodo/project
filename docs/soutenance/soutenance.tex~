@@ -88,9 +88,9 @@
     \end{block}
 \end{frame}
 
-\subsection{Présentation de la carte à puce}
+\subsection{Java Card}
 \begin{frame}
-    \begin{block}{Présentation}
+    \begin{block}{Rappel sur la carte à puce}
         stockage et traitement d'infos
         de base assure authentification
     \end{block}
@@ -99,10 +99,10 @@
 \begin{frame}
     \begin{block}{Qu'est-ce que Java Card ?}
         \begin{itemize}
-            \item[technologogie: ] techno permettant dev applets "sécurisées"
-                    sur carte à puce 
+            \item Désigne techno permettant dev applets "sécurisées"
+                sur carte à puce 
 
-            \item[la carte: ]
+            \item 
                 \begin{itemize}
                     \item carte à puce programmable 
                     \item carte à puce multi-appli
@@ -129,7 +129,7 @@
 \subsection{Les applications développées}
 \begin{frame}
     \frametitle{Les applications développées}
- \includegraphics[width=10cm]{graphe_dep}
+    \includegraphics[width=10cm]{graphe_dep}
     \begin{block}{}
     \end{block}
 \end{frame}
@@ -138,8 +138,8 @@
 \begin{frame}
     \frametitle{L'aspect sécurité}
     \includegraphics[width=9cm]{stack}
-   % \begin{block}{}
-   % \end{block}
+    % \begin{block}{}
+    % \end{block}
 \end{frame}
 
 \subsection{Démonstration}
