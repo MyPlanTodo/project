@@ -1,5 +1,7 @@
 package Default;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -71,14 +73,16 @@ public class GeneralClient {
 			boolean fin = false;
 			byte[] data = null;
 			PublicKey publicKey = null;
+			String s = null;
 			byte[] clair = new String("Hello World").getBytes();
+
 			while (!fin) {
 				System.out.println();
 				System.out
 						.println("Welcome to the Javacard client application");
 				System.out.println("----------------------------");
 				System.out
-						.println("Some functions require a the correct PIN to be entered");
+						.println("Some functions require the correct PIN to be entered");
 				System.out.println();
 				System.out.println("1 - Get the public key ");
 				System.out.println("2 - Encrypt a message ");
@@ -97,13 +101,13 @@ public class GeneralClient {
 
 				Scanner sc = new Scanner(System.in);
 				int choix = sc.nextInt();
+
 				while (!(choix >= 0 && choix <= 12)) {
 					choix = System.in.read();
 				}
 
 				BigInteger exp = null;
 				byte[] result;
-				String s = "hello world and this is a test for long long long loglg longlong g llonglong longlong longlong longlong long messages";
 
 				switch (choix) {
 				case 1:
@@ -130,10 +134,17 @@ public class GeneralClient {
 					publicKey = kf.generatePublic(pubKeySpec);
 
 					System.out.println(publicKey.toString());
-
 					break;
 
 				case 2:
+
+					System.out
+							.println("Please enter the text you want to encrypt");
+					InputStreamReader converter = new InputStreamReader(
+							System.in);
+					BufferedReader in = new BufferedReader(converter);
+					s = in.readLine();
+
 					// encryption
 					t.erase();
 					t.request((short) AID_CYPHER, INS_CIPHER, (byte) 0x00,
@@ -147,30 +158,42 @@ public class GeneralClient {
 					break;
 
 				case 3:
+					if (publicKey != null & s != null) {
+						// decryption
+						Cipher c = Cipher.getInstance("RSA");
+						byte[] clearText = s.getBytes();
 
-					// decryption
-					Cipher c = Cipher.getInstance("RSA");
-					byte[] clearText = s.getBytes();
-					System.out.println(clearText.length);
-					c.init(Cipher.ENCRYPT_MODE, publicKey);
-					byte[] ciphered = c.doFinal(clearText);
-					System.out.println("Cleartext : " + new String(clearText));
-					System.out.println("Ciphertext : " + Base64.encodeBase64String(ciphered));
-					
-					for (int ii = 0; ii < 50; ii++) {
+						c.init(Cipher.ENCRYPT_MODE, publicKey);
+						byte[] ciphered = c.doFinal(clearText);
+						System.out.println("Cleartext : "
+								+ new String(clearText));
+						System.out.println("Ciphertext : "
+								+ Base64.encodeBase64String(ciphered));
+
 						t.erase();
 						t.request((short) AID_CYPHER, INS_UNCIPHER,
 								(byte) 0x00, (byte) 0x00, ciphered);
-						int res = t.execute();
+						t.execute();
+
 						result = t.getResponse();
-						
-						System.out.println("Decrypted data "
-								+ new String(result));
-						System.out.println(res);
+						if (result.length != s.getBytes().length) {
+							System.out
+									.println("Please unlock the card with the PIN");
+						} else {
+
+							System.out.println("Decrypted data : "
+									+ new String(result));
+						}
+
+					} else {
+						System.out
+								.println("Please get the public key or encrypt a text first");
 					}
 					break;
 
 				case 4:
+					System.out
+							.println("Please enter a number less than 500 to obtain a random sequence of bytes");
 					// Random number generation
 					t.erase();
 					Scanner in2 = new Scanner(System.in);
@@ -259,14 +282,19 @@ public class GeneralClient {
 					t.erase();
 					t.request((short) AID_STORE, INS_GET_CRED, (byte) 0x00,
 							(byte) 0x00);
-					int res = t.execute();
+					t.execute();
 
 					data = t.getResponse();
 					if ((data.length == 1) && (data[0] == -1)) {
 						System.out.println(ErrorMsg);
 					} else {
-						System.out.println(bytesToHexString(data));
-						System.out.println("Stocké : " + new String(data));
+						System.out.print("Stored : ");
+						if (data[0] == 0x20) {
+							System.out.print("   <vide>");
+						} else {
+							System.out.print(new String(data));
+						}
+
 					}
 
 					break;
@@ -274,8 +302,9 @@ public class GeneralClient {
 				case 8:
 					// PIN check
 					System.out.println("Please enter you PIN");
-					Scanner in = new Scanner(System.in);
-					int pin = in.nextInt();
+					Scanner in1 = new Scanner(System.in);
+
+					int pin = in1.nextInt();
 
 					byte[] data1 = new byte[2];
 					data1[0] = (byte) (pin >> 8);
@@ -291,8 +320,6 @@ public class GeneralClient {
 						System.out.println("Incorrect PIN, try again");
 						System.out
 								.println("If you don't remember your PIN, enter your PUK");
-						System.out
-								.println("If you don't know what a PUK is, contact the guy who sold you the card and ask for a refund");
 					}
 					break;
 				case 9:
@@ -310,33 +337,42 @@ public class GeneralClient {
 							(byte) 0x00, data_puk);
 					t.execute();
 					byte[] PIN = t.getResponse();
+					if (PIN.length == 0) {
+						System.out.println("Incorrect PUK");
+					} else {
 
-					int value1 = (int) (PIN[0] & 0xFF);
-					int value2 = (int) (PIN[1] & 0xFF);
+						int value1 = (int) (PIN[0] & 0xFF);
+						int value2 = (int) (PIN[1] & 0xFF);
 
-					while ((int) (value1 << 8 | value2) < 10000) {
-						t.erase();
-						t.request((short) AID_PIN, (short) INS_PUK,
-								(byte) 0x02, (byte) 0x00, data_puk);
-						t.execute();
-						PIN = t.getResponse();
+						while ((int) (value1 << 8 | value2) < 10000) {
+							t.erase();
+							t.request((short) AID_PIN, (short) INS_PUK,
+									(byte) 0x02, (byte) 0x00, data_puk);
+							t.execute();
+							PIN = t.getResponse();
 
+						}
+
+						System.out.println("Your new PIN is ");
+
+						System.out.println(String.format("%05d",
+								(int) (value1 << 8 | value2)));
+						System.out.println("Try not to forget it this time");
 					}
-
-					System.out.println("Your new PIN is ");
-
-					System.out.println(String.format("%05d",
-							(int) (value1 << 8 | value2)));
-					System.out.println("Try not to forget it this time");
-
 					break;
 
 				case 10:
 					// Signature
+
+					Scanner in5 = new Scanner(System.in);
+					System.out.println("Please enter some text to sign");
+					String strStored1 = in5.nextLine();
+
 					t.erase();
 					t.request((short) AID_SIGN, INS_ASK_AUTH, (byte) 0x00,
-							(byte) 0x00, clair);
-					System.out.println("Clair :" + bytesToHexString(clair));
+							(byte) 0x00, strStored1.getBytes());
+					System.out.println("Cleartext :"
+							+ bytesToHexString(strStored1.getBytes()));
 
 					t.execute();
 					byte[] dechiff = t.getResponse();
@@ -346,14 +382,19 @@ public class GeneralClient {
 					break;
 
 				case 11:
+					Scanner in6 = new Scanner(System.in);
+					System.out.println("Please enter some text to sign");
+					String strStored2 = in6.nextLine();
+
 					// Signature check
 					t.erase();
 					t.request((short) AID_SIGN, INS_ASK_AUTH, (byte) 0x00,
-							(byte) 0x00, clair);
+							(byte) 0x00, strStored2.getBytes());
 					t.execute();
 
 					/* We ask for the signature first */
-					System.out.println("Message :" + bytesToHexString(clair));
+					System.out.println("Message :"
+							+ bytesToHexString(strStored2.getBytes()));
 					byte[] signed = t.getResponse();
 
 					System.out.print("Signature: ");
@@ -374,13 +415,14 @@ public class GeneralClient {
 					 */
 					t.erase();
 					t.request((short) AID_SIGN, INS_TEST_AUTH, (byte) 0x00,
-							(byte) 0x01, clair);
+							(byte) 0x01, strStored2.getBytes());
 					t.execute();
 
 					if (t.getResponse()[0] == 1) {
-						System.out.println("You fail at failing");
+						System.out.println("The signature failed");
 					} else {
-						System.out.println("Success");
+						System.out
+								.println("The signature was successfully verified");
 					}
 
 					break;
@@ -388,6 +430,7 @@ public class GeneralClient {
 				case 12:
 					// end
 					fin = true;
+					System.out.println("Thank you for using this application");
 					break;
 				}
 			}
