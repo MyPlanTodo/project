@@ -118,8 +118,30 @@
     \end{block}
 \end{frame}
 
+\begin{frame}[fragile]
+    \frametitle{Abstraction}
+    \begin{block}{L'API Java Card}
+        \begin{itemize}
+            \item Permet de s'abstraire de l'assembleur $\rightarrow$ Java
+            \item Fournit un certain nombre d'objets : PIN, clefs RSA...
+        \end{itemize}
+    \end{block}
+    \begin{block}{Exemple}
+    
+        \lstset{language=Java,basicstyle=\scriptsize,keywordstyle=\color{red}
+            \bfseries,commentstyle=\color{blue}\textit,labelstyle=\tiny, frame=singe}
+        \begin{lstlisting}
+    // Nouveau PIN d'une taille de 2 octets, 
+    // avec 3 tentatives.
+    pin = new OwnerPIN((byte) 3, (byte) 2 );
+    // Fixation d'un PIN aux octets 15 et 12 (i.e. 3852)
+    pin.update(new byte[]{15,12}, (short) 0, (byte) 2);
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
 \begin{frame}
-    \frametitle{Fonctionnement}
+    \frametitle{Dialogues}
     \begin{block}{Les APDU}
         \begin{itemize}
             \item Application Protocol Data Unit.
@@ -140,27 +162,25 @@
         \end{tabular}
         \caption{Structures d'une commande et d'une réponse}
     \end{table}
-    \begin{block}{Exemple}
+\end{frame}
+
+\begin{frame}[fragile]
+    \begin{block}{Exemple sans l'API Java Card}
         \begin{itemize}
             \item Commande : 0xB0 0x00 0x00 0x00 0x01 0x05
             \item Réponse : 0x02 0xf2 0x23 0x42 0xcf 0x90 0x00
         \end{itemize}
     \end{block}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Abstraction}
-    \begin{block}{L'API Java Card}
-        \begin{itemize}
-            \item Permet de s'abstraire de l'assembleur $\rightarrow$ Java
-            \item Fournit un certain nombres d'objets : PIN, clefs RSA...
-        \end{itemize}
-    \end{block}
-    \begin{block}{Exemple}
-        \begin{itemize}
-            \item Todo
-                %Todo 
-        \end{itemize}
+    \begin{block}{Exemple avec l'API Java Card}
+        \lstset{language=Java,basicstyle=\scriptsize,keywordstyle=\color{red}
+            \bfseries,commentstyle=\color{blue}\textit,labelstyle=\tiny, frame=singe}
+        \begin{lstlisting}
+// Commande
+ResponseAPDU r = channel.transmit(new CommandAPDU(
+    (byte)0xB0, (byte) 0x00, (byte) 0x00, (byte) 0x00, 1));
+// Partie donnees de la reponse 0x02 0xf2 0x23 0x42 0xcf
+r.getData(); 
+        \end{lstlisting}
     \end{block}
 \end{frame}
 
@@ -197,8 +217,9 @@
     \end{block}
 \end{frame}
 
-\frametitle{L'interface entre SSN et la carte}
+\subsection{SoftCard}
 \begin{frame}
+\frametitle{L'interface entre SSN et la carte}
     \frametitle{L'interface entre SSN et la carte}
     \begin{block}{Actuellement}
         \begin{itemize}
@@ -214,16 +235,17 @@
     \frametitle{L'interface entre SSN et la carte}
     \begin{block}{Un serveur vis-à-vis de SSN}
         \begin{itemize}
-            \item Une application (SoftCardServer) se met en
+            \item Une entité (SoftCardServer) est instanciée et se met en
                 attente de connexions.
             \item Pour chaque requête reçue, une action est transmise
-                à une seconde application : SoftCard.
+                à une seconde entité : SoftCard.
             \item SoftCardServer renvoie le résultat de SoftCard au client.
         \end{itemize}
     \end{block}
     \begin{block}{Un client vis-à-vis de la carte}
         \begin{itemize}
-            \item Une unique instance se connecte au lecteur puis à la carte.
+            \item Une unique instance de SoftCard se connecte au lecteur puis à
+                la carte.
             \item Différentes méthodes permettent de déchiffrer, signer...
             \item Pour certaines, sensibles, la carte devra être déverrouillée.
         \end{itemize}
