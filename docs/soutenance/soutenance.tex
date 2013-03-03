@@ -72,13 +72,13 @@ head/foot}\hspace*{2em}
 \subtitle{Projet de Master 2 SSI}
 
 \author{
-    Zakaria \textsc{Addi}
-    Baptiste \textsc{Dolbeau}\\
-    Yicheng \textsc{Gao}
-    Florian \textsc{Guilbert}\\
-    Giovanni \textsc{Huet}
-    Emmanuel \textsc{Mocquet}\\
-    Maxence \textsc{Péchoux}
+    Zakaria \textsc{Addi},
+    Baptiste \textsc{Dolbeau},\\
+    Yicheng \textsc{Gao},
+    Florian \textsc{Guilbert},\\
+    Giovanni \textsc{Huet},
+    Emmanuel \textsc{Mocquet},\\
+    Maxence \textsc{Péchoux},
     Romain \textsc{Pignard}
 }
 \institute{Université de Rouen}
@@ -86,7 +86,8 @@ head/foot}\hspace*{2em}
 \AtBeginSection[]
 {
     \begin{frame}
-        \tableofcontents[currentsection]
+        \frametitle{Plan}
+        \tableofcontents[currentsection,hideothersubsections]
     \end{frame}
 }
 
@@ -105,19 +106,31 @@ head/foot}\hspace*{2em}
 
 \subsection{Présentation}
 \begin{frame}
-    \frametitle{Contexte}
+    \frametitle{Sujets}
     \begin{block}{SmartCard}
-        titi
+       Étude et mise en \oe{}uvre de solutions d’authentification et de signature 
+       par cartes à puce. (Mme \textsc{Bardet})
     \end{block}
     \begin{block}{Secure Social Network}
-        toto
+       Solutions cryptographiques pour les réseaux sociaux. (M. \textsc{Otmani})
+    \end{block}
+    \pause
+    \begin{block}{Fusion des projets : Smart Social Network}
+       Développer une solution cryptographique pour un réseau social en 
+      utilisant une base cryptographique sûre (carte à puce). 
     \end{block}
 \end{frame}
 
 \subsection{Gestion de projet}
 \begin{frame}
     \frametitle{Gestion de projet}
-    \begin{block}{ }
+    \begin{block}{Organisation}
+        \begin{itemize}
+            \item deux groupes (SC et SSN);
+            \item quatre itérations.
+            \item réunion hebdomadaire avec les clients;
+            \item documentations (STB, DAL, AdR, CdR, ...);
+        \end{itemize}
     \end{block}
 \end{frame}
 
@@ -427,7 +440,8 @@ head/foot}\hspace*{2em}
                     \item gestion d'une communication sécurisées entre plusieurs
                         composants;
                 \end{itemize}
-            \item utilisation concrête de la cryptographie.
+            \item utilisation concrête de la cryptographie;
+            \item travail en équipe.
         \end{itemize}
     \end{block}
 \end{frame}
