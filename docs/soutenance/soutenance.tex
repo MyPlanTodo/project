@@ -391,10 +391,67 @@ r.getData();
     % \end{block}
 \end{frame}
 
+\subsection{SSNExt}
+
+\begin{frame}
+    \frametitle{Les extensions Firefox}
+    \begin{block}{Javascript} 
+    Langage de script orienté objet
+    \end{block}
+    \begin{block}{Add-on SDK Mozilla}
+    Environnement de développement pour les extensions Firefox
+    \end{block}
+    \begin{block}{Add-on Builder}
+    Plateforme en ligne d'utilisation du SDK, permet le \emph{versionning}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Schéma de fonctionnement}
+    \includegraphics[width=11cm]{content-scripting-events.png}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Modification du DOM}
+    \begin{block}{Apparence fidèle} 
+    Conservation du \emph{Look and Feel}
+    \end{block}
+    \begin{block}{Ajouts d'éléments}
+        \begin{itemize}
+            \item{Boutons de chiffrement, déchiffrement, 
+            gestion des clefs...}
+            \item{Listes d'amis, liens de modification...}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Communication sécurisée}
+    \begin{block}{Tunnel SSL}
+    Communication via sockets, utilisation PKCS\#12 de Firefox,
+    utilisation librairies NSS de Mozilla
+    \end{block}
+    \begin{block}{Gestion des évènements}
+    Plusieurs types d'évènements au niveau des librairies
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Interaction avec la Base de Données}
+    \begin{block}{Manipulation des fichiers}
+    Création d'une instance de la Base de Données à la reception du pseudo,
+    module FileUtils
+    \end{block}
+    \begin{block}{Cas d'utilisations}
+    Synchronisation clefs publiques, ajout/modification/suppression
+    de listes d'amis
+    \end{block}
+\end{frame}
+
 \section{Démonstration}
 \begin{frame}
     \frametitle{Démonstration}
-    schéma
+    \includegraphics[width=11cm]{content-scripting-events.png}
 \end{frame}
 
 \section{Conclusion}
