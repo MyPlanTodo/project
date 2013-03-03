@@ -221,7 +221,7 @@ head/foot}\hspace*{2em}
     // Fixation d'un PIN aux octets 15 et 12 (i.e. 3852)
     pin.update(new byte[]{15,12}, (short) 0, (byte) 2);
         \end{lstlisting}
-    \end{block}
+    \end{exampleblock}
 \end{frame}
 
 \begin{frame}
@@ -254,7 +254,7 @@ head/foot}\hspace*{2em}
             \item Commande : 0xB0 0x00 0x00 0x00 0x01 0x05
             \item Réponse : 0x02 0xf2 0x23 0x42 0xcf 0x90 0x00
         \end{itemize}
-    \end{block}
+    \end{exampleblock}
     \begin{exampleblock}{Exemple avec l'API Java Card}
         \lstset{language=Java,basicstyle=\scriptsize,keywordstyle=\color{red}
             \bfseries,commentstyle=\color{blue}\textit,labelstyle=\tiny, frame=singe}
@@ -265,7 +265,7 @@ ResponseAPDU r = channel.transmit(new CommandAPDU(
 // Partie donnees de la reponse 0x02 0xf2 0x23 0x42 0xcf
 r.getData(); 
         \end{lstlisting}
-    \end{block}
+    \end{exampleblock}
 \end{frame}
 
 \begin{frame}
