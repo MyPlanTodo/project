@@ -56,12 +56,12 @@
 \begin{document}
 
 \begin{frame}
-\titlepage 
+    \titlepage 
 \end{frame}
 
 \begin{frame}
-\frametitle{Plan}
-\tableofcontents[hideallsubsections]
+    \frametitle{Plan}
+    \tableofcontents[hideallsubsections]
 \end{frame}
 
 \section{Introduction}
@@ -95,22 +95,24 @@
 
 \subsection{Java Card}
 \begin{frame}
+    \frametitle{Présentation}
     \begin{block}{Rappel sur la carte à puce}
-        stockage et traitement d'infos
-        de base assure authentification
+        \begin{itemize}
+            \item Dispose d'un processeur pour du traitement d'informations.
+            \item Permet de stocker des données cachées.
+            \item Assure l'authentification de l'utilisateur.
+        \end{itemize}
     \end{block}
-\end{frame}
-
-\begin{frame}
-    \begin{block}{Qu'est-ce que Java Card ?}
+    \begin{block}{Qu'est-ce que "Java Card" ?}
         \begin{itemize}
             \item Désigne la technologie permettant de développer
-                des applets \og sécurisées \fg{} sur carte à puce 
+                des applets \og sécurisées \fg{} sur carte à puce.
 
-            \item Côté carte : 
+            \item Mais c'est aussi une carte à puce : 
                 \begin{itemize}
-                    \item carte à puce programmable 
-                    \item carte à puce multi-applications
+                    \item programmable 
+                    \item multi-applications
+                    \item interopérable
                 \end{itemize}
         \end{itemize}
     \end{block}
@@ -118,19 +120,57 @@
 
 \begin{frame}
     \frametitle{Fonctionnement}
-    \begin{block}{APDU}
+    \begin{block}{Les APDU}
+        \begin{itemize}
+            \item Application Protocol Data Unit.
+            \item Unité de communication entre le lecteur et la carte.
+        \end{itemize}
     \end{block}
-    \begin{block}{L'API Java Card }
-    \end{block}
-    \begin{block}{Identifications des applets}
+    \begin{table}
+        \begin{tabular}{|c|c|c|c|c|c|c|}
+            \hline
+            CLA & INS & P1 & P2 & Lc & Données & Le\\
+            \hline
+        \end{tabular}
+        \newline
+        \begin{tabular}{|c|c|}
+            \hline
+            Données & Status\\
+            \hline
+        \end{tabular}
+        \caption{Structures d'une commande et d'une réponse}
+    \end{table}
+    \begin{block}{Exemple}
+        \begin{itemize}
+            \item Commande : 0xB0 0x00 0x00 0x00 0x01 0x05
+            \item Réponse : 0x02 0xf2 0x23 0x42 0xcf 0x90 0x00
+        \end{itemize}
     \end{block}
 \end{frame}
 
 \begin{frame}
-    \begin{block}{Principales limitations}
-        types primitifs : boolean, byte, short
-        pas de "garbage collector"
+    \frametitle{Abstraction}
+    \begin{block}{L'API Java Card}
+        \begin{itemize}
+            \item Permet de s'abstraire de l'assembleur $\rightarrow$ Java
+            \item Fournit un certain nombres d'objets : PIN, clefs RSA...
+        \end{itemize}
+    \end{block}
+    \begin{block}{Exemple}
+        \begin{itemize}
+            \item Todo
+                %Todo 
+        \end{itemize}
+    \end{block}
+\end{frame}
 
+\begin{frame}
+    \frametitle{Principales contraintes}
+    \begin{block}{Les limitations de l'API Java Card}
+        \begin{itemize}
+            \item types : boolean, byte, short, tableaux associés
+            \item pas de \og garbage collector \fg{}
+        \end{itemize}
     \end{block}
 \end{frame}
 
@@ -157,13 +197,13 @@
     \end{block}
 \end{frame}
 
-\subsection{L'interface avec SSN : SoftCard}
+\frametitle{L'interface entre SSN et la carte}
 \begin{frame}
-    \frametitle{L'interface avec SSN : SoftCard}
+    \frametitle{L'interface entre SSN et la carte}
     \begin{block}{Actuellement}
         \begin{itemize}
-            \item Applications de chiffrement, signature, stockage...
-            \item Client testant ces applications
+            \item Applications de chiffrement, déchiffrement, signature, stockage...
+            \item Client testant ces applications.
         \end{itemize}
     \end{block}
 
@@ -171,10 +211,21 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{L'interface avec SSN : SoftCard}
-    \begin{block}{Un serveur}
+    \frametitle{L'interface entre SSN et la carte}
+    \begin{block}{Un serveur vis-à-vis de SSN}
         \begin{itemize}
-            \item 
+            \item Une application (SoftCardServer) se met en
+                attente de connexions.
+            \item Pour chaque requête reçue, une action est transmise
+                à une seconde application : SoftCard.
+            \item SoftCardServer renvoie le résultat de SoftCard au client.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Un client vis-à-vis de la carte}
+        \begin{itemize}
+            \item Une unique instance se connecte au lecteur puis à la carte.
+            \item Différentes méthodes permettent de déchiffrer, signer...
+            \item Pour certaines, sensibles, la carte devra être déverrouillée.
         \end{itemize}
     \end{block}
 \end{frame}
@@ -186,9 +237,9 @@
     \frametitle{Les besoins et exigences}
     \begin{block}{}
 
-Protection des données utilisateur vis-à-vis de tiers
+        Protection des données utilisateur vis-à-vis de tiers
 
-Authentification forte par carte à puce 
+        Authentification forte par carte à puce 
     \end{block}
 \end{frame}
 
@@ -196,8 +247,8 @@ Authentification forte par carte à puce
 \begin{frame}
     \frametitle{Présentation des composants}
     %\begin{block}{ }
- \includegraphics[width=12cm]{schema_zako}
-   % \end{block}
+    \includegraphics[width=12cm]{schema_zako}
+    % \end{block}
 \end{frame}
 
 
@@ -205,15 +256,15 @@ Authentification forte par carte à puce
 \begin{frame}
     \frametitle{Base de données}
     \begin{block}{Moteur SQLite }
- Base de données locale
+        Base de données locale
 
-Accessible depuis Java et l'extension 
+        Accessible depuis Java et l'extension 
     \end{block}
-  \begin{block}{Stockage des liens d'amitié dans la base}
-Listes d'amis
+    \begin{block}{Stockage des liens d'amitié dans la base}
+        Listes d'amis
 
 
-Clés publiques
+        Clés publiques
 
 
     \end{block}
@@ -228,101 +279,101 @@ Clés publiques
 
 \begin{frame}
     \frametitle{Composition}
-	\begin{block}{Six classes java}
-	\begin{itemize}
-	\item ASymCypher
-	\item SymCypher
-	\item ServerSSL
-	\item Client
-	\item Dataprocess
-	\item CacheManager
-	\end{itemize}
-	\end{block}
+    \begin{block}{Six classes java}
+        \begin{itemize}
+            \item ASymCypher
+            \item SymCypher
+            \item ServerSSL
+            \item Client
+            \item Dataprocess
+            \item CacheManager
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \begin{frame}
     \frametitle{Exemple de cycle}
 
-	\begin{itemize}
-	\item Received from Facecrypt : \{"action":"getID"\}
-	\item Sent to Softcard : 47
-	\item Received from Softcard : $\underbrace{666f6f2e6261722e33333434393133}_{\textrm{login}} 20 \underbrace{726f6f74726f6f74}_{\textrm{password}}$
-	\item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
-\end{itemize}
+    \begin{itemize}
+        \item Received from Facecrypt : \{"action":"getID"\}
+        \item Sent to Softcard : 47
+        \item Received from Softcard : $\underbrace{666f6f2e6261722e33333434393133}_{\textrm{login}} 20 \underbrace{726f6f74726f6f74}_{\textrm{password}}$
+        \item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
+    \end{itemize}
 
-   % \end{block}
+    % \end{block}
 \end{frame}
 
 \section{Démonstration}
 \begin{frame}
-\frametitle{Démonstration}
-schéma
+    \frametitle{Démonstration}
+    schéma
 \end{frame}
 
 \section{Conclusion}
 \begin{frame}
-\frametitle{Conclusion}
-\begin{block}{Difficultés rencontrées}
-\begin{itemize}
-    \item SmartCard : 
-    \begin{itemize}
-        \item taille des données; % limitées dans les APDUs (256)
-        \item communications sécurisées entre la carte à puce et l'application
-            cliente;
-        \item installations des lecteurs;
-        \item stockage "caché"; % vérifier que c'est vraiment caché
-        \item algorithmes implantés sur la carte;
-    \end{itemize}
-    \item Secure Social Network : 
+    \frametitle{Conclusion}
+    \begin{block}{Difficultés rencontrées}
         \begin{itemize}
-            \item manipulation de la page Facebook;
-            \item communications sécurisées entre SSNExt et FaceCrypt;
-            \item fonctionnement d'une extension.
+            \item SmartCard : 
+                \begin{itemize}
+                    \item taille des données; % limitées dans les APDUs (256)
+                    \item communications sécurisées entre la carte à puce et l'application
+                        cliente;
+                    \item installations des lecteurs;
+                    \item stockage "caché"; % vérifier que c'est vraiment caché
+                    \item algorithmes implantés sur la carte;
+                \end{itemize}
+            \item Secure Social Network : 
+                \begin{itemize}
+                    \item manipulation de la page Facebook;
+                    \item communications sécurisées entre SSNExt et FaceCrypt;
+                    \item fonctionnement d'une extension.
+                \end{itemize}
         \end{itemize}
-\end{itemize}
-\end{block}
+    \end{block}
 \end{frame}
 
 \begin{frame}
-\frametitle{Conclusion}
-\begin{block}{Améliorations possibles}
-\begin{itemize}
-    \item SmartCard : 
-    \begin{itemize}
-        \item IHM pour entrer le code PIN; % => démon
-        \item Gestion de l'arrachage de la carte; % lors d'une opération, 
-                                                  % la carte plante le cliente, débranchage, rebranchage avant une opération est géré.
-        \item communications sécurisées entre la carte à puce et l'application
-            cliente;
-        \item One Time Password;
-        \item prendre en compte les attaques (canaux cachés);
-        \item algorithmes implantés sur la carte;
-    \end{itemize}
-    \item Secure Social Network : 
+    \frametitle{Conclusion}
+    \begin{block}{Améliorations possibles}
         \begin{itemize}
-           \item finalisation pour mise en production;
-           \item étudier le tatouage d'images.
+            \item SmartCard : 
+                \begin{itemize}
+                    \item IHM pour entrer le code PIN; % => démon
+                    \item Gestion de l'arrachage de la carte; % lors d'une opération, 
+                        % la carte plante le cliente, débranchage, rebranchage avant une opération est géré.
+                    \item communications sécurisées entre la carte à puce et l'application
+                        cliente;
+                    \item One Time Password;
+                    \item prendre en compte les attaques (canaux cachés);
+                    \item algorithmes implantés sur la carte;
+                \end{itemize}
+            \item Secure Social Network : 
+                \begin{itemize}
+                    \item finalisation pour mise en production;
+                    \item étudier le tatouage d'images.
+                \end{itemize}
         \end{itemize}
-\end{itemize}
-\end{block}
+    \end{block}
 \end{frame}
 
 \begin{frame}
-\frametitle{Conclusion}
-\begin{block}{Les apports}
-\begin{itemize}
-    \item SmartCard : 
-    \begin{itemize}
-        \item manipulation d'une carte à puce;
-    \end{itemize}
-    \item Secure Social Network : 
+    \frametitle{Conclusion}
+    \begin{block}{Les apports}
         \begin{itemize}
-           \item gestion d'une communication sécurisées entre plusieurs
-            composants;
+            \item SmartCard : 
+                \begin{itemize}
+                    \item manipulation d'une carte à puce;
+                \end{itemize}
+            \item Secure Social Network : 
+                \begin{itemize}
+                    \item gestion d'une communication sécurisées entre plusieurs
+                        composants;
+                \end{itemize}
+            \item utilisation concrête de la cryptographie.
         \end{itemize}
-    \item utilisation concrête de la cryptographie.
-\end{itemize}
-\end{block}
+    \end{block}
 \end{frame}
 
 \end{document}
