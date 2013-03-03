@@ -10,7 +10,43 @@
 \usepackage{tikz}
 
 
-\usetheme{Warsaw}
+\usetheme{Boadilla}
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+      \hbox{%
+        
+   
+\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in
+head/foot}%
+            \usebeamerfont{author in head/foot}
+\thesection.\thesubsection~\insertsubsection
+            \end{beamercolorbox}%
+ 
+\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in
+head/foot}%
+            \usebeamerfont{title in head/foot}Smart Social Network
+           \end{beamercolorbox}%
+           
+\begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in
+head/foot}%
+            \usebeamerfont{date in
+head/foot}\hspace*{2em}
+        \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+       \end{beamercolorbox}}%
+          \vskip0pt%
+}
+
+\setbeamertemplate{blocks} [rounded] [shadow=false] 
+
+\setbeamertemplate{navigation symbols}{
+%     \insertslidenavigationsymbol
+%         \insertframenavigationsymbol
+%         \insertsubsectionnavigationsymbol
+%         \insertsectionnavigationsymbol
+%         \insertdocnavigationsymbol
+%         \insertbackfindforwardnavigationsymbol
+}
 
 %\setbeamercolor{normal text}{fg=white,bg=black!90}
 %\setbeamercolor{structure}{fg=white}
@@ -32,7 +68,8 @@
 %\setbeamercolor*{block title example}{parent=example text,bg=black!15}
 
 
-\title{Smart Social Network - Projet de Master 2 SSI}
+\title{Smart Social Network}
+\subtitle{Projet de Master 2 SSI}
 
 \author{
     Zakaria \textsc{Addi}
@@ -88,9 +125,24 @@
 
 \subsection{Introduction}
 \begin{frame}
-    \frametitle{Introduction}
-    \begin{block}{}
-    \end{block}
+\frametitle{Introduction}
+\begin{block}{Besoins}
+\begin{itemize}
+\item Authentification forte
+\item Contenir des informations confidentielles
+\end{itemize}
+\end{block}
+
+\begin{exampleblock}{Technologies étudiées}
+\begin{itemize}
+\item Génération de nombres aléatoires
+\item Chiffrement/Déchiffrement
+\item Signature/Vérification
+\item Code PIN/PUK
+\item SoftCard
+\end{itemize}
+\end{exampleblock}
+
 \end{frame}
 
 \subsection{Java Card}
@@ -311,9 +363,10 @@
 \end{frame}
 
 \section{Conclusion}
+\subsection{Difficultés rencontrées}
 \begin{frame}
     \frametitle{Conclusion}
-    \begin{block}{Difficultés rencontrées}
+    \begin{alertblock}{Difficultés rencontrées}
         \begin{itemize}
             \item SmartCard : 
                 \begin{itemize}
@@ -331,8 +384,10 @@
                     \item fonctionnement d'une extension.
                 \end{itemize}
         \end{itemize}
-    \end{block}
+    \end{alertblock}
 \end{frame}
+
+\subsection{Améliorations possibles}
 
 \begin{frame}
     \frametitle{Conclusion}
@@ -358,9 +413,10 @@
     \end{block}
 \end{frame}
 
+\subsection{Apports}
 \begin{frame}
     \frametitle{Conclusion}
-    \begin{block}{Les apports}
+    \begin{block}{Ce que cela nous a apporté}
         \begin{itemize}
             \item SmartCard : 
                 \begin{itemize}
@@ -374,6 +430,11 @@
             \item utilisation concrête de la cryptographie.
         \end{itemize}
     \end{block}
+\end{frame}
+
+\begin{frame}
+\begin{center}Merci pour votre attention.\\[2cm]
+          Questions ?\end{center}
 \end{frame}
 
 \end{document}
