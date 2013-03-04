@@ -482,16 +482,21 @@ r.getData();
 \end{frame}
 
 \begin{frame}
+\frametitle{Formation du texte chiffré}
+\begin{center}
+\includegraphics[width=9cm]{schema_dolby_2}
+\end{center}
+\end{frame}
+
+\begin{frame}
     \frametitle{Exemple de cycle}
 
     \begin{itemize}
-        \item Received from Facecrypt : \{"action":"getID"\}
+        \item Received from Facecrypt : \{\og action \fg{}: \og getID\fg{}\}
         \item Sent to Softcard : 47
         \item Received from Softcard : $\underbrace{666f6f2e6261722e33333434393133}_{\textrm{login}} 20 \underbrace{726f6f74726f6f74}_{\textrm{password}}$
-        \item Sent to Facecrypt : \{"action":"getID" ,"login":"foo.bar.3344913","firstConnection":false, "pass":"rootroot"\}
+        \item Sent to Facecrypt : \{\og action\fg{} : \og{} getID\fg{}, \og login\fg{}: \og foo.bar.3344913\fg{}, \og{}firstConnection \fg{}:false, \og pass\fg{}: \og rootroot\fg{}\}
     \end{itemize}
-
-    % \end{block}
 \end{frame}
 
 \subsection{SSNExt}
