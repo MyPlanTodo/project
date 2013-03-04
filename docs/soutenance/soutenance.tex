@@ -292,7 +292,7 @@ r.getData();
 		\begin{itemize}
 			\item CLA.
 			\item AID: Applet Identification.
-			\item Les numéros des différentes instruction.
+			\item Les numéros des différentes instructions.
 		\end{itemize}
 	\end{block}
 	\begin{block}{Algorithme général}
@@ -301,7 +301,7 @@ r.getData();
 			\item Connexion au terminal;
 			\item Sélection du canal;
 			\item Sélection de l'applet par AID (via une APDU);
-			\item Envoie de la requête (via une APDU).
+			\item Envoi de la requête (via une APDU).
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -339,7 +339,7 @@ r.getData();
 			\item Fonction process(APDU apdu).
 			\item Switch(INS).
 			\item Traitement (chiffrement, déchiffrement,...).
-			\item Envoie de la réponse au client.
+			\item Envoi de la réponse au client.
 		\end{itemize}
 	\end{block}
 \end{frame}
@@ -347,14 +347,18 @@ r.getData();
 \begin{frame}
 	\frametitle{Exemple}
 	\begin{exampleblock}{Données}
-		\item CLA = 0xB0
-		\item INS = 0x01
+        \begin{itemize}
+            \item CLA = 0xB0
+            \item INS = 0x01
+        \end{itemize}
 	\end{exampleblock}
 
 	\begin{exampleblock}{Algorithme général}
-		\item apdu = 0xB0, 0x01, 0x00, 0x00, data;
-		\item case INS\_CYPHER: chiffrement de data;
-		\item Envoie du chiffré au client.
+        \begin{itemize}
+            \item apdu = 0xB0, 0x01, 0x00, 0x00, data;
+            \item case INS\_CYPHER: chiffrement de data;
+		    \item Envoi du chiffré au client.
+        \end{itemize}
 	\end{exampleblock}
 \end{frame}
 
