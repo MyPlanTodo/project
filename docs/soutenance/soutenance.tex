@@ -278,6 +278,87 @@ r.getData();
     \end{block}
 \end{frame}
 
+
+\subsection{Fonctionnement des applications}
+\begin{frame}
+	\frametitle{Communication}
+	IMAGE
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Coté Client}
+	\begin{block}{Données}
+		\begin{itemize}
+			\item CLA.
+			\item AID: Applet Identification.
+			\item Les numéros des différentes instruction.
+		\end{itemize}
+	\end{block}
+	\begin{block}{Algorithme général}
+		\begin{itemize}
+			\item Sélection du terminal;
+			\item Connexion au terminal;
+			\item Sélection du canal;
+			\item Sélection de l'applet par AID (via une APDU);
+			\item Envoie de la requête (via une APDU).
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	\begin{exampleblock}{Données}
+		\begin{itemize}
+			\item CLA = 0xB0
+			\item APPLET\_AID = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x00, 0x01}
+			\item INS\_CIPHER = 0x01.
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{Algorithme général}
+		\begin{itemize}
+			\item CardTerminal terminal = terminals.get(0);
+			\item Card card = terminal.connect("T=1");
+			\item CardChannel c = card.getBasicChannel();
+			\item ResponseAPDU r = c.transmit(new CommandAPDU(0x00, 0xA4, 0x04, 0x00, APPLET\_AID));
+			\item r = c.transmit(new CommandAPDU(0xB0, 0x01, 0x00, 0x00, data));
+		\end{itemize}
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Coté carte à puce}
+	\begin{block}{Données}
+		\begin{itemize}
+			\item CLA.
+			\item Les numéros des différentes instructions.
+		\end{itemize}		
+	\end{block}
+	\begin{block}{Algorithme général}
+		\begin{itemize}
+			\item Fonction process(APDU apdu).
+			\item Switch(INS).
+			\item Traitement (chiffrement, déchiffrement,...).
+			\item Envoie de la réponse au client.
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	\begin{exampleblock}{Données}
+		\item CLA = 0xB0
+		\item INS = 0x01
+	\end{exampleblock}
+
+	\begin{exampleblock}{Algorithme général}
+		\item apdu = 0xB0, 0x01, 0x00, 0x00, data;
+		\item case INS\_CYPHER: chiffrement de data;
+		\item Envoie du chiffré au client.
+	\end{exampleblock}
+\end{frame}
+
+	
 \subsection{Les applications développées}
 \begin{frame}
     \frametitle{Les applications développées}
