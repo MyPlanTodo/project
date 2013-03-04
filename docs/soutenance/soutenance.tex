@@ -373,10 +373,38 @@ r.getData();
 
 \subsection{L'aspect sécurité}
 \begin{frame}
-    \frametitle{L'aspect sécurité}
+    \frametitle{Authentification mutuelle}
+    \includegraphics[width=9cm]{question}
+    % \begin{block}{}
+    % \end{block}
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Le tunnel}
     \includegraphics[width=9cm]{stack}
     % \begin{block}{}
     % \end{block}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Le tunnel : suite}
+
+\begin{exampleblock}{Deux clefs}
+        \begin{itemize}
+            \item clef de session pour la confidentialité
+            \item clef partagée pour le MAC
+        \end{itemize}
+	\end{exampleblock}
+\begin{exampleblock}{AES-CBC}
+        \begin{itemize}
+            \item Chiffrement
+            \item CBC-MAC amélioré pour le MAC
+        \end{itemize}
+	\end{exampleblock}
+ \includegraphics[width=9cm]{packet}
 \end{frame}
 
 \subsection{Démonstration}
